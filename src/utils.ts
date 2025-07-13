@@ -1,7 +1,10 @@
 import { applicantSchema } from './lib/applicantSchema';
 import { Listing } from './app/properties/page';
-
+// lib/email/sendW4Email.ts
+import sgMail from '@sendgrid/mail';
+import z from 'zod';
 import { Property } from "@/types";
+sgMail.setApiKey(process.env.SENDGRID_API_KEY!);
 
 export function transformListings(listings: Listing[]): Property[] {
   console.log({ listings })
@@ -16,11 +19,7 @@ export function transformListings(listings: Listing[]): Property[] {
 }
 
 
-// lib/email/sendW4Email.ts
-import sgMail from '@sendgrid/mail';
-import z from 'zod';
 
-sgMail.setApiKey(process.env.SENDGRID_API_KEY!);
 
 export async function sendW4Email({
   to,
@@ -46,6 +45,12 @@ export async function sendW4Email({
       <a href="https://corekeyrealty.com">www.corekeyrealty.com</a></p>
     </div>
   `;
+
+  console.log({
+    to,
+    employeeName,
+    pdfBuffer,
+  })
 
   await sgMail.send({
     to,
@@ -92,27 +97,33 @@ export async function sendEmailToApplicant(applicant: Applicant, pdfBuffer: Buff
   </div>
 `;
 
-  await sgMail.send({
-    to: applicant.email,
-    from: process.env.FROM_EMAIL!,
-    subject: `✅ Welcome to CoreKey Realty, ${applicant.fullName}!`,
-    html,
-    attachments: [
-      {
-        filename: `W4-${applicant.fullName}.pdf`,
-        type: 'application/pdf',
-        content: pdfBuffer.toString('base64'),
-        disposition: 'attachment',
-      },
-    ],
-  });
+
+  try {
+    await sgMail.send({
+      to: applicant.email,
+      from: process.env.FROM_EMAIL!,
+      subject: `✅ Welcome to CoreKey Realty, ${applicant.fullName}!`,
+      html,
+      attachments: [
+        {
+          filename: `W4-${applicant.fullName}.pdf`,
+          type: 'application/pdf',
+          content: pdfBuffer.toString('base64'),
+          disposition: 'attachment',
+        },
+      ],
+    });
+  } catch (error) {
+
+    console.error('Error sending email:', error);
+
+  }
+
 }
 
 
 
 
-
-sgMail.setApiKey(process.env.SENDGRID_API_KEY!);
 
 type Applicant = z.infer<typeof applicantSchema>;
 
@@ -138,12 +149,17 @@ export async function sendEmailToAdmin(applicant: Applicant, email: string) {
     <hr />
     <p style="font-size:13px;">This message was sent automatically by the CoreKey Realty onboarding system.</p>
   `;
+  try {
+    await sgMail.send({
+      to: email,
+      from: process.env.FROM_EMAIL!,
+      subject: `📝 New Application from ${applicant.fullName}`,
+      html,
+    });
+  } catch (error) {
+    console.error('Error sending admin email:', error);
+  }
 
-  await sgMail.send({
-    to: email,
-    from: process.env.FROM_EMAIL!,
-    subject: `📝 New Application from ${applicant.fullName}`,
-    html,
-  });
+
 }
 
