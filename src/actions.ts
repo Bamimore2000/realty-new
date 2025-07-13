@@ -1,4 +1,6 @@
 'use server';
+import sgMail from '@sendgrid/mail';
+
 
 import User from '@/models/User';
 import { nanoid } from 'nanoid';
@@ -268,6 +270,69 @@ export async function findUserByKey(key: string) {
         name: user.name,
         referralLink: user.referralLink,
     };
+}
+
+
+export async function sendBulkEmails({
+    recipients,
+    phoneNumber,
+}: {
+    recipients: string[];
+    phoneNumber: string;
+}) {
+    if (!Array.isArray(recipients) || recipients.length === 0) {
+        return { success: false, message: "No valid recipients provided." };
+    }
+
+    if (!phoneNumber) {
+        return { success: false, message: "Phone number is required." };
+    }
+
+    const fromEmail = process.env.CAREER_EMAIL || "careers@corekeyrealty.com";
+
+    const messages = recipients.map((email) => ({
+        to: email,
+        from: fromEmail,
+        trackingSettings: {
+            clickTracking: {
+                enable: false,
+                enableText: false,
+            },
+        },
+        subject: "Virtual Assistant Role at Core Key Realty",
+        text: `
+Greetings,
+
+We found your profile on JobGet and would like to offer you a Virtual Assistant position at Core Key Realty.
+
+This is a remote role involving email management, scheduling, and client support.
+
+Visit https://corekeyrealty.com to learn more.
+
+If you're interested and ready to begin, please send us a text message to request the registration address and access token:
+
+📱 Text: ${phoneNumber}
+
+Thank you for your time.
+
+Best regards,  
+Core Key Realty Careers Team
+    `.trim(),
+    }));
+
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY!);
+
+    try {
+        await Promise.all(messages.map((msg) => sgMail.send(msg)));
+        return { success: true };
+    } catch (error: unknown) {
+
+        console.error("Error sending bulk emails:", error);
+        return {
+            success: false,
+            message: "Failed to send some or all emails.",
+        };
+    }
 }
 
 
