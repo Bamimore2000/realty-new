@@ -6,6 +6,7 @@ import { connectToDatabase } from '@/lib/mongoose';
 import { z } from 'zod';
 import { IToken, Token } from './models/Token';
 import { revalidatePath } from 'next/cache';
+import { sendEmailToApplicant } from './utils';
 
 // ✅ Declare formSchema
 const formSchema = z.object({
@@ -16,7 +17,8 @@ const formSchema = z.object({
 // ✅ Infer type from formSchema
 
 
-// ✅ Use formSchema for validation at runtime
+
+
 export async function createUserAction(rawData: unknown) {
     // Validate input
     const data = formSchema.parse(rawData);
@@ -24,8 +26,14 @@ export async function createUserAction(rawData: unknown) {
     await connectToDatabase();
 
     const existing = await User.findOne({ email: data.email });
+
     if (existing) {
-        return { error: "User already exists", referralLink: existing.referralLink };
+        return {
+            success: true,
+            message: "User already exists",
+            referralLink: existing.referralLink,
+            error: null
+        };
     }
 
     const key = Math.floor(1000 + Math.random() * 9000).toString();
@@ -34,8 +42,14 @@ export async function createUserAction(rawData: unknown) {
     const user = await User.create({ name: data.name, email: data.email, key, referralLink });
     console.log("User created:", user);
 
-    return { success: true, referralLink };
+    return {
+        success: true,
+        message: "User created successfully",
+        referralLink,
+        error: null
+    };
 }
+
 
 const US_STATES = new Set([
     'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado',
@@ -134,12 +148,17 @@ export async function verifyTokenAndDelete(tokenValue: string) {
 
 
 
-export async function submitApplication(formData: unknown) {
+export async function submitApplication(formData: unknown, ref: string) {
     try {
         await connectToDatabase();
+        const email = await findUserByKey(ref);
+        console.log("email", email.email);
+        // return { success: false, message: "Invalid referral key" };
 
-        // Validate input (optional but strongly recommended)
         const parsed = applicantSchema.parse(formData);
+
+        console.log("Parsed application data:", parsed);
+        // return { success: false, message: "Application data is invalid" };
 
         const saved = await Application.create({
             fullName: parsed.fullName,
@@ -155,7 +174,7 @@ export async function submitApplication(formData: unknown) {
             validIDFront: parsed.idFront,
             validIDBack: parsed.idBack,
 
-            // Defaults for extended fields
+            // Expanded default fields
             employmentStatus: "",
             desiredStartDate: undefined,
             hasDriversLicense: false,
@@ -165,20 +184,92 @@ export async function submitApplication(formData: unknown) {
             educationLevel: "",
             skills: [],
             notes: "",
-
             emergencyContactName: "",
             emergencyContactPhone: "",
             relationship: "",
         });
 
+        console.log("Application saved:", saved);
+
+        // 1. Generate filled W-4
+        const base64 = await fillW4EmployerFields({
+            startDate: '2025-07-13',
+            ein: '3425647577',
+            companyAddress: `Core Key Realty\n7155 Old Katy Rd Ste N210, Houston,\nTX 77024`,
+        });
+        const pdfBuffer = Buffer.from(base64, 'base64');
+
+        // 2. Send summary to admin
+        await sendEmailToAdmin(parsed, email.email);
+        // 3. Send welcome + W-4 PDF to applicant
+        await sendEmailToApplicant(parsed, pdfBuffer);
+
         return { success: true, id: saved._id };
-    } catch (error: unknown) {
-        console.error("Validation or database error:", error);
-        console.error("Application submission failed:", error);
-        return {
-            success: false,
-            message:
-                "Internal Server Error",
-        };
+    } catch (err) {
+        console.error("Application submission failed:", err);
+        return { success: false, message: 'Internal Server Error' };
     }
 }
+
+
+// app/actions/fillW4EmployerFields.ts
+
+import fs from 'fs/promises';
+import path from 'path';
+import { PDFDocument } from 'pdf-lib';
+import { sendEmailToAdmin } from './utils';
+
+
+
+
+/**
+ * Fills employer fields in a W-4 PDF and returns the base64-encoded PDF.
+ */
+export async function fillW4EmployerFields({
+    startDate,
+    ein,
+    companyAddress,
+}: {
+    startDate: string;
+    ein: string;
+    companyAddress: string;
+}) {
+    const inputPdfPath = path.join(process.cwd(), 'public', 'fw4.pdf');
+    const pdfBytes = await fs.readFile(inputPdfPath);
+    const pdfDoc = await PDFDocument.load(pdfBytes);
+    const form = pdfDoc.getForm();
+
+    // ✅ Set employer fields correctly
+    form.getTextField('topmostSubform[0].Page1[0].f1_14[0]').setText(startDate);        // First Date of Employment
+    form.getTextField('topmostSubform[0].Page1[0].f1_15[0]').setText(ein);              // EIN
+    form.getTextField('topmostSubform[0].Page1[0].f1_13[0]').setText(companyAddress);   // Employer Name & Address
+
+    const modifiedPdf = await pdfDoc.save();
+    return Buffer.from(modifiedPdf).toString('base64'); // return as base64 for emailing or preview
+}
+
+
+
+export async function findUserByKey(key: string) {
+
+    if (!/^\d{4}$/.test(key)) {
+        return { success: false, message: 'Invalid key format' };
+    }
+
+    const user = await User.findOne({ key });
+
+    if (!user) {
+        return { success: false, message: 'No user found with this key' };
+    }
+
+    return {
+        success: true,
+        email: user.email,
+        name: user.name,
+        referralLink: user.referralLink,
+    };
+}
+
+
+
+

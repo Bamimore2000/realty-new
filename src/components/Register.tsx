@@ -93,7 +93,7 @@ export default function ApplicantForm({ refId }: { refId?: string }) {
     setSubmitSuccess(false);
     try {
       // TODO: send data to backend here via fetch or server action
-      const result = await submitApplication(data);
+      const result = await submitApplication(data, refId as string);
       if (result.success) {
         setSubmitSuccess(true);
         reset();

@@ -11,11 +11,13 @@ export default function RegisterPage() {
   const [status, setStatus] = useState<
     "idle" | "verifying" | "error" | "success"
   >("idle");
-  const [ref, setRef] = useState<string | null>(null);
+
   const [showModal, setShowModal] = useState(false);
 
   const token = searchParams.get("token");
   const urlRef = searchParams.get("ref");
+
+  console.log("urlsssssssssssssssssssssssssssssssssssssssssssssss", urlRef);
 
   useEffect(() => {
     if (!token) {
@@ -27,10 +29,8 @@ export default function RegisterPage() {
 
   async function verify(inputToken: string) {
     setStatus("verifying");
-
     const res = await verifyTokenAndDelete(inputToken);
     if (res.success) {
-      setRef(res.ref || urlRef || null);
       setStatus("success");
       setShowModal(false);
     } else {
@@ -60,7 +60,7 @@ export default function RegisterPage() {
 
   return (
     <div>
-      <ApplicantForm refId={ref as string} />
+      <ApplicantForm refId={searchParams.get("ref") as string} />
     </div>
   );
 }

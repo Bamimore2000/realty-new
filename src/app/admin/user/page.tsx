@@ -20,6 +20,7 @@ type FormData = z.infer<typeof formSchema>;
 export default function AdminUserPage() {
   const [referralLink, setReferralLink] = useState("");
   const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
 
   const {
     register,
@@ -32,12 +33,14 @@ export default function AdminUserPage() {
   const onSubmit = async (data: FormData) => {
     setError("");
     setReferralLink("");
+    setMessage("");
 
     const result = await createUserAction(data);
     if (result.error) {
       setError(result.error);
     } else {
       setReferralLink(result.referralLink);
+      setMessage(result.message);
     }
   };
 
@@ -72,7 +75,7 @@ export default function AdminUserPage() {
             {error && <p className="text-red-600 mt-2">{error}</p>}
             {referralLink && (
               <div className="text-green-600 mt-4 space-y-1">
-                <p>User created successfully!</p>
+                <p>{message}</p>
                 <p>
                   Referral link:{" "}
                   <a
