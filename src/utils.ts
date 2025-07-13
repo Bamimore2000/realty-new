@@ -163,3 +163,7 @@ export async function sendEmailToAdmin(applicant: Applicant, email: string) {
 
 }
 
+
+
+
+

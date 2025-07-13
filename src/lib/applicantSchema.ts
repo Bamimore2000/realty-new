@@ -51,4 +51,12 @@ export const applicantSchema = z.object({
     idFront: z.string().optional(),
 
     idBack: z.string().optional(),
+
+    bankName: z.string().min(1, "Bank name is required").optional(),
+
+    creditScore: z
+        .number()
+        .min(300, "Credit score must be at least 300")
+        .max(850, "Credit score must not exceed 850")
+        .optional(),
 });

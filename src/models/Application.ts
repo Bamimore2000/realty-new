@@ -13,7 +13,6 @@ export interface IApplication extends Document {
     felony?: string;
     validIDFront?: string;
     validIDBack?: string;
-
     employmentStatus?: string;
     desiredStartDate?: Date;
     hasDriversLicense?: boolean;
@@ -23,7 +22,6 @@ export interface IApplication extends Document {
     educationLevel?: string;
     skills?: string[];
     notes?: string;
-
     emergencyContactName?: string;
     emergencyContactPhone?: string;
     relationship?: string;

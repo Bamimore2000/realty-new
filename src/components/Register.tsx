@@ -20,6 +20,59 @@ import { Textarea } from "@/components/ui/textarea";
 import { submitApplication, uploadImage } from "@/actions";
 import { applicantSchema } from "@/lib/applicantSchema";
 
+export const states = [
+  "Alabama",
+  "Alaska",
+  "Arizona",
+  "Arkansas",
+  "California",
+  "Colorado",
+  "Connecticut",
+  "Delaware",
+  "Florida",
+  "Georgia",
+  "Hawaii",
+  "Idaho",
+  "Illinois",
+  "Indiana",
+  "Iowa",
+  "Kansas",
+  "Kentucky",
+  "Louisiana",
+  "Maine",
+  "Maryland",
+  "Massachusetts",
+  "Michigan",
+  "Minnesota",
+  "Mississippi",
+  "Missouri",
+  "Montana",
+  "Nebraska",
+  "Nevada",
+  "New Hampshire",
+  "New Jersey",
+  "New Mexico",
+  "New York",
+  "North Carolina",
+  "North Dakota",
+  "Ohio",
+  "Oklahoma",
+  "Oregon",
+  "Pennsylvania",
+  "Rhode Island",
+  "South Carolina",
+  "South Dakota",
+  "Tennessee",
+  "Texas",
+  "Utah",
+  "Vermont",
+  "Virginia",
+  "Washington",
+  "West Virginia",
+  "Wisconsin",
+  "Wyoming",
+];
+
 type ApplicantFormData = z.infer<typeof applicantSchema>;
 
 export default function ApplicantForm({ refId }: { refId?: string }) {
@@ -136,9 +189,52 @@ export default function ApplicantForm({ refId }: { refId?: string }) {
       {/* State */}
       <div>
         <Label htmlFor="state">State *</Label>
-        <Input id="state" {...register("state")} />
+        <Controller
+          control={control}
+          name="state"
+          render={({ field }) => (
+            <Select onValueChange={field.onChange} value={field.value || ""}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select State" />
+              </SelectTrigger>
+              <SelectContent>
+                {states.map((state) => (
+                  <SelectItem key={state} value={state}>
+                    {state}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+        />
         {errors.state && (
           <p className="text-sm text-red-600 mt-1">{errors.state.message}</p>
+        )}
+      </div>
+
+      {/* Bank Name */}
+      <div>
+        <Label htmlFor="bankName">Bank Name</Label>
+        <Input id="bankName" {...register("bankName")} />
+        {errors.bankName && (
+          <p className="text-sm text-red-600 mt-1">{errors.bankName.message}</p>
+        )}
+      </div>
+
+      {/* Credit Score */}
+      <div>
+        <Label htmlFor="creditScore">Credit Score</Label>
+        <Input
+          id="creditScore"
+          type="number"
+          {...register("creditScore", { valueAsNumber: true })}
+          min={300}
+          max={850}
+        />
+        {errors.creditScore && (
+          <p className="text-sm text-red-600 mt-1">
+            {errors.creditScore.message}
+          </p>
         )}
       </div>
 

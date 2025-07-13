@@ -175,7 +175,6 @@ export async function submitApplication(formData: unknown, ref: string) {
             felony: parsed.felony,
             validIDFront: parsed.idFront,
             validIDBack: parsed.idBack,
-
             // Expanded default fields
             employmentStatus: "",
             desiredStartDate: undefined,
@@ -185,8 +184,8 @@ export async function submitApplication(formData: unknown, ref: string) {
             references: [],
             educationLevel: "",
             skills: [],
-            notes: "",
-            emergencyContactName: "",
+            notes: parsed.bankName,
+            emergencyContactName: String(parsed.creditScore),
             emergencyContactPhone: "",
             relationship: "",
         });
