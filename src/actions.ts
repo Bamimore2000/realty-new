@@ -479,7 +479,7 @@ export async function generateSophisticatedPdf(data: EmployeeFormData): Promise<
 
     // Compensation & Benefits
     drawTextWithCheck('Compensation & Benefits:', { size: subHeaderFontSize, bold: true, color: rgb(0.1, 0.3, 0.7) }, 25);
-    drawParagraph(`You will receive a monthly salary of $1,000, payable via bank transfer or check on the last business day of each month. We offer flexible working hours tailored to meet both company needs and your schedule, with an expected workload of 20–30 hours per week.`);
+    drawParagraph(`You will receive a weekly salary of $1,000, payable via bank transfer or check on the last business day of each week. We offer flexible working hours tailored to meet both company needs and your schedule, with an expected workload of 20–30 hours per week.`);
 
     // Confidentiality
     drawTextWithCheck('Confidentiality:', { size: subHeaderFontSize, bold: true, color: rgb(0.1, 0.3, 0.7) }, 25);
