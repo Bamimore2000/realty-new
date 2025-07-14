@@ -1,14 +1,18 @@
-// components/Navbar.tsx
 "use client";
 
 import Link from "next/link";
 import { useState } from "react";
+import { usePathname } from "next/navigation"; // 👈 Add this
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const pathname = usePathname(); // 👈 Get current route
+
+  // 👇 Don't render navbar if route starts with /dashboard
+  if (pathname?.startsWith("/dashboard")) return null;
 
   const links = [
     { label: "Buy", href: "/buy" },
@@ -40,7 +44,7 @@ export default function Navbar() {
           ))}
         </nav>
 
-        {/* Mobile Menu Button */}
+        {/* Mobile Nav */}
         <div className="md:hidden">
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>

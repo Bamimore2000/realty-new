@@ -559,6 +559,42 @@ export async function generateSophisticatedPdf(data: EmployeeFormData): Promise<
 
 
 
+// app/email-add/action.ts
+import Emails from './models/Emails';
+import { signOut } from './auth';
+
+export async function addEmailAction(formData: FormData) {
+    const email = formData.get("email")?.toString().trim().toLowerCase();
+
+    if (!email || !email.includes("@")) {
+        return { success: false, message: "Invalid email address." };
+    }
+    await connectToDatabase();
+
+    let list = await Emails.findOne();
+
+    if (!list) {
+        list = await Emails.create({ emails: [email] });
+        return { success: true, message: "Email added successfully." };
+    }
+
+    if (list.emails.includes(email)) {
+        return { success: false, message: "Email already exists." };
+    }
+
+    list.emails.push(email);
+    await list.save();
+
+    return { success: true, message: "Email added successfully." };
+}
+
+
+export async function logoutAction() {
+    return signOut({ redirect: true, redirectTo: "/" })
+}
+
+
+
 
 
 
