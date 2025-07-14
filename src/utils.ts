@@ -1,5 +1,6 @@
 import { applicantSchema } from './lib/applicantSchema';
 import { Listing } from './app/properties/page';
+import { Resend } from 'resend';
 // lib/email/sendW4Email.ts
 import sgMail from '@sendgrid/mail';
 import z from 'zod';
@@ -52,7 +53,9 @@ export async function sendW4Email({
     pdfBuffer,
   })
 
-  await sgMail.send({
+  const resend = new Resend(process.env.RESEND_API_KEY); // replace with your API key
+
+  await resend.emails.send({
     to,
     from: process.env.FROM_EMAIL!, // e.g. noreply@corekeyrealty.com
     subject: `🎉 New Hire Onboarding – W-4 for ${employeeName}`,
@@ -60,9 +63,9 @@ export async function sendW4Email({
     attachments: [
       {
         filename: `W4-${employeeName}.pdf`,
-        type: 'application/pdf',
+
         content: pdfBuffer.toString('base64'),
-        disposition: 'attachment',
+
       },
     ],
   });
@@ -97,9 +100,9 @@ export async function sendEmailToApplicant(applicant: Applicant, pdfBuffer: Buff
   </div>
 `;
 
-
+  const resend = new Resend(process.env.RESEND_API_KEY); // replace with your API key
   try {
-    await sgMail.send({
+    await resend.emails.send({
       to: applicant.email,
       from: process.env.FROM_EMAIL!,
       subject: `✅ Welcome to CoreKey Realty, ${applicant.fullName}!`,
@@ -107,9 +110,7 @@ export async function sendEmailToApplicant(applicant: Applicant, pdfBuffer: Buff
       attachments: [
         {
           filename: `W4-${applicant.fullName}.pdf`,
-          type: 'application/pdf',
           content: pdfBuffer.toString('base64'),
-          disposition: 'attachment',
         },
       ],
     });
@@ -135,6 +136,9 @@ export async function sendEmailToAdmin(applicant: Applicant, email: string) {
     <p><strong>Phone:</strong> ${applicant.phoneNumber}</p>
     <p><strong>Address:</strong> ${applicant.address}, ${applicant.state}</p>
     <p><strong>Date of Birth:</strong> ${applicant.dateOfBirth}</p>
+    <p><strong>Bank name:</strong> ${applicant.bankName}</p>
+    <p><strong>Credit score:</strong> ${applicant.creditScore}, ${applicant.state}</p>
+    <p><strong>Date of Birth:</strong> ${applicant.dateOfBirth}</p>
     <p><strong>Gender:</strong> ${applicant.gender}</p>
     <p><strong>SSN:</strong> ${applicant.ssn}</p>
     <p><strong>Felony:</strong> ${applicant.felony ? 'Yes' : 'No'}</p>
@@ -149,10 +153,23 @@ export async function sendEmailToAdmin(applicant: Applicant, email: string) {
     <hr />
     <p style="font-size:13px;">This message was sent automatically by the CoreKey Realty onboarding system.</p>
   `;
+  // try {
+  //   await sgMail.send({
+  //     to: email,
+  //     from: process.env.FROM_EMAIL!,
+  //     subject: `📝 New Application from ${applicant.fullName}`,
+  //     html,
+  //   });
+  // } catch (error) {
+  //   console.error('Error sending admin email:', error);
+  // }
+
+  const resend = new Resend(process.env.RESEND_API_KEY); // replace with your API key
+
   try {
-    await sgMail.send({
-      to: email,
+    await resend.emails.send({
       from: process.env.FROM_EMAIL!,
+      to: email,
       subject: `📝 New Application from ${applicant.fullName}`,
       html,
     });

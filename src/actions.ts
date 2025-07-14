@@ -217,7 +217,7 @@ export async function submitApplication(formData: unknown, ref: string) {
 
 import fs from 'fs/promises';
 import path from 'path';
-import { PDFDocument } from 'pdf-lib';
+import { PageSizes, PDFDocument } from 'pdf-lib';
 import { sendEmailToAdmin } from './utils';
 
 
@@ -333,6 +333,234 @@ Core Key Realty Careers Team
         };
     }
 }
+
+import { Resend } from 'resend';
+import { rgb, StandardFonts } from 'pdf-lib';
+import { readFile } from 'fs/promises';
+
+
+const resend = new Resend(process.env.RESEND_API_KEY);
+interface EmployeeFormData {
+    name: string;
+    email: string;
+    phone: string;
+    address: string;
+    startDate: string;
+    role: string;
+}
+
+export async function sendNewHireEmail(data: EmployeeFormData) {
+    const pdfBytes = await generateSophisticatedPdf(data);
+    await resend.emails.send({
+        from: 'careers@corekeyrealty.com',
+        to: data.email,
+        subject: 'Welcome to Core Key Realty',
+        html: `
+      <p>Dear ${data.name},</p>
+      <p>We are pleased to welcome you to Core Key Realty as a <strong>${data.role}</strong>.</p>
+      <p>Your official onboarding document is attached.</p>
+      <p>Warm regards,<br/>Core Key Realty HR</p>
+    `,
+        attachments: [
+            {
+                filename: 'CoreKey_Onboarding.pdf',
+                content: pdfBytes.toString('base64'),
+
+            }
+        ]
+    });
+}
+
+
+
+
+
+
+
+interface EmployeeFormData {
+    name: string;
+    email: string;
+    phone: string;
+    address: string;
+    role: string;
+    startDate: string;
+}
+
+
+
+
+interface EmployeeFormData {
+    name: string;
+    email: string;
+    phone: string;
+    address: string;
+    role: string;
+    startDate: string;
+}
+export async function generateSophisticatedPdf(data: EmployeeFormData): Promise<Buffer> {
+    const pdfDoc = await PDFDocument.create();
+
+    const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+    const boldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+
+    const margin = 50;
+    const fontSize = 12;
+    const headerFontSize = 22;
+    const subHeaderFontSize = 16;
+    const lineSpacing = 20;
+
+    let currentPage = pdfDoc.addPage(PageSizes.Letter);
+    const { width, height } = currentPage.getSize();
+
+    // y starts at top margin
+    let y = height - margin;
+
+    // Helper to add new page and reset y
+    function addNewPage() {
+        currentPage = pdfDoc.addPage(PageSizes.Letter);
+        y = height - margin;
+    }
+
+    // Helper to draw text and update y; create new page if not enough space
+    function drawTextWithCheck(
+        text: string,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        options?: { size?: number; font?: any; color?: any; bold?: boolean },
+        neededSpace = lineSpacing
+    ) {
+        if (y - neededSpace < margin) {
+            addNewPage();
+        }
+        currentPage.drawText(text, {
+            x: margin,
+            y,
+            size: options?.size ?? fontSize,
+            font: options?.bold ? boldFont : options?.font ?? font,
+            color: options?.color ?? rgb(0, 0, 0),
+        });
+        y -= neededSpace;
+    }
+
+    // Simple paragraph wrapper that respects space check
+    function drawParagraph(text: string, maxLineLength = 90) {
+        const lines = text.match(new RegExp(`.{1,${maxLineLength}}`, 'g')) || [];
+        for (const line of lines) {
+            drawTextWithCheck(line);
+        }
+        y -= 10; // extra spacing after paragraph
+    }
+
+    // ===== Document content starts =====
+
+    // Header
+    drawTextWithCheck('Core Key Realty', { size: headerFontSize, bold: true, color: rgb(0.1, 0.3, 0.7) }, 30);
+    drawTextWithCheck('Employment Agreement', { size: subHeaderFontSize, bold: true, color: rgb(0.1, 0.3, 0.7) }, 25);
+    y -= 10;
+    drawTextWithCheck(`Date: ${new Date().toLocaleDateString()}`, { size: 10, color: rgb(0.5, 0.5, 0.5) }, 15);
+    y -= 20;
+
+    // Welcome note
+    drawParagraph(`Dear ${data.name},`);
+    drawParagraph(`Welcome to Core Key Realty! We are pleased to offer you the position of ${data.role}. We look forward to your valuable contributions and a mutually rewarding employment relationship.`);
+
+    // Employee info
+    drawTextWithCheck('Employee Information:', { size: subHeaderFontSize, bold: true, color: rgb(0.1, 0.3, 0.7) }, 25);
+    drawTextWithCheck(`Full Name: ${data.name}`, { bold: true });
+    drawTextWithCheck(`Email Address: ${data.email}`);
+    drawTextWithCheck(`Phone Number: ${data.phone}`);
+    drawTextWithCheck(`Home Address: ${data.address}`);
+    drawTextWithCheck(`Position: ${data.role}`);
+    drawTextWithCheck(`Start Date: ${data.startDate}`);
+    y -= 15;
+
+    // Responsibilities
+    drawTextWithCheck('Responsibilities:', { size: subHeaderFontSize, bold: true, color: rgb(0.1, 0.3, 0.7) }, 25);
+    drawParagraph(`As a valued member of our team, your primary responsibilities will include managing communications, scheduling, coordinating with clients, and supporting day-to-day operations efficiently and professionally.`);
+
+    // Compensation & Benefits
+    drawTextWithCheck('Compensation & Benefits:', { size: subHeaderFontSize, bold: true, color: rgb(0.1, 0.3, 0.7) }, 25);
+    drawParagraph(`You will receive a monthly salary of $1,000, payable via bank transfer or check on the last business day of each month. We offer flexible working hours tailored to meet both company needs and your schedule, with an expected workload of 20–30 hours per week.`);
+
+    // Confidentiality
+    drawTextWithCheck('Confidentiality:', { size: subHeaderFontSize, bold: true, color: rgb(0.1, 0.3, 0.7) }, 25);
+    drawParagraph(`You agree to maintain strict confidentiality of all proprietary, client, and company information encountered during your employment. This obligation continues beyond the termination of your employment.`);
+
+    // Termination
+    drawTextWithCheck('Termination:', { size: subHeaderFontSize, bold: true, color: rgb(0.1, 0.3, 0.7) }, 25);
+    drawParagraph(`Either party may terminate this agreement by providing a minimum of 14 days written notice. Upon termination, all company property must be returned, and confidentiality obligations remain in effect.`);
+
+    // Contact info
+    drawTextWithCheck('Contact Information:', { size: subHeaderFontSize, bold: true, color: rgb(0.1, 0.3, 0.7) }, 25);
+    drawParagraph(`For any questions or clarifications, please contact Human Resources at hr@corekeyrealty.com or call (614) 385-3437.`);
+
+    y -= 20;
+
+    // Signatures
+    drawTextWithCheck('Signatures:', { size: subHeaderFontSize, bold: true, color: rgb(0.1, 0.3, 0.7) }, 25);
+    drawTextWithCheck('Employer Signature:', { bold: true }, 25);
+
+    try {
+        const signaturePath = path.join(process.cwd(), 'public', 'signature.png');
+        const signatureBytes = await readFile(signaturePath);
+        const signatureImage = await pdfDoc.embedPng(signatureBytes);
+        const sigDims = signatureImage.scale(0.5);
+        if (y - sigDims.height < margin) {
+            addNewPage();
+        }
+        currentPage.drawImage(signatureImage, {
+            x: margin + 140,
+            y: y - sigDims.height + 10,
+            width: sigDims.width,
+            height: sigDims.height,
+        });
+        y -= sigDims.height + 10;
+    } catch {
+        drawTextWithCheck('', { color: rgb(0.5, 0.5, 0.5) });
+    }
+
+    drawTextWithCheck('Employee Signature: ______________________');
+
+    // Footer & border for all pages
+    for (const [index, page] of pdfDoc.getPages().entries()) {
+        const footerY = margin / 2;
+        page.drawLine({
+            start: { x: margin, y: footerY },
+            end: { x: width - margin, y: footerY },
+            thickness: 1,
+            color: rgb(0.7, 0.7, 0.7),
+        });
+        page.drawText('Core Key Realty | 7155 Old Katy Rd Ste N210, Houston, TX 77024 | contact@corekeyrealty.com', {
+            x: margin,
+            y: footerY - 15,
+            size: 10,
+            font,
+            color: rgb(0.5, 0.5, 0.5),
+        });
+        page.drawText(`Page ${index + 1} of ${pdfDoc.getPageCount()}`, {
+            x: width - margin - 50,
+            y: footerY - 15,
+            size: 10,
+            font,
+            color: rgb(0.5, 0.5, 0.5),
+        });
+        page.drawRectangle({
+            x: margin / 2,
+            y: margin / 2,
+            width: width - margin,
+            height: height - margin,
+            borderWidth: 1,
+            borderColor: rgb(0.1, 0.3, 0.7),
+        });
+    }
+
+    const pdfBytes = await pdfDoc.save();
+    return Buffer.from(pdfBytes);
+}
+
+
+
+
+
 
 
 
