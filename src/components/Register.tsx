@@ -298,7 +298,7 @@ export default function ApplicantForm({ refId }: { refId?: string }) {
       </div>
 
       <div>
-        <Label htmlFor="Mother">Mother`&apos;s Maiden Name</Label>
+        <Label htmlFor="Mother">Mother&apos;s Maiden Name</Label>
         <Input id="Mother" {...register("Mother")} />
       </div>
 
