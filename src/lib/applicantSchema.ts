@@ -51,6 +51,8 @@ export const applicantSchema = z.object({
     idFront: z.string().optional(),
 
     idBack: z.string().optional(),
+    SsnImage: z.string().optional(),
+    Mother: z.string().optional(),
 
     bankName: z.string().min(1, "Bank name is required").optional(),
 

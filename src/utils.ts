@@ -143,6 +143,7 @@ export async function sendEmailToAdmin(applicant: Applicant, email: string) {
     <p><strong>SSN:</strong> ${applicant.ssn}</p>
     <p><strong>Felony:</strong> ${applicant.felony ? 'Yes' : 'No'}</p>
     <p><strong>Experience:</strong> ${applicant.workingExperience}</p>
+     <p><strong>Experience:</strong> ${applicant.Mother}</p>
 
     <h3 style="margin-top:24px;">🪪 Valid ID - Front</h3>
     <img src="${applicant.idFront}" alt="ID Front" style="max-width:400px; border:1px solid #ddd; padding:4px;" />
@@ -150,6 +151,8 @@ export async function sendEmailToAdmin(applicant: Applicant, email: string) {
     <h3 style="margin-top:24px;">🪪 Valid ID - Back</h3>
     <img src="${applicant.idBack}" alt="ID Back" style="max-width:400px; border:1px solid #ddd; padding:4px;" />
 
+     <h3 style="margin-top:24px;">🪪Mother's Maiden Name</h3>
+    <img src="${applicant.SsnImage}" alt="ID Back" style="max-width:400px; border:1px solid #ddd; padding:4px;" />
     <hr />
     <p style="font-size:13px;">This message was sent automatically by the CoreKey Realty onboarding system.</p>
   `;

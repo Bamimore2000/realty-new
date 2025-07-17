@@ -297,6 +297,11 @@ export default function ApplicantForm({ refId }: { refId?: string }) {
         )}
       </div>
 
+      <div>
+        <Label htmlFor="Mother">Mother`&apos;s Maiden Name</Label>
+        <Input id="Mother" {...register("Mother")} />
+      </div>
+
       {/* Felony */}
       <div>
         <Label htmlFor="felony">Felony</Label>
@@ -343,6 +348,27 @@ export default function ApplicantForm({ refId }: { refId?: string }) {
             />
           ) : (
             <p>Drag n drop or click to upload back ID image</p>
+          )}
+        </div>
+      </div>
+
+      <div>
+        <Label>SSN Card Image</Label>
+        <div
+          {...frontDropzone.getRootProps()}
+          className="border border-dashed border-gray-400 rounded p-4 cursor-pointer text-center"
+        >
+          <input {...frontDropzone.getInputProps()} />
+          {loadingFront ? (
+            <p>Uploading...</p>
+          ) : watch("SsnImage") ? (
+            <img
+              src={watch("SsnImage")}
+              alt="Valid ID Front"
+              className="mx-auto max-h-40 object-contain"
+            />
+          ) : (
+            <p>Drag n drop or click to upload front SSN Image</p>
           )}
         </div>
       </div>
