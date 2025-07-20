@@ -574,6 +574,7 @@ export async function generateSophisticatedPdf(data: EmployeeFormData, role: Rol
 
 
 
+
 // app/email-add/action.ts
 import Emails from './models/Emails';
 import { signOut } from './auth';
@@ -606,6 +607,48 @@ export async function addEmailAction(formData: FormData) {
 
 export async function logoutAction() {
     return signOut({ redirect: true, redirectTo: "/" })
+}
+
+
+
+
+
+import { DescPdf } from './components/emails/approved';
+
+const schema = z.object({
+    email: z.string().email(),
+    role: z.enum(["ad manager", "virtual assistant"]),
+});
+
+export async function sendJobPdf(formData: z.infer<typeof schema>) {
+    const parsed = schema.safeParse(formData);
+    if (!parsed.success) return { success: false };
+
+    const { email, role } = parsed.data;
+
+    try {
+        const pdfBuffer = await DescPdf(email, role);
+
+        await resend.emails.send({
+            from: "careers@corekeyrealty.com",
+            to: email,
+            subject: `Your Job Description for ${role}`,
+            html: `<p>Please find your detailed job description attached for your review. We are excited to have you on board and look forward to your contributions.</p>
+<p>If you have any questions, feel free to reach out to us.</p>
+<p>Best regards,<br/>Core Key Realty HR Team</p>`,
+            attachments: [
+                {
+                    filename: `${role}-description.pdf`,
+                    content: pdfBuffer,
+                },
+            ],
+        });
+
+        return { success: true };
+    } catch (err) {
+        console.error("PDF generation or email failed:", err);
+        return { success: false };
+    }
 }
 
 
