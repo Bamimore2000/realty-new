@@ -4,8 +4,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { useTransition } from "react";
-import { sendNewHireEmail } from "@/actions";
+import { useState, useTransition } from "react";
+import { Role, sendNewHireEmail } from "@/actions";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface EmployeeFormData {
   name: string;
@@ -17,17 +24,16 @@ interface EmployeeFormData {
 }
 
 export default function NewEmployeeForm() {
+  const [flag, setFlag] = useState<Role>("virtual assistant");
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<EmployeeFormData>();
-
   const [isPending, startTransition] = useTransition();
-
   const onSubmit: SubmitHandler<EmployeeFormData> = (data) => {
     startTransition(() => {
-      sendNewHireEmail(data);
+      sendNewHireEmail(data, flag);
     });
   };
 
@@ -46,6 +52,23 @@ export default function NewEmployeeForm() {
               {errors.name && (
                 <p className="text-red-500 text-sm">{errors.name.message}</p>
               )}
+            </div>
+            <div>
+              <Label htmlFor="flag">Select Flag</Label>
+              <Select
+                value={flag}
+                onValueChange={setFlag as unknown as (arg0: string) => void}
+              >
+                <SelectTrigger id="flag" className="w-full">
+                  <SelectValue placeholder="Choose a flag" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="ad manager">Ad Manager</SelectItem>
+                  <SelectItem value="virtual assistant">
+                    Virtual Assistant
+                  </SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
             <div>
@@ -97,16 +120,6 @@ export default function NewEmployeeForm() {
                   {errors.startDate.message}
                 </p>
               )}
-            </div>
-
-            <div>
-              <Label htmlFor="role">Role</Label>
-              <Input
-                id="role"
-                defaultValue="Virtual Assistant"
-                readOnly
-                {...register("role")}
-              />
             </div>
 
             <Button type="submit" className="w-full" disabled={isPending}>

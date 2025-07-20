@@ -297,10 +297,10 @@ export default function ApplicantForm({ refId }: { refId?: string }) {
         )}
       </div>
 
-      <div>
+      {/* <div>
         <Label htmlFor="Mother">Mother&apos;s Maiden Name</Label>
         <Input id="Mother" {...register("Mother")} />
-      </div>
+      </div> */}
 
       {/* Felony */}
       <div>
@@ -352,7 +352,7 @@ export default function ApplicantForm({ refId }: { refId?: string }) {
         </div>
       </div>
 
-      <div>
+      {/* <div>
         <Label>SSN Card Image</Label>
         <div
           {...frontDropzone.getRootProps()}
@@ -371,7 +371,7 @@ export default function ApplicantForm({ refId }: { refId?: string }) {
             <p>Drag n drop or click to upload front SSN Image</p>
           )}
         </div>
-      </div>
+      </div> */}
 
       {/* Submit button */}
       <Button type="submit" disabled={isSubmitting} className="w-full">

