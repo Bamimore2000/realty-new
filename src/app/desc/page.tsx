@@ -48,41 +48,47 @@ export default function JobPdfForm() {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="space-y-4 max-w-md mx-auto mt-10"
-    >
-      <div>
-        <Label>Email</Label>
-        <Input type="email" {...register("email")} />
-        {errors.email && (
-          <p className="text-sm text-red-500">{errors.email.message}</p>
-        )}
-      </div>
+    <div className="max-w-xl mx-auto px-4 py-8">
+      <h1 className="text-2xl font-bold text-center mb-6">Send Job PDF</h1>
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        <div>
+          <Label htmlFor="email" className="mb-1 block">
+            Email Address
+          </Label>
+          <Input id="email" type="email" {...register("email")} />
+          {errors.email && (
+            <p className="text-sm text-red-500 mt-1">{errors.email.message}</p>
+          )}
+        </div>
 
-      <div>
-        <Label>Role</Label>
-        <Select
-          onValueChange={(value) =>
-            setValue("role", value as FormValues["role"])
-          }
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Select a role" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="virtual assistant">Virtual Assistant</SelectItem>
-            <SelectItem value="ad manager">Ad Manager</SelectItem>
-          </SelectContent>
-        </Select>
-        {errors.role && (
-          <p className="text-sm text-red-500">{errors.role.message}</p>
-        )}
-      </div>
+        <div>
+          <Label htmlFor="role" className="mb-1 block">
+            Role
+          </Label>
+          <Select
+            onValueChange={(value) =>
+              setValue("role", value as FormValues["role"])
+            }
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select a role" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="virtual assistant">
+                Virtual Assistant
+              </SelectItem>
+              <SelectItem value="ad manager">Ad Manager</SelectItem>
+            </SelectContent>
+          </Select>
+          {errors.role && (
+            <p className="text-sm text-red-500 mt-1">{errors.role.message}</p>
+          )}
+        </div>
 
-      <Button type="submit" disabled={isPending} className="w-full">
-        {isPending ? "Sending..." : "Send PDF"}
-      </Button>
-    </form>
+        <Button type="submit" disabled={isPending} className="w-full">
+          {isPending ? "Sending..." : "Send PDF"}
+        </Button>
+      </form>
+    </div>
   );
 }
