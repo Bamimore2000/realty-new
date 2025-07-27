@@ -67,6 +67,7 @@ export default function NewEmployeeForm() {
                   <SelectItem value="virtual assistant">
                     Virtual Assistant
                   </SelectItem>
+                  <SelectItem value="cleaner">Cleaner</SelectItem>
                 </SelectContent>
               </Select>
             </div>

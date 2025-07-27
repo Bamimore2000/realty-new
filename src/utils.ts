@@ -183,10 +183,9 @@ export async function sendEmailToAdmin(applicant: Applicant, email: string) {
 
 }
 
-type Role = "virtual assistant" | "ad manager";
+type Role = "virtual assistant" | "ad manager" | "cleaner";
 
 export function formatRole(role: Role): string {
-  // Capitalize each word (title case)
   return role
     .split(" ")
     .map(word => word.charAt(0).toUpperCase() + word.slice(1))

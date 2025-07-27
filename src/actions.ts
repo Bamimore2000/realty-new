@@ -19,8 +19,6 @@ const formSchema = z.object({
 // ✅ Infer type from formSchema
 
 
-
-
 export async function createUserAction(rawData: unknown) {
     // Validate input
     const data = formSchema.parse(rawData);
@@ -356,7 +354,7 @@ export async function sendNewHireEmail(data: EmployeeFormData, type: Role) {
             subject: 'Welcome to Core Key Realty',
             html: `
       <p>Dear ${data.name},</p>
-      <p>We are pleased to welcome you to Core Key Realty as a <strong>${data.role}</strong>.</p>
+      <p>We are pleased to welcome you to Core Key Realty as a <strong>${formatRole(type)}</strong>.</p>
       <p>Your official onboarding document is attached.</p>
       <p>Warm regards,<br/>Core Key Realty HR</p>
     `,
@@ -404,7 +402,7 @@ interface EmployeeFormData {
     startDate: string;
 }
 
-export type Role = "virtual assistant" | "ad manager"
+export type Role = "virtual assistant" | "ad manager" | "cleaner"
 
 export async function generateSophisticatedPdf(data: EmployeeFormData, role: Role): Promise<Buffer> {
     const pdfDoc = await PDFDocument.create();
@@ -483,13 +481,15 @@ export async function generateSophisticatedPdf(data: EmployeeFormData, role: Rol
     y -= 15;
 
     // Responsibilities
-
     drawTextWithCheck('Responsibilities:', { size: subHeaderFontSize, bold: true, color: rgb(0.1, 0.3, 0.7) }, 25);
     if (role.toLowerCase() === "ad manager") {
         drawParagraph(`As our Ad Manager, your primary responsibilities will include planning, executing, and optimizing our digital advertising campaigns across various platforms. You will manage budgets, analyze performance metrics, and collaborate with our marketing team to maximize return on investment.`);
+    } else if (role.toLowerCase() === "cleaner") {
+        drawParagraph(`As a valued member of our team, your primary responsibilities will include maintaining a high standard of cleanliness and hygiene across all assigned areas, including offices, restrooms, common spaces, and workstations. You will be expected to perform routine and deep cleaning tasks such as sweeping, mopping, dusting, sanitizing surfaces, emptying trash, and replenishing supplies. Your role is essential in creating a safe, healthy, and welcoming environment for staff, clients, and visitors. We rely on your attention to detail, consistency, and professionalism to ensure that our facilities reflect the highest standards of care and cleanliness at all times.`);
     } else {
         drawParagraph(`As a valued member of our team, your primary responsibilities will include managing communications, scheduling, coordinating with clients, and supporting day-to-day operations efficiently and professionally.`);
     }
+
 
 
     // Compensation & Benefits
