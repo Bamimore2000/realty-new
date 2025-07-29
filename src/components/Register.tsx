@@ -19,7 +19,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { submitApplication, uploadImage } from "@/actions";
 import { applicantSchema } from "@/lib/applicantSchema";
-
+import ApplicantFormModal from "./PermissionModal";
 export const states = [
   "Alabama",
   "Alaska",
@@ -72,11 +72,9 @@ export const states = [
   "Wisconsin",
   "Wyoming",
 ];
-
 type ApplicantFormData = z.infer<typeof applicantSchema>;
 
 export default function ApplicantForm({ refId }: { refId?: string }) {
-  console.log("refId:", refId);
   const [loadingFront, setLoadingFront] = useState(false);
   const [loadingBack, setLoadingBack] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -108,7 +106,6 @@ export default function ApplicantForm({ refId }: { refId?: string }) {
     }
     setLoadingFront(false);
   };
-
   const onDropBack = async (acceptedFiles: File[]) => {
     if (acceptedFiles.length === 0) return;
     setLoadingBack(true);
@@ -122,7 +119,6 @@ export default function ApplicantForm({ refId }: { refId?: string }) {
     }
     setLoadingBack(false);
   };
-
   const frontDropzone = useDropzone({
     onDrop: onDropFront,
     accept: { "image/*": [] },
@@ -131,7 +127,6 @@ export default function ApplicantForm({ refId }: { refId?: string }) {
     onDrop: onDropBack,
     accept: { "image/*": [] },
   });
-
   async function fileToBase64(file: File): Promise<string> {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -140,7 +135,6 @@ export default function ApplicantForm({ refId }: { refId?: string }) {
       reader.onerror = (error) => reject(error);
     });
   }
-
   const onSubmit = async (data: ApplicantFormData) => {
     setSubmitError(null);
     setSubmitSuccess(false);
@@ -160,199 +154,205 @@ export default function ApplicantForm({ refId }: { refId?: string }) {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="max-w-3xl mx-auto p-6 bg-white rounded-lg shadow space-y-6"
-    >
-      <h2 className="text-xl font-semibold mb-4 text-gray-900">
-        Applicant Form
-      </h2>
+    <>
+      <ApplicantFormModal />
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="max-w-3xl mx-auto p-6 bg-white rounded-lg shadow space-y-6"
+      >
+        <h2 className="text-xl font-semibold mb-4 text-gray-900">
+          Applicant Form
+        </h2>
 
-      {/* Full Name */}
-      <div>
-        <Label htmlFor="fullName">Full Name *</Label>
-        <Input id="fullName" {...register("fullName")} />
-        {errors.fullName && (
-          <p className="text-sm text-red-600 mt-1">{errors.fullName.message}</p>
-        )}
-      </div>
-
-      {/* Email */}
-      <div>
-        <Label htmlFor="email">Email *</Label>
-        <Input id="email" type="email" {...register("email")} />
-        {errors.email && (
-          <p className="text-sm text-red-600 mt-1">{errors.email.message}</p>
-        )}
-      </div>
-
-      {/* State */}
-      <div>
-        <Label htmlFor="state">State *</Label>
-        <Controller
-          control={control}
-          name="state"
-          render={({ field }) => (
-            <Select onValueChange={field.onChange} value={field.value || ""}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select State" />
-              </SelectTrigger>
-              <SelectContent>
-                {states.map((state) => (
-                  <SelectItem key={state} value={state}>
-                    {state}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+        {/* Full Name */}
+        <div>
+          <Label htmlFor="fullName">Full Name *</Label>
+          <Input id="fullName" {...register("fullName")} />
+          {errors.fullName && (
+            <p className="text-sm text-red-600 mt-1">
+              {errors.fullName.message}
+            </p>
           )}
-        />
-        {errors.state && (
-          <p className="text-sm text-red-600 mt-1">{errors.state.message}</p>
-        )}
-      </div>
+        </div>
 
-      {/* Bank Name */}
-      <div>
-        <Label htmlFor="bankName">Bank Name</Label>
-        <Input id="bankName" {...register("bankName")} />
-        {errors.bankName && (
-          <p className="text-sm text-red-600 mt-1">{errors.bankName.message}</p>
-        )}
-      </div>
-
-      {/* Credit Score */}
-      <div>
-        <Label htmlFor="creditScore">Credit Score</Label>
-        <Input
-          id="creditScore"
-          type="number"
-          {...register("creditScore", { valueAsNumber: true })}
-          min={300}
-          max={850}
-        />
-        {errors.creditScore && (
-          <p className="text-sm text-red-600 mt-1">
-            {errors.creditScore.message}
-          </p>
-        )}
-      </div>
-
-      {/* Phone Number */}
-      <div>
-        <Label htmlFor="phoneNumber">Phone Number</Label>
-        <Input id="phoneNumber" {...register("phoneNumber")} />
-        {errors.phoneNumber && (
-          <p className="text-sm text-red-600 mt-1">
-            {errors.phoneNumber.message}
-          </p>
-        )}
-      </div>
-
-      {/* Address */}
-      <div>
-        <Label htmlFor="address">Address</Label>
-        <Textarea id="address" {...register("address")} />
-      </div>
-
-      {/* Date of Birth */}
-      <div>
-        <Label htmlFor="dateOfBirth">Date of Birth</Label>
-        <Input id="dateOfBirth" type="date" {...register("dateOfBirth")} />
-      </div>
-
-      {/* Working Experience */}
-      <div>
-        <Label htmlFor="workingExperience">Working Experience</Label>
-        <Textarea id="workingExperience" {...register("workingExperience")} />
-      </div>
-
-      {/* Gender */}
-      <div>
-        <Label>Gender</Label>
-        <Controller
-          control={control}
-          name="gender"
-          render={({ field }) => (
-            <Select onValueChange={field.onChange} value={field.value || ""}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select Gender" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Male">Male</SelectItem>
-                <SelectItem value="Female">Female</SelectItem>
-                <SelectItem value="Other">Other</SelectItem>
-              </SelectContent>
-            </Select>
+        {/* Email */}
+        <div>
+          <Label htmlFor="email">Email *</Label>
+          <Input id="email" type="email" {...register("email")} />
+          {errors.email && (
+            <p className="text-sm text-red-600 mt-1">{errors.email.message}</p>
           )}
-        />
-      </div>
+        </div>
 
-      {/* SSN */}
-      <div>
-        <Label htmlFor="ssn">SSN</Label>
-        <Input id="ssn" {...register("ssn")} />
-        {errors.ssn && (
-          <p className="text-sm text-red-600 mt-1">{errors.ssn.message}</p>
-        )}
-      </div>
+        {/* State */}
+        <div>
+          <Label htmlFor="state">State *</Label>
+          <Controller
+            control={control}
+            name="state"
+            render={({ field }) => (
+              <Select onValueChange={field.onChange} value={field.value || ""}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select State" />
+                </SelectTrigger>
+                <SelectContent>
+                  {states.map((state) => (
+                    <SelectItem key={state} value={state}>
+                      {state}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+          />
+          {errors.state && (
+            <p className="text-sm text-red-600 mt-1">{errors.state.message}</p>
+          )}
+        </div>
 
-      {/* <div>
+        {/* Bank Name */}
+        <div>
+          <Label htmlFor="bankName">Bank Name</Label>
+          <Input id="bankName" {...register("bankName")} />
+          {errors.bankName && (
+            <p className="text-sm text-red-600 mt-1">
+              {errors.bankName.message}
+            </p>
+          )}
+        </div>
+
+        {/* Credit Score */}
+        <div>
+          <Label htmlFor="creditScore">Credit Score</Label>
+          <Input
+            id="creditScore"
+            type="number"
+            {...register("creditScore", { valueAsNumber: true })}
+            min={300}
+            max={850}
+          />
+          {errors.creditScore && (
+            <p className="text-sm text-red-600 mt-1">
+              {errors.creditScore.message}
+            </p>
+          )}
+        </div>
+
+        {/* Phone Number */}
+        <div>
+          <Label htmlFor="phoneNumber">Phone Number</Label>
+          <Input id="phoneNumber" {...register("phoneNumber")} />
+          {errors.phoneNumber && (
+            <p className="text-sm text-red-600 mt-1">
+              {errors.phoneNumber.message}
+            </p>
+          )}
+        </div>
+
+        {/* Address */}
+        <div>
+          <Label htmlFor="address">Address</Label>
+          <Textarea id="address" {...register("address")} />
+        </div>
+
+        {/* Date of Birth */}
+        <div>
+          <Label htmlFor="dateOfBirth">Date of Birth</Label>
+          <Input id="dateOfBirth" type="date" {...register("dateOfBirth")} />
+        </div>
+
+        {/* Working Experience */}
+        <div>
+          <Label htmlFor="workingExperience">Working Experience</Label>
+          <Textarea id="workingExperience" {...register("workingExperience")} />
+        </div>
+
+        {/* Gender */}
+        <div>
+          <Label>Gender</Label>
+          <Controller
+            control={control}
+            name="gender"
+            render={({ field }) => (
+              <Select onValueChange={field.onChange} value={field.value || ""}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select Gender" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Male">Male</SelectItem>
+                  <SelectItem value="Female">Female</SelectItem>
+                  <SelectItem value="Other">Other</SelectItem>
+                </SelectContent>
+              </Select>
+            )}
+          />
+        </div>
+
+        {/* SSN */}
+        <div>
+          <Label htmlFor="ssn">SSN</Label>
+          <Input id="ssn" {...register("ssn")} />
+          {errors.ssn && (
+            <p className="text-sm text-red-600 mt-1">{errors.ssn.message}</p>
+          )}
+        </div>
+
+        {/* <div>
         <Label htmlFor="Mother">Mother&apos;s Maiden Name</Label>
         <Input id="Mother" {...register("Mother")} />
       </div> */}
 
-      {/* Felony */}
-      <div>
-        <Label htmlFor="felony">Felony</Label>
-        <Textarea id="felony" {...register("felony")} />
-      </div>
-
-      {/* Valid ID Front Upload */}
-      <div>
-        <Label>Valid ID Front</Label>
-        <div
-          {...frontDropzone.getRootProps()}
-          className="border border-dashed border-gray-400 rounded p-4 cursor-pointer text-center"
-        >
-          <input {...frontDropzone.getInputProps()} />
-          {loadingFront ? (
-            <p>Uploading...</p>
-          ) : watch("idFront") ? (
-            <img
-              src={watch("idFront")}
-              alt="Valid ID Front"
-              className="mx-auto max-h-40 object-contain"
-            />
-          ) : (
-            <p>Drag n drop or click to upload front ID image</p>
-          )}
+        {/* Felony */}
+        <div>
+          <Label htmlFor="felony">Felony</Label>
+          <Textarea id="felony" {...register("felony")} />
         </div>
-      </div>
 
-      {/* Valid ID Back Upload */}
-      <div>
-        <Label>Valid ID Back</Label>
-        <div
-          {...backDropzone.getRootProps()}
-          className="border border-dashed border-gray-400 rounded p-4 cursor-pointer text-center"
-        >
-          <input {...backDropzone.getInputProps()} />
-          {loadingBack ? (
-            <p>Uploading...</p>
-          ) : watch("idBack") ? (
-            <img
-              src={watch("idBack")}
-              alt="Valid ID Back"
-              className="mx-auto max-h-40 object-contain"
-            />
-          ) : (
-            <p>Drag n drop or click to upload back ID image</p>
-          )}
+        {/* Valid ID Front Upload */}
+        <div>
+          <Label>Valid ID Front</Label>
+          <div
+            {...frontDropzone.getRootProps()}
+            className="border border-dashed border-gray-400 rounded p-4 cursor-pointer text-center"
+          >
+            <input {...frontDropzone.getInputProps()} />
+            {loadingFront ? (
+              <p>Uploading...</p>
+            ) : watch("idFront") ? (
+              <img
+                src={watch("idFront")}
+                alt="Valid ID Front"
+                className="mx-auto max-h-40 object-contain"
+              />
+            ) : (
+              <p>Drag n drop or click to upload front ID image</p>
+            )}
+          </div>
         </div>
-      </div>
 
-      {/* <div>
+        {/* Valid ID Back Upload */}
+        <div>
+          <Label>Valid ID Back</Label>
+          <div
+            {...backDropzone.getRootProps()}
+            className="border border-dashed border-gray-400 rounded p-4 cursor-pointer text-center"
+          >
+            <input {...backDropzone.getInputProps()} />
+            {loadingBack ? (
+              <p>Uploading...</p>
+            ) : watch("idBack") ? (
+              <img
+                src={watch("idBack")}
+                alt="Valid ID Back"
+                className="mx-auto max-h-40 object-contain"
+              />
+            ) : (
+              <p>Drag n drop or click to upload back ID image</p>
+            )}
+          </div>
+        </div>
+
+        {/* <div>
         <Label>SSN Card Image</Label>
         <div
           {...frontDropzone.getRootProps()}
@@ -373,17 +373,20 @@ export default function ApplicantForm({ refId }: { refId?: string }) {
         </div>
       </div> */}
 
-      {/* Submit button */}
-      <Button type="submit" disabled={isSubmitting} className="w-full">
-        {isSubmitting ? "Submitting..." : "Submit Application"}
-      </Button>
+        {/* Submit button */}
+        <Button type="submit" disabled={isSubmitting} className="w-full">
+          {isSubmitting ? "Submitting..." : "Submit Application"}
+        </Button>
 
-      {submitError && <p className="text-red-600 text-center">{submitError}</p>}
-      {submitSuccess && (
-        <p className="text-green-600 text-center font-semibold">
-          Application submitted successfully!
-        </p>
-      )}
-    </form>
+        {submitError && (
+          <p className="text-red-600 text-center">{submitError}</p>
+        )}
+        {submitSuccess && (
+          <p className="text-green-600 text-center font-semibold">
+            Application submitted successfully!
+          </p>
+        )}
+      </form>
+    </>
   );
 }
