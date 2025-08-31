@@ -1,15 +1,16 @@
 import ErrorPage from "@/components/Errorpage";
 import PropertiesPageClient from "@/components/PropertyClient";
 export interface Listing {
-  title: string;
+  address: string;
+  propertyType: string;
   price: string;
-  bedBath: string;
-  type: string;
+  beds: string;
+  imgs: string[];
   link: string;
-  img: string;
   phone: string;
+  emailButtonText: string;
+  datePosted: string;
 }
-
 type Params = Promise<{ slug: string }>;
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 
@@ -34,11 +35,8 @@ export default async function PropertiesPage(props: {
 
   try {
     const res = await fetch(
-      `${
-        process.env.BACKEND_API_URL ||
-        "https://backendrealty-production.up.railway.app"
-      }/search?location=${encodeURIComponent(location as string)}`,
-      { cache: "no-store" }
+      `http://16.16.192.166:4001/search?location=${encodeURIComponent(location as string)}`,
+      { next: { revalidate: 60 } }
     );
 
     if (!res.ok) {

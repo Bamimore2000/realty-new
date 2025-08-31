@@ -73,7 +73,7 @@ export async function getRegionFromIp(ip: string): Promise<string> {
         const res = await fetch(`https://ipinfo.io/${ip}/json?token=79b5916c8371af`);
 
         if (!res.ok) throw new Error('Failed to fetch geo info');
-        console.log("haaaaaaaaaaa", res, ip)
+
         const data = await res.json();
         console.log("data", data);
         const region = data.region;

@@ -1,23 +1,9 @@
 import { applicantSchema } from './lib/applicantSchema';
-import { Listing } from './app/properties/page';
 import { Resend } from 'resend';
 // lib/email/sendW4Email.ts
 import sgMail from '@sendgrid/mail';
 import z from 'zod';
-import { Property } from "@/types";
 sgMail.setApiKey(process.env.SENDGRID_API_KEY!);
-
-export function transformListings(listings: Listing[]): Property[] {
-  console.log({ listings })
-  return listings.map((listing, index) => ({
-    id: `listing-${index}`, // or generate a UUID if needed
-    title: listing.title,
-    address: `${listing.type} • ${listing.bedBath} • ${listing.phone}`,
-    price: Number(listing.price.replace(/[^\d]/g, "")), // strip symbols, commas
-    images: [listing.img], // assuming one image, wrap in array
-    isLiked: false,
-  }));
-}
 
 
 

@@ -1,8 +1,6 @@
 import { getRegionFromIp } from "@/actions"; // adjust path
 import Carousel from "./Carousel";
 import { Listing } from "@/app/properties/page";
-import { Property } from "@/types";
-import { transformListings } from "@/utils";
 
 export default async function Listings() {
   // 1. Fetch IP from ipify (this will be server IP in SSR)
@@ -18,15 +16,19 @@ export default async function Listings() {
 
   // 2. Call your server action to get region from IP
   const region = await getRegionFromIp(ip);
-  console.log("Region from IP:", region);
 
-  // 3. Use region to fetch listings
+  // // 3. Use region to fetch listings
+  // const res = await fetch(
+  //   `https://backendrealty-production.up.railway.app/search?location=${encodeURIComponent(
+  //     region
+  //   )}`,
+  //   { next: { revalidate: 60 } }
   const res = await fetch(
-    `https://backendrealty-production.up.railway.app/search?location=${encodeURIComponent(
-      region
-    )}`,
+    `http://16.16.192.166:4001/search?location=${encodeURIComponent(region)}`,
     { next: { revalidate: 60 } }
   );
+
+  console.log({ res });
 
   if (!res.ok) {
     return <div>Failed to load listings</div>;
@@ -35,9 +37,9 @@ export default async function Listings() {
   const listings: Listing[] = await res.json();
   console.log({ listings });
 
-  const properties: Property[] = transformListings(
-    listings.filter((listing) => listing.price)
-  );
+  // const properties: Property[] = transformListings(
+  //   listings.filter((listing) => listing.price)
+  // );
 
   return (
     <main className="max-w-7xl mx-auto px-4 py-8">
@@ -52,7 +54,7 @@ export default async function Listings() {
         </p>
       </div>
 
-      <Carousel properties={properties.slice(0, 11)} />
+      <Carousel properties={listings} />
     </main>
   );
 }

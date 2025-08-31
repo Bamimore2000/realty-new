@@ -1,8 +1,8 @@
 "use client";
 
-import { Property } from "@/types";
+import { Listing } from "@/types";
 import { Button } from "@/components/ui/button";
-import { Heart, HeartOff, BedDouble, Bath, MapPin } from "lucide-react";
+import { Heart, HeartOff, BedDouble, Bath, Phone, Mail } from "lucide-react";
 import { useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Card, CardContent } from "@/components/ui/card";
@@ -13,10 +13,11 @@ import "swiper/css/pagination";
 import Image from "next/image";
 
 interface Props {
-  property: Property & { views?: number; maxViews?: number };
+  property: Listing & { isLiked?: boolean; views?: number; maxViews?: number };
 }
 
 export default function PropertyCard({ property }: Props) {
+  console.log("property receved", { property });
   const [liked, setLiked] = useState(property.isLiked || false);
 
   return (
@@ -34,12 +35,12 @@ export default function PropertyCard({ property }: Props) {
             nextSlideMessage: "Next slide",
           }}
         >
-          {property.images.map((img, i) => (
+          {property.imgs.map((img, i) => (
             <SwiperSlide key={i}>
               <div className="relative w-full h-52 overflow-hidden">
                 <Image
                   src={img}
-                  alt={`Property image ${i + 1}`}
+                  alt={`${property.address} image ${i + 1}`}
                   fill
                   className="object-cover transition-transform duration-700 group-hover:scale-110"
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -64,45 +65,64 @@ export default function PropertyCard({ property }: Props) {
             <HeartOff className="w-6 h-6 text-gray-400 hover:text-gray-600 transition-colors duration-300" />
           )}
         </Button>
+
+        {/* Date Posted Badge */}
+        <div className="absolute top-4 left-4 bg-black/70 text-white text-xs px-2 py-1 rounded-full">
+          {new Date(property.datePosted).toLocaleDateString()}
+        </div>
       </div>
 
       <CardContent className="p-5 space-y-3">
-        {/* Title and Status */}
+        {/* Address and Property Type */}
         <div className="flex items-center justify-between">
-          <h3 className="text-xl font-bold text-gray-800 truncate">
-            {property.title}
+          <h3
+            className="text-lg font-bold text-gray-800 truncate"
+            title={property.address}
+          >
+            {property.address}
           </h3>
-          <span className="text-sm font-semibold bg-gray-300 text-gray-700 text-center px-3 py-1 rounded-full uppercase tracking-wide select-none">
+          <span className="text-xs font-semibold bg-gray-300 text-gray-700 text-center px-3 py-1 rounded-full uppercase tracking-wide select-none">
             {"For Rent"}
           </span>
-        </div>
-
-        {/* Address */}
-        <div className="flex items-center text-sm text-gray-500 gap-2">
-          <MapPin className="w-5 h-5 text-gray-500" />
-          <span className="truncate">{property.address}</span>
         </div>
 
         {/* Property Details */}
         <div className="flex items-center gap-6 text-sm text-gray-600">
           <div className="flex items-center gap-2">
             <BedDouble className="w-5 h-5 text-gray-500" />
-            <span>{extractBeds(property.address)}</span>
+            <span>{property.beds}</span>
           </div>
           <div className="flex items-center gap-2">
             <Bath className="w-5 h-5 text-gray-500" />
-            <span>{extractBaths(property.address)}</span>
+            <span>-</span> {/* No bath info in your API response */}
           </div>
+        </div>
+
+        {/* Contact Info */}
+        <div className="flex items-center gap-4 text-sm text-gray-600">
+          {property.phone && (
+            <div className="flex items-center gap-2">
+              <Phone className="w-4 h-4 text-gray-500" />
+              <span className="truncate">{property.phone}</span>
+            </div>
+          )}
+          {property.emailButtonText && (
+            <div className="flex items-center gap-2">
+              <Mail className="w-4 h-4 text-gray-500" />
+              <span className="text-blue-600 text-xs">Email Available</span>
+            </div>
+          )}
         </div>
 
         {/* Price and CTA */}
         <div className="flex items-center justify-between mt-4">
           <p className="text-2xl font-extrabold text-gray-900">
-            ${property.price.toLocaleString()}
+            {property.price}
           </p>
           <Button
             variant="outline"
             className="border-gray-500 text-gray-700 hover:bg-gray-700 hover:text-white transition-colors duration-300"
+            onClick={() => window.open(property.link, "_blank")}
           >
             View Details
           </Button>
@@ -110,15 +130,4 @@ export default function PropertyCard({ property }: Props) {
       </CardContent>
     </Card>
   );
-}
-
-// Helper functions
-function extractBeds(address: string) {
-  const match = address.match(/(\d+)\s*bed/i);
-  return match ? `${match[1]} Beds` : "-";
-}
-
-function extractBaths(address: string) {
-  const match = address.match(/(\d+)\s*bath/i);
-  return match ? `${match[1]} Baths` : "-";
 }

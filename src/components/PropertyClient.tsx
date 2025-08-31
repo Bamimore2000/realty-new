@@ -3,6 +3,7 @@ import { Listing } from "@/app/properties/page";
 import { useState } from "react";
 import Nav from "./Nav";
 import Link from "next/link";
+
 // Client wrapper component to use useState
 export default function PropertiesPageClient({
   listings,
@@ -43,7 +44,20 @@ export default function PropertiesPageClient({
 
       <ul className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {[...listings.filter((listing) => listing.price)].map(
-          ({ title, price, bedBath, type, link, img, phone }, i) => (
+          (
+            {
+              address,
+              price,
+              beds,
+              propertyType,
+              link,
+              imgs,
+              phone,
+              emailButtonText,
+              datePosted,
+            },
+            i
+          ) => (
             <li
               key={i}
               className="border rounded-lg overflow-hidden shadow hover:shadow-lg transition"
@@ -55,17 +69,25 @@ export default function PropertiesPageClient({
                 className="block"
               >
                 <img
-                  src={img}
-                  alt={title}
+                  src={imgs[0]} // Use first image from array
+                  alt={address}
                   className="w-full h-48 object-cover"
                 />
                 <div className="p-4">
-                  <h2 className="font-semibold text-lg">{title}</h2>
+                  <h2 className="font-semibold text-lg">{address}</h2>
                   <p>
-                    {price} — {bedBath}
+                    {price} — {beds}
                   </p>
-                  <p className="italic text-sm">{type}</p>
-                  {phone && <p className="mt-2">Phone: {phone}</p>}
+                  <p className="italic text-sm">{propertyType}</p>
+                  {phone && <p className="mt-2">{phone}</p>}
+                  {emailButtonText && (
+                    <p className="mt-1 text-sm text-blue-600">
+                      {emailButtonText}
+                    </p>
+                  )}
+                  <p className="mt-1 text-xs text-gray-500">
+                    Posted: {new Date(datePosted).toLocaleDateString()}
+                  </p>
                 </div>
               </a>
             </li>

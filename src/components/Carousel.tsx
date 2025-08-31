@@ -9,10 +9,10 @@ import "swiper/css/pagination";
 
 import PropertyCard from "./PropertyCard";
 
-import { Property } from "@/types";
+import { Listing } from "@/types";
 
 interface CarouselProps {
-  properties: Property[];
+  properties: Listing[];
 }
 
 export default function Carousel({ properties }: CarouselProps) {
