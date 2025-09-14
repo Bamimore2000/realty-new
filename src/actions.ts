@@ -1,7 +1,8 @@
 'use server';
-import sgMail from '@sendgrid/mail';
-
-
+// import sgMail from '@sendgrid/mail';
+import { Resend } from 'resend';
+import { rgb, StandardFonts } from 'pdf-lib';
+import { readFile } from 'fs/promises';
 import User from '@/models/User';
 import { nanoid } from 'nanoid';
 import { connectToDatabase } from '@/lib/mongoose';
@@ -9,6 +10,21 @@ import { z } from 'zod';
 import { IToken, Token } from './models/Token';
 import { revalidatePath } from 'next/cache';
 import { formatRole, sendEmailToApplicant } from './utils';
+import { uploadToCloudinary } from "@/lib/cloudinary";
+import Application from './models/Application';
+import { applicantSchema } from './lib/applicantSchema';
+import fs from 'fs/promises';
+import path from 'path';
+import { PageSizes, PDFDocument } from 'pdf-lib';
+import { sendEmailToAdmin } from './utils';
+
+import { DescPdf } from './components/emails/approved';
+
+
+// app/email-add/action.ts
+import Emails from './models/Emails';
+import { signOut } from './auth';
+
 
 // ✅ Declare formSchema
 const formSchema = z.object({
@@ -115,9 +131,7 @@ export async function getAllTokens() {
     }));
 }
 
-import { uploadToCloudinary } from "@/lib/cloudinary";
-import Application from './models/Application';
-import { applicantSchema } from './lib/applicantSchema';
+
 
 export async function uploadImage(fileBase64: string) {
     if (!fileBase64) throw new Error("No file provided");
@@ -210,10 +224,7 @@ export async function submitApplication(formData: unknown, ref: string) {
 
 // app/actions/fillW4EmployerFields.ts
 
-import fs from 'fs/promises';
-import path from 'path';
-import { PageSizes, PDFDocument } from 'pdf-lib';
-import { sendEmailToAdmin } from './utils';
+
 
 
 
@@ -282,19 +293,11 @@ export async function sendBulkEmails({
         return { success: false, message: "Phone number is required." };
     }
 
+    const resend = new Resend(process.env.RESEND_API_KEY!);
     const fromEmail = process.env.CAREER_EMAIL || "careers@corekeyrealty.com";
 
-    const messages = recipients.map((email) => ({
-        to: email,
-        from: fromEmail,
-        trackingSettings: {
-            clickTracking: {
-                enable: false,
-                enableText: false,
-            },
-        },
-        subject: "Virtual Assistant Role at Core Key Realty",
-        text: `
+    const subject = "Virtual Assistant Role at Core Key Realty";
+    const text = `
 Greetings,
 
 We found your profile on JobGet and would like to offer you a Virtual Assistant position at Core Key Realty.
@@ -311,16 +314,22 @@ Thank you for your time.
 
 Best regards,  
 Core Key Realty Careers Team
-    `.trim(),
-    }));
-
-    sgMail.setApiKey(process.env.SENDGRID_API_KEY!);
+  `.trim();
 
     try {
-        await Promise.all(messages.map((msg) => sgMail.send(msg)));
-        return { success: true };
-    } catch (error: unknown) {
+        await Promise.all(
+            recipients.map((email) =>
+                resend.emails.send({
+                    from: fromEmail,
+                    to: email,
+                    subject,
+                    text,
+                })
+            )
+        );
 
+        return { success: true };
+    } catch (error) {
         console.error("Error sending bulk emails:", error);
         return {
             success: false,
@@ -328,11 +337,6 @@ Core Key Realty Careers Team
         };
     }
 }
-
-import { Resend } from 'resend';
-import { rgb, StandardFonts } from 'pdf-lib';
-import { readFile } from 'fs/promises';
-
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 interface EmployeeFormData {
@@ -375,12 +379,6 @@ export async function sendNewHireEmail(data: EmployeeFormData, type: Role) {
 
 }
 
-
-
-
-
-
-
 interface EmployeeFormData {
     name: string;
     email: string;
@@ -389,9 +387,6 @@ interface EmployeeFormData {
     role: string;
     startDate: string;
 }
-
-
-
 
 interface EmployeeFormData {
     name: string;
@@ -574,11 +569,6 @@ export async function generateSophisticatedPdf(data: EmployeeFormData, role: Rol
 
 
 
-
-// app/email-add/action.ts
-import Emails from './models/Emails';
-import { signOut } from './auth';
-
 export async function addEmailAction(formData: FormData) {
     const email = formData.get("email")?.toString().trim().toLowerCase();
 
@@ -613,7 +603,6 @@ export async function logoutAction() {
 
 
 
-import { DescPdf } from './components/emails/approved';
 
 const schema = z.object({
     email: z.string().email(),
