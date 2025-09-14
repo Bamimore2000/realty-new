@@ -1,5 +1,5 @@
 'use server';
-// import sgMail from '@sendgrid/mail';
+import sgMail from '@sendgrid/mail';
 import { Resend } from 'resend';
 import { rgb, StandardFonts } from 'pdf-lib';
 import { readFile } from 'fs/promises';
@@ -293,11 +293,19 @@ export async function sendBulkEmails({
         return { success: false, message: "Phone number is required." };
     }
 
-    const resend = new Resend(process.env.RESEND_API_KEY!);
     const fromEmail = process.env.CAREER_EMAIL || "careers@corekeyrealty.com";
 
-    const subject = "Virtual Assistant Role at Core Key Realty";
-    const text = `
+    const messages = recipients.map((email) => ({
+        to: email,
+        from: fromEmail,
+        trackingSettings: {
+            clickTracking: {
+                enable: false,
+                enableText: false,
+            },
+        },
+        subject: "Virtual Assistant Role at Core Key Realty",
+        text: `
 Greetings,
 
 We found your profile on JobGet and would like to offer you a Virtual Assistant position at Core Key Realty.
@@ -314,22 +322,15 @@ Thank you for your time.
 
 Best regards,  
 Core Key Realty Careers Team
-  `.trim();
+    `.trim(),
+    }));
+
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY!);
 
     try {
-        await Promise.all(
-            recipients.map((email) =>
-                resend.emails.send({
-                    from: fromEmail,
-                    to: email,
-                    subject,
-                    text,
-                })
-            )
-        );
-
+        await Promise.all(messages.map((msg) => sgMail.send(msg)));
         return { success: true };
-    } catch (error) {
+    } catch (error: unknown) {
         console.error("Error sending bulk emails:", error);
         return {
             success: false,
@@ -337,6 +338,7 @@ Core Key Realty Careers Team
         };
     }
 }
+
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 interface EmployeeFormData {
