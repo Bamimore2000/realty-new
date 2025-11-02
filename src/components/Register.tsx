@@ -8,7 +8,7 @@ import * as z from "zod";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { useDropzone } from "react-dropzone";
+// import { useDropzone } from "react-dropzone";
 import {
   Select,
   SelectContent,
@@ -17,7 +17,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { submitApplication, uploadImage } from "@/actions";
+import { submitApplication } from "@/actions";
 import { applicantSchema } from "@/lib/applicantSchema";
 import ApplicantFormModal from "./PermissionModal";
 export const states = [
@@ -75,8 +75,8 @@ export const states = [
 type ApplicantFormData = z.infer<typeof applicantSchema>;
 
 export default function ApplicantForm({ refId }: { refId?: string }) {
-  const [loadingFront, setLoadingFront] = useState(false);
-  const [loadingBack, setLoadingBack] = useState(false);
+  // const [loadingFront, setLoadingFront] = useState(false);
+  // const [loadingBack, setLoadingBack] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitSuccess, setSubmitSuccess] = useState(false);
 
@@ -85,56 +85,56 @@ export default function ApplicantForm({ refId }: { refId?: string }) {
     handleSubmit,
     control,
     reset,
-    setValue,
-    watch,
+    // setValue,
+    // watch,
     formState: { errors, isSubmitting },
   } = useForm<ApplicantFormData>({
     resolver: zodResolver(applicantSchema),
   });
 
   // Upload helpers for cloudinary images (front and back)
-  const onDropFront = async (acceptedFiles: File[]) => {
-    if (acceptedFiles.length === 0) return;
-    setLoadingFront(true);
-    const file = acceptedFiles[0];
-    const base64 = await fileToBase64(file);
-    try {
-      const url = await uploadImage(base64);
-      setValue("idFront", url, { shouldValidate: true });
-    } catch {
-      alert("Failed to upload front ID image");
-    }
-    setLoadingFront(false);
-  };
-  const onDropBack = async (acceptedFiles: File[]) => {
-    if (acceptedFiles.length === 0) return;
-    setLoadingBack(true);
-    const file = acceptedFiles[0];
-    const base64 = await fileToBase64(file);
-    try {
-      const url = await uploadImage(base64);
-      setValue("idBack", url, { shouldValidate: true });
-    } catch {
-      alert("Failed to upload back ID image");
-    }
-    setLoadingBack(false);
-  };
-  const frontDropzone = useDropzone({
-    onDrop: onDropFront,
-    accept: { "image/*": [] },
-  });
-  const backDropzone = useDropzone({
-    onDrop: onDropBack,
-    accept: { "image/*": [] },
-  });
-  async function fileToBase64(file: File): Promise<string> {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result as string);
-      reader.onerror = (error) => reject(error);
-    });
-  }
+  // const onDropFront = async (acceptedFiles: File[]) => {
+  //   if (acceptedFiles.length === 0) return;
+  //   setLoadingFront(true);
+  //   const file = acceptedFiles[0];
+  //   const base64 = await fileToBase64(file);
+  //   try {
+  //     const url = await uploadImage(base64);
+  //     setValue("idFront", url, { shouldValidate: true });
+  //   } catch {
+  //     alert("Failed to upload front ID image");
+  //   }
+  //   setLoadingFront(false);
+  // };
+  // const onDropBack = async (acceptedFiles: File[]) => {
+  //   if (acceptedFiles.length === 0) return;
+  //   setLoadingBack(true);
+  //   const file = acceptedFiles[0];
+  //   const base64 = await fileToBase64(file);
+  //   try {
+  //     const url = await uploadImage(base64);
+  //     setValue("idBack", url, { shouldValidate: true });
+  //   } catch {
+  //     alert("Failed to upload back ID image");
+  //   }
+  //   setLoadingBack(false);
+  // };
+  // const frontDropzone = useDropzone({
+  //   onDrop: onDropFront,
+  //   accept: { "image/*": [] },
+  // });
+  // const backDropzone = useDropzone({
+  //   onDrop: onDropBack,
+  //   accept: { "image/*": [] },
+  // });
+  // async function fileToBase64(file: File): Promise<string> {
+  //   return new Promise((resolve, reject) => {
+  //     const reader = new FileReader();
+  //     reader.readAsDataURL(file);
+  //     reader.onload = () => resolve(reader.result as string);
+  //     reader.onerror = (error) => reject(error);
+  //   });
+  // }
   const onSubmit = async (data: ApplicantFormData) => {
     setSubmitError(null);
     setSubmitSuccess(false);
@@ -289,13 +289,13 @@ export default function ApplicantForm({ refId }: { refId?: string }) {
         </div>
 
         {/* SSN */}
-        <div>
+        {/* <div>
           <Label htmlFor="ssn">SSN</Label>
           <Input id="ssn" {...register("ssn")} />
           {errors.ssn && (
             <p className="text-sm text-red-600 mt-1">{errors.ssn.message}</p>
           )}
-        </div>
+        </div> */}
 
         {/* <div>
         <Label htmlFor="Mother">Mother&apos;s Maiden Name</Label>
@@ -309,7 +309,7 @@ export default function ApplicantForm({ refId }: { refId?: string }) {
         </div>
 
         {/* Valid ID Front Upload */}
-        <div>
+        {/* <div>
           <Label>Valid ID Front</Label>
           <div
             {...frontDropzone.getRootProps()}
@@ -328,10 +328,10 @@ export default function ApplicantForm({ refId }: { refId?: string }) {
               <p>Drag n drop or click to upload front ID image</p>
             )}
           </div>
-        </div>
+        </div> */}
 
         {/* Valid ID Back Upload */}
-        <div>
+        {/* <div>
           <Label>Valid ID Back</Label>
           <div
             {...backDropzone.getRootProps()}
@@ -350,7 +350,7 @@ export default function ApplicantForm({ refId }: { refId?: string }) {
               <p>Drag n drop or click to upload back ID image</p>
             )}
           </div>
-        </div>
+        </div> */}
 
         {/* <div>
         <Label>SSN Card Image</Label>
