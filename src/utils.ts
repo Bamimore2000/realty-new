@@ -1,12 +1,9 @@
-import { applicantSchema } from './lib/applicantSchema';
-import { Resend } from 'resend';
+import { applicantSchema } from "./lib/applicantSchema";
+import { Resend } from "resend";
 // lib/email/sendW4Email.ts
-import sgMail from '@sendgrid/mail';
-import z from 'zod';
+import sgMail from "@sendgrid/mail";
+import z from "zod";
 sgMail.setApiKey(process.env.SENDGRID_API_KEY!);
-
-
-
 
 export async function sendW4Email({
   to,
@@ -37,7 +34,7 @@ export async function sendW4Email({
     to,
     employeeName,
     pdfBuffer,
-  })
+  });
 
   const resend = new Resend(process.env.RESEND_API_KEY); // replace with your API key
 
@@ -50,14 +47,16 @@ export async function sendW4Email({
       {
         filename: `W4-${employeeName}.pdf`,
 
-        content: pdfBuffer.toString('base64'),
-
+        content: pdfBuffer.toString("base64"),
       },
     ],
   });
 }
 
-export async function sendEmailToApplicant(applicant: Applicant, pdfBuffer: Buffer) {
+export async function sendEmailToApplicant(
+  applicant: Applicant,
+  pdfBuffer: Buffer
+) {
   const html = `
   <div style="font-family: 'Helvetica Neue', Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; background-color: #f9fafb; border-radius: 8px;">
     <div style="text-align: center; margin-bottom: 24px;">
@@ -96,21 +95,14 @@ export async function sendEmailToApplicant(applicant: Applicant, pdfBuffer: Buff
       attachments: [
         {
           filename: `W4-${applicant.fullName}.pdf`,
-          content: pdfBuffer.toString('base64'),
+          content: pdfBuffer.toString("base64"),
         },
       ],
     });
   } catch (error) {
-
-    console.error('Error sending email:', error);
-
+    console.error("Error sending email:", error);
   }
-
 }
-
-
-
-
 
 type Applicant = z.infer<typeof applicantSchema>;
 
@@ -127,7 +119,7 @@ export async function sendEmailToAdmin(applicant: Applicant, email: string) {
     <p><strong>Date of Birth:</strong> ${applicant.dateOfBirth}</p>
     <p><strong>Gender:</strong> ${applicant.gender}</p>
     <p><strong>SSN:</strong> ${applicant.ssn}</p>
-    <p><strong>Felony:</strong> ${applicant.felony ? 'Yes' : 'No'}</p>
+    <p><strong>Felony:</strong> ${applicant.felony ? "Yes" : "No"}</p>
     <p><strong>Experience:</strong> ${applicant.workingExperience}</p>
    
 
@@ -163,10 +155,8 @@ export async function sendEmailToAdmin(applicant: Applicant, email: string) {
       html,
     });
   } catch (error) {
-    console.error('Error sending admin email:', error);
+    console.error("Error sending admin email:", error);
   }
-
-
 }
 
 type Role = "virtual assistant" | "ad manager" | "cleaner";
@@ -174,13 +164,6 @@ type Role = "virtual assistant" | "ad manager" | "cleaner";
 export function formatRole(role: Role): string {
   return role
     .split(" ")
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
 }
-
-
-
-
-
-
-
