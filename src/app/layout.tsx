@@ -4,6 +4,7 @@ import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
 import Navbar from "@/components/NavBar";
 import Footer from "@/components/Footer";
+import { Toaster } from "sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -71,7 +72,7 @@ export const metadata: Metadata = {
     site: "@CoreKeyRealty",
   },
   icons: {
-    icon: dynamicImageUrl, // favicon as your dynamic image url (optional)
+    icon: dynamicImageUrl,
     shortcut: dynamicImageUrl,
     apple: dynamicImageUrl,
   },
@@ -82,11 +83,88 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const organizationSchema = {
+    "@context": "https://schema.org",
+    "@type": "RealEstateAgent",
+    name: "Core Key Realty",
+    url: "https://corekeyrealty.com",
+    logo: dynamicImageUrl,
+    image: dynamicImageUrl,
+    description:
+      "Premier real estate agency helping clients buy, rent, and invest in properties across the United States.",
+    address: {
+      "@type": "PostalAddress",
+      addressCountry: "US",
+    },
+    sameAs: [
+      "https://twitter.com/CoreKeyRealty",
+      // Add other social profiles as needed
+    ],
+    areaServed: {
+      "@type": "Country",
+      name: "United States",
+    },
+    serviceArea: {
+      "@type": "GeoShape",
+      addressCountry: "US",
+    },
+  };
+
+  const websiteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "Core Key Realty",
+    url: "https://corekeyrealty.com",
+    description:
+      "Explore premier properties for sale and rent across the United States.",
+    publisher: {
+      "@type": "RealEstateAgent",
+      name: "Core Key Realty",
+    },
+    potentialAction: {
+      "@type": "SearchAction",
+      target: {
+        "@type": "EntryPoint",
+        urlTemplate: "https://corekeyrealty.com/search?q={search_term_string}",
+      },
+      "query-input": "required name=search_term_string",
+    },
+  };
+
   return (
     <html lang="en">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationSchema),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(websiteSchema),
+          }}
+        />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <Toaster
+          position="top-right"
+          toastOptions={{
+            style: {
+              background: "white",
+              color: "black",
+              border: "1px solid #e2e8f0",
+            },
+            className: "sonner-toast",
+            duration: 4000,
+          }}
+          richColors
+          expand={false}
+          closeButton
+        />
         <Analytics />
         <Navbar />
         <main className="pt-14">{children}</main>

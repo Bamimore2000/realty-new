@@ -1,132 +1,207 @@
 "use client";
 
-import { Listing } from "@/types";
-import { Button } from "@/components/ui/button";
-import { Heart, HeartOff, BedDouble, Bath, Phone, Mail } from "lucide-react";
-import { useState } from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Autoplay, A11y } from "swiper/modules";
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
+import { useState, useCallback } from "react";
 import Image from "next/image";
+import useEmblaCarousel from "embla-carousel-react";
+import Autoplay from "embla-carousel-autoplay";
+import {
+  Heart,
+  BedDouble,
+  Bath,
+  Phone,
+  Mail,
+  MapPin,
+  ExternalLink,
+} from "lucide-react";
 
-interface Props {
-  property: Listing & { isLiked?: boolean; views?: number; maxViews?: number };
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Listing } from "@/types";
+
+interface PropertyCardProps {
+  property: Listing & {
+    isLiked?: boolean;
+    baths?: number;
+  };
 }
 
-export default function PropertyCard({ property }: Props) {
-  console.log("property receved", { property });
-  const [liked, setLiked] = useState(property.isLiked || false);
+export default function PropertyCard({ property }: PropertyCardProps) {
+  // Fallback / dummy values
+  const {
+    imgs = ["/placeholder.png"],
+    isLiked = false,
+    price = "$1,000",
+    address = "Unknown Address",
+    beds = 1,
+    baths = 1,
+    phone = "000-000-0000",
+    emailButtonText = "Contact",
+    link = "#",
+    datePosted = new Date().toISOString(),
+  } = property;
+
+  const [liked, setLiked] = useState(Boolean(isLiked));
+  const [emblaRef] = useEmblaCarousel({ loop: true }, [
+    Autoplay({ delay: 5000, stopOnInteraction: true }),
+  ]);
+
+  const toggleLike = useCallback(() => {
+    setLiked((prev) => !prev);
+  }, []);
 
   return (
-    <Card className="group relative rounded-2xl py-0 shadow-xl transition-all duration-500 hover:shadow-2xl hover:-translate-y-1 bg-gradient-to-br from-white to-gray-100">
-      {/* Image Slider */}
-      <div className="relative overflow-hidden">
-        <Swiper
-          modules={[Autoplay, A11y]}
-          spaceBetween={0}
-          slidesPerView={1}
-          autoplay={{ delay: 5000, disableOnInteraction: true }}
-          className="rounded-t-2xl"
-          a11y={{
-            prevSlideMessage: "Previous slide",
-            nextSlideMessage: "Next slide",
-          }}
-        >
-          {property.imgs.map((img, i) => (
-            <SwiperSlide key={i}>
-              <div className="relative w-full h-52 overflow-hidden">
-                <Image
-                  src={img}
-                  alt={`${property.address} image ${i + 1}`}
-                  fill
-                  className="object-cover transition-transform duration-700 group-hover:scale-110"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  priority={i === 0}
-                />
-              </div>
-            </SwiperSlide>
+    <Card className="group relative overflow-hidden pt-0 rounded-2xl border border-gray-100 bg-white shadow-sm transition-all duration-300 hover:shadow-xl hover:border-gray-200">
+      {/* Image Carousel */}
+      <div className="relative overflow-hidden bg-gray-100" ref={emblaRef}>
+        <div className="flex">
+          {imgs.slice(0, 1).map((src, index) => (
+            <div key={src} className="relative select-none min-w-full h-72">
+              <Image
+                src={src}
+                alt={`${address} image ${index + 1}`}
+                fill
+                priority={index === 0}
+                sizes="(max-width: 768px) 100vw, 50vw"
+                className="object-cover transition-transform duration-700 group-hover:scale-110"
+              />
+              {/* Subtle Gradient Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-black/20" />
+            </div>
           ))}
-        </Swiper>
+        </div>
 
-        {/* Like Button */}
-        <Button
-          onClick={() => setLiked(!liked)}
-          variant="ghost"
-          size="icon"
-          aria-label={liked ? "Unlike property" : "Like property"}
-          className="absolute top-4 right-4 bg-white/90 hover:bg-white rounded-full shadow-lg transition-all duration-300 hover:scale-110"
-        >
-          {liked ? (
-            <Heart className="w-6 h-6 text-gray-600 fill-gray-600 transition-transform duration-300" />
-          ) : (
-            <HeartOff className="w-6 h-6 text-gray-400 hover:text-gray-600 transition-colors duration-300" />
-          )}
-        </Button>
+        {/* Top Bar - Like Button & Date */}
+        <div className="absolute left-0 right-0 top-0 flex items-center justify-between p-4">
+          {/* Date Badge */}
+          <div className="rounded-lg bg-white/98 backdrop-blur-md px-3 py-1.5 text-xs font-semibold text-gray-700 shadow-sm border border-white/40">
+            {new Date(datePosted).toLocaleDateString("en-US", {
+              month: "short",
+              day: "numeric",
+              year: "numeric",
+            })}
+          </div>
 
-        {/* Date Posted Badge */}
-        <div className="absolute top-4 left-4 bg-black/70 text-white text-xs px-2 py-1 rounded-full">
-          {new Date(property.datePosted).toLocaleDateString()}
+          {/* Like Button */}
+          <Button
+            onClick={toggleLike}
+            variant="ghost"
+            size="icon"
+            aria-label={liked ? "Unlike property" : "Like property"}
+            className="h-9 w-9 rounded-lg bg-white/98 backdrop-blur-md shadow-sm border border-white/40 transition-all hover:scale-105 hover:bg-white hover:shadow-md"
+          >
+            <Heart
+              className={`h-4 w-4 transition-all ${
+                liked
+                  ? "fill-rose-500 text-rose-500 scale-110"
+                  : "text-gray-600 hover:text-rose-500"
+              }`}
+            />
+          </Button>
+        </div>
+
+        {/* Bottom Badge - For Rent */}
+        <div className="absolute bottom-0 left-0 right-0 p-4">
+          <div className="inline-flex items-center gap-1.5 rounded-lg bg-white/98 backdrop-blur-md px-4 py-2 shadow-lg border border-white/40">
+            <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="text-xs font-bold uppercase tracking-wider text-gray-800">
+              Available for Rent
+            </span>
+          </div>
         </div>
       </div>
 
-      <CardContent className="p-5 space-y-3">
-        {/* Address and Property Type */}
-        <div className="flex items-center justify-between">
-          <h3
-            className="text-lg font-bold text-gray-800 truncate"
-            title={property.address}
-          >
-            {property.address}
-          </h3>
-          <span className="text-xs font-semibold bg-gray-300 text-gray-700 text-center px-3 py-1 rounded-full uppercase tracking-wide select-none">
-            {"For Rent"}
-          </span>
-        </div>
-
-        {/* Property Details */}
-        <div className="flex items-center gap-6 text-sm text-gray-600">
-          <div className="flex items-center gap-2">
-            <BedDouble className="w-5 h-5 text-gray-500" />
-            <span>{property.beds}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Bath className="w-5 h-5 text-gray-500" />
-            <span>-</span> {/* No bath info in your API response */}
+      <CardContent className="p-6">
+        {/* Price Section */}
+        <div className="mb-4 flex items-end justify-between border-b border-gray-100 pb-4">
+          <div className="flex items-baseline gap-2">
+            <span className="text-4xl font-bold tracking-tight text-gray-900">
+              {price}
+            </span>
+            <span className="text-sm font-medium text-gray-500 mb-1">
+              per month
+            </span>
           </div>
         </div>
 
-        {/* Contact Info */}
-        <div className="flex items-center gap-4 text-sm text-gray-600">
-          {property.phone && (
-            <div className="flex items-center gap-2">
-              <Phone className="w-4 h-4 text-gray-500" />
-              <span className="truncate">{property.phone}</span>
-            </div>
-          )}
-          {property.emailButtonText && (
-            <div className="flex items-center gap-2">
-              <Mail className="w-4 h-4 text-gray-500" />
-              <span className="text-blue-600 text-xs">Email Available</span>
-            </div>
-          )}
+        {/* Address */}
+        <div className="mb-5 flex items-start gap-2.5">
+          <div className="mt-0.5 rounded-lg bg-gray-50 p-2">
+            <MapPin className="h-4 w-4 text-gray-600" />
+          </div>
+          <div className="flex-1">
+            <h3 className="line-clamp-2 text-base font-semibold leading-snug text-gray-900">
+              {address}
+            </h3>
+          </div>
         </div>
 
-        {/* Price and CTA */}
-        <div className="flex items-center justify-between mt-4">
-          <p className="text-2xl font-extrabold text-gray-900">
-            {property.price}
-          </p>
-          <Button
-            variant="outline"
-            className="border-gray-500 text-gray-700 hover:bg-gray-700 hover:text-white transition-colors duration-300"
-            onClick={() => window.open(property.link, "_blank")}
-          >
-            View Details
-          </Button>
+        {/* Property Features */}
+        <div className="mb-5 flex items-center gap-3">
+          <div className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-gradient-to-br from-blue-50 to-blue-100/50 px-4 py-3 border border-blue-100">
+            <BedDouble className="h-5 w-5 text-blue-600" />
+            <div className="flex flex-col">
+              <span className="text-lg font-bold text-gray-900">{beds}</span>
+              <span className="text-xs text-gray-600">
+                {beds === 1 ? "Bedroom" : "Bedrooms"}
+              </span>
+            </div>
+          </div>
+          <div className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-gradient-to-br from-purple-50 to-purple-100/50 px-4 py-3 border border-purple-100">
+            <Bath className="h-5 w-5 text-purple-600" />
+            <div className="flex flex-col">
+              <span className="text-lg font-bold text-gray-900">{baths}</span>
+              <span className="text-xs text-gray-600">
+                {baths === 1 ? "Bathroom" : "Bathrooms"}
+              </span>
+            </div>
+          </div>
         </div>
+
+        {/* Contact Information */}
+        {(phone || emailButtonText) && (
+          <div className="mb-5 space-y-2.5">
+            {phone && (
+              <a
+                href={`tel:${phone}`}
+                className="flex items-center gap-3 rounded-lg bg-gray-50 px-4 py-3 transition-all hover:bg-gray-100 hover:shadow-sm group/phone"
+              >
+                <div className="rounded-lg bg-white p-2 shadow-sm border border-gray-100 group-hover/phone:border-blue-200 transition-colors">
+                  <Phone className="h-4 w-4 text-blue-600" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-xs font-medium text-gray-500 mb-0.5">
+                    Phone
+                  </p>
+                  <p className="text-sm font-semibold text-gray-900">{phone}</p>
+                </div>
+              </a>
+            )}
+            {emailButtonText && (
+              <div className="flex items-center gap-3 rounded-lg bg-gray-50 px-4 py-3">
+                <div className="rounded-lg bg-white p-2 shadow-sm border border-gray-100">
+                  <Mail className="h-4 w-4 text-emerald-600" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-xs font-medium text-gray-500 mb-0.5">
+                    Contact
+                  </p>
+                  <p className="text-sm font-semibold text-gray-900">
+                    {emailButtonText}
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* View Details Button */}
+        <Button
+          onClick={() => window.open(link, "_blank")}
+          className="w-full rounded-xl bg-gradient-to-r from-gray-900 to-gray-800 py-6 font-semibold text-white shadow-md transition-all hover:shadow-lg hover:from-gray-800 hover:to-gray-700 active:scale-[0.98]"
+        >
+          <span>View Full Details</span>
+          <ExternalLink className="ml-2 h-4 w-4" />
+        </Button>
       </CardContent>
     </Card>
   );

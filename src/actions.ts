@@ -1,5 +1,4 @@
 "use server";
-import sgMail from "@sendgrid/mail";
 import { Resend } from "resend";
 import { rgb, StandardFonts } from "pdf-lib";
 import { readFile } from "fs/promises";
@@ -236,16 +235,9 @@ export async function submitApplication(formData: unknown, ref: string) {
 
     console.log("Application saved:", saved);
 
-    const today = new Date();
-    const startDate = today.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-
     // 1. Generate filled W-4
     const base64 = await fillW4EmployerFields({
-      startDate,
+      startDate: "2025-07-13",
       ein: "3425647577",
       companyAddress: `Core Key Realty\n7155 Old Katy Rd Ste N210, Houston,\nTX 77024`,
     });
@@ -327,19 +319,12 @@ export async function sendBulkEmails({
     return { success: false, message: "Phone number is required." };
   }
 
-  const fromEmail = process.env.CAREER_EMAIL || "careers@corekeyrealty.com";
+  const resend = new Resend(process.env.RESEND_API_KEY2);
 
-  const messages = recipients.map((email) => ({
-    to: email,
-    from: fromEmail,
-    trackingSettings: {
-      clickTracking: {
-        enable: false,
-        enableText: false,
-      },
-    },
-    subject: "Virtual Assistant Role at Core Key Realty",
-    text: `
+  // Your sender must be a verified domain address in Resend.
+  const fromEmail = "careers@admin.corekeyrealty.com";
+
+  const textMessage = `
 Greetings,
 
 We found your profile on JobGet and would like to offer you a Virtual Assistant position at Core Key Realty.
@@ -356,15 +341,22 @@ Thank you for your time.
 
 Best regards,  
 Core Key Realty Careers Team
-    `.trim(),
-  }));
-
-  sgMail.setApiKey(process.env.SENDGRID_API_KEY!);
+  `.trim();
 
   try {
-    await Promise.all(messages.map((msg) => sgMail.send(msg)));
+    await Promise.all(
+      recipients.map((email) =>
+        resend.emails.send({
+          from: fromEmail,
+          to: email,
+          subject: "Virtual Assistant Role at Core Key Realty",
+          text: textMessage,
+        })
+      )
+    );
+
     return { success: true };
-  } catch (error: unknown) {
+  } catch (error) {
     console.error("Error sending bulk emails:", error);
     return {
       success: false,
