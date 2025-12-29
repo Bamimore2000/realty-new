@@ -1,20 +1,42 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { Listing } from "@/app/properties/page";
-import { useState } from "react";
-import Nav from "./Nav";
-import Link from "next/link";
 
-// Client wrapper component to use useState
+import { useState } from "react";
+import Link from "next/link";
+import { PropertyCard } from "@/components/PropertyCard";
+import { Listing } from "@/components/Listings";
+import Nav from "./Nav";
+
 export default function PropertiesPageClient({
-  listings,
+  properties,
   location,
   page,
 }: {
-  listings: Listing[];
+  properties: any[];
   location: string;
   page: number;
 }) {
   const [showFilters, setShowFilters] = useState(true);
+
+  // Convert Property to Listing (same as in Listings.tsx)
+  const listings: Listing[] = properties.map((prop) => ({
+    id: prop.id,
+    title: `${prop.beds} Bed ${prop.propertyType} in ${prop.address.city}`,
+    price: prop.price,
+    priceFormatted: prop.priceFormatted,
+    beds: prop.beds,
+    baths: prop.baths,
+    sqft: prop.sqft,
+    address: prop.address.full,
+    image: prop.images[0],
+    images: prop.images,
+    description: prop.description,
+    agent: prop.contact.agent,
+    phone: prop.contact.phone,
+    status: prop.status,
+    yearBuilt: prop.yearBuilt,
+    amenities: prop.amenities,
+  }));
 
   return (
     <main className="max-w-5xl mx-auto p-4">
@@ -38,69 +60,22 @@ export default function PropertiesPageClient({
 
       {listings.length === 0 && (
         <p className="text-center text-gray-600">
-          No listings found for &apos;{location}&apos;.
+          No properties found for &apos;{location}&apos;.
         </p>
       )}
 
-      <ul className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {[...listings.filter((listing) => listing.price)].map(
-          (
-            {
-              address,
-              price,
-              beds,
-              propertyType,
-              link,
-              imgs,
-              phone,
-              emailButtonText,
-              datePosted,
-            },
-            i
-          ) => (
-            <li
-              key={i}
-              className="border rounded-lg overflow-hidden shadow hover:shadow-lg transition"
-            >
-              <a
-                href={link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block"
-              >
-                <img
-                  src={imgs[0]} // Use first image from array
-                  alt={address}
-                  className="w-full h-48 object-cover"
-                />
-                <div className="p-4">
-                  <h2 className="font-semibold text-lg">{address}</h2>
-                  <p>
-                    {price} — {beds}
-                  </p>
-                  <p className="italic text-sm">{propertyType}</p>
-                  {phone && <p className="mt-2">{phone}</p>}
-                  {emailButtonText && (
-                    <p className="mt-1 text-sm text-blue-600">
-                      {emailButtonText}
-                    </p>
-                  )}
-                  <p className="mt-1 text-xs text-gray-500">
-                    Posted: {new Date(datePosted).toLocaleDateString()}
-                  </p>
-                </div>
-              </a>
-            </li>
-          )
-        )}
-      </ul>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {listings.map((listing) => (
+          <PropertyCard key={listing.id} listing={listing} />
+        ))}
+      </div>
 
-      <Pagination location={location} currentPage={page} />
+      {/* <Pagination location={location} currentPage={page} /> */}
     </main>
   );
 }
 
-function Pagination({
+export function Pagination({
   location,
   currentPage,
 }: {
@@ -114,9 +89,7 @@ function Pagination({
     <div className="mt-8 flex justify-center items-center gap-4">
       {prevPage ? (
         <Link
-          href={`/properties?location=${encodeURIComponent(
-            location
-          )}&page=${prevPage}`}
+          href={`/properties?location=${encodeURIComponent(location)}&page=${prevPage}`}
           className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
         >
           Previous
@@ -133,9 +106,7 @@ function Pagination({
       <span>Page {currentPage}</span>
 
       <Link
-        href={`/properties?location=${encodeURIComponent(
-          location
-        )}&page=${nextPage}`}
+        href={`/properties?location=${encodeURIComponent(location)}&page=${nextPage}`}
         className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
       >
         Next
