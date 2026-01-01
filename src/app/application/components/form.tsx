@@ -255,7 +255,7 @@ export default function LeaseApplicationForm() {
       <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-lg p-8 md:p-12">
         <div className="text-center mb-10">
           <h1 className="text-4xl font-bold text-slate-900 mb-2">
-            Core Key Realty
+            Invitation Homes
           </h1>
           <h2 className="text-2xl font-semibold text-slate-700">
             Lease Application Form
