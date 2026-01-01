@@ -6,9 +6,9 @@ const dynamicImageUrl =
   "https://isfj6shkii.ufs.sh/f/7lSE5lws1RB32V6uVzUalG6TwSy1CK0hYIjPdvJgz8tRqixO";
 
 export const metadata: Metadata = {
-  title: "Lease Application - Apply for Your Dream Property",
+  title: "Lease Application - Apply for Your Invitation Homes Rental",
   description:
-    "Submit your rental application with Core Key Realty. Quick, secure, and easy online lease application process for properties across the United States.",
+    "Submit your rental application with Invitation Homes. A fast, secure, and easy online lease application process for quality homes across the United States.",
   keywords: [
     "lease application",
     "rental application",
@@ -16,14 +16,14 @@ export const metadata: Metadata = {
     "tenant application",
     "property lease form",
     "rent application USA",
-    "Core Key Realty application",
+    "Invitation Homes application",
   ],
   openGraph: {
-    title: "Lease Application - Core Key Realty",
+    title: "Lease Application - Invitation Homes",
     description:
-      "Apply for your next rental home with Core Key Realty. Fast and secure online lease application process.",
-    url: "https://corekeyrealty.com/lease-application",
-    siteName: "Core Key Realty",
+      "Apply for your next rental home with Invitation Homes. A seamless and secure online lease application experience.",
+    url: "https://www.invitationhomes.com/lease-application",
+    siteName: "Invitation Homes",
     locale: "en_US",
     type: "website",
     images: [
@@ -31,17 +31,17 @@ export const metadata: Metadata = {
         url: dynamicImageUrl,
         width: 1200,
         height: 630,
-        alt: "Core Key Realty lease application page",
+        alt: "Invitation Homes lease application page",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Lease Application - Core Key Realty",
+    title: "Lease Application - Invitation Homes",
     description:
-      "Apply for your next rental home. Quick and secure application process.",
+      "Apply for your next rental home with Invitation Homes. Quick and secure lease application process.",
     images: [dynamicImageUrl],
-    site: "@CoreKeyRealty",
+    site: "@InvitationHomes",
   },
   robots: {
     index: true,
@@ -49,7 +49,7 @@ export const metadata: Metadata = {
   },
 };
 
-const page = () => {
+const Page = () => {
   return (
     <section>
       <LeaseApplicationForm />
@@ -57,4 +57,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
