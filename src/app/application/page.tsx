@@ -3,7 +3,7 @@ import LeaseApplicationForm from "./components/form";
 import type { Metadata } from "next";
 
 const dynamicImageUrl =
-  "https://isfj6shkii.ufs.sh/f/7lSE5lws1RB32V6uVzUalG6TwSy1CK0hYIjPdvJgz8tRqixO";
+  "https://oucjnc32w9.ufs.sh/f/QRO8ij64eFS9qZQZwr9YnQPbd2iUhv0X6sAuMCOrz7BESlaG";
 
 export const metadata: Metadata = {
   title: "Lease Application - Apply for Your Invitation Homes Rental",
