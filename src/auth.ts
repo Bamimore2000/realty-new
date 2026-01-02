@@ -5,22 +5,20 @@ import Emails from "./models/Emails";
 import { connectToDatabase } from "./lib/mongoose";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
-    providers: [
-        Google,
-    ],
-    callbacks: {
-        async signIn({ user }) {
-            try {
-                await connectToDatabase();
-                const email = user?.email;
-                if (!email) return false;
-                const list = await Emails.findOne();
-                const isWhitelisted = list?.emails.includes(email.toLowerCase());
-                return isWhitelisted;
-            } catch (err) {
-                console.error("SignIn check failed:", err);
-                return false;
-            }
-        },
+  providers: [Google],
+  callbacks: {
+    async signIn({ user }) {
+      try {
+        await connectToDatabase();
+        const email = user?.email;
+        if (!email) return false;
+        const list = await Emails.findOne();
+        const isWhitelisted = list?.emails.includes(email.toLowerCase());
+        return isWhitelisted;
+      } catch (err) {
+        console.error("SignIn check failed:", err);
+        return false;
+      }
     },
+  },
 });
