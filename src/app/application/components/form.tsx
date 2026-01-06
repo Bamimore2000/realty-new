@@ -177,7 +177,7 @@ const formSchema = z
       .regex(/^[\d\s\-\+\(\)]+$/, "Invalid phone number format"),
     emergencyContactRelationship: z.string().min(2, "Relationship is required"),
 
-    paymentMethod: z.enum(["venmo", "zelle", "appleCash", "chime"], {
+    paymentMethod: z.enum(["zelle", "chime"], {
       error: "Payment method is required",
     }),
   })
