@@ -846,9 +846,7 @@ export default function LeaseApplicationForm() {
                     <SelectValue placeholder="Select payment method" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="venmo">Venmo</SelectItem>
                     <SelectItem value="zelle">Zelle</SelectItem>
-                    <SelectItem value="appleCash">Apple Cash</SelectItem>
                     <SelectItem value="chime">Chime</SelectItem>
                   </SelectContent>
                 </Select>
