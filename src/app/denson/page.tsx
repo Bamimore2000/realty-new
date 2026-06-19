@@ -5,14 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { FileText, Download, Loader2, CheckCircle, RefreshCw, Printer, ShieldCheck, Send } from "lucide-react";
 import { toJpeg } from "html-to-image";
-
 import jsPDF from "jspdf";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { sendRentalDocumentEmail } from "./actions";
 
-export default function RentalDocumentPage() {
+export default function DensonDocumentPage() {
   const [loading, setLoading] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const [complete, setComplete] = useState(false);
@@ -49,7 +48,7 @@ export default function RentalDocumentPage() {
       const result = await getPdfData();
       if (!result) return;
       
-      result.pdf.save(`Invitation_Homes_Statement_3257_Trafalgar.pdf`);
+      result.pdf.save(`Invitation_Homes_Statement_2300_Hilltop_Dr.pdf`);
       
       setComplete(true);
       setTimeout(() => setComplete(false), 3000);
@@ -73,7 +72,7 @@ export default function RentalDocumentPage() {
       if (!result) return;
 
       const pdfBase64 = result.pdf.output("datauristring").split(",")[1];
-      const fileName = `Invitation_Homes_Statement_3257_Trafalgar.pdf`;
+      const fileName = `Invitation_Homes_Statement_2300_Hilltop_Dr.pdf`;
 
       const response = await sendRentalDocumentEmail(tenantEmail, pdfBase64, fileName);
 
@@ -114,7 +113,7 @@ export default function RentalDocumentPage() {
               <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 text-sm space-y-3">
                 <div className="flex justify-between border-b pb-2">
                   <span className="text-slate-500 font-medium">Property</span>
-                  <span className="font-bold">3257 Trafalgar Ave</span>
+                  <span className="font-bold">2300 Hilltop Dr</span>
                 </div>
                 <div className="flex justify-between border-b pb-2">
                   <span className="text-slate-500 font-medium">Broker</span>
@@ -179,8 +178,8 @@ export default function RentalDocumentPage() {
             ref={documentRef}
             className="bg-white w-[816px] shadow-2xl p-16 relative overflow-hidden"
             style={{ 
-              fontFamily: "'Times New Roman', serif", // More traditional legal look
-              minHeight: "1056px" // Standard 8.5x11 aspect ratio approx
+              fontFamily: "'Times New Roman', serif", 
+              minHeight: "1056px"
             }}
           >
             {/* Red Round Stamp Overlay */}
@@ -202,15 +201,24 @@ export default function RentalDocumentPage() {
                 </svg>
 
                 <div className="w-full h-full border-2 border-red-700 rounded-full flex flex-col items-center justify-center text-center p-1">
-                  <img 
-                    src="https://dokumfe7mps0i.cloudfront.net/media/logos/2022/06/283238_1655844560.7826822_InvitationHomesBoldedcmykRevLogo.png" 
-                    className="h-4 mb-2" 
-                    style={{ filter: 'invert(16%) sepia(89%) saturate(6011%) hue-rotate(357deg) brightness(97%) contrast(110%)' }} // Match red-700 approx
+                  <img
+                    src="https://dokumfe7mps0i.cloudfront.net/media/logos/2022/06/283238_1655844560.7826822_InvitationHomesBoldedcmykRevLogo.png"
+                    className="h-4 mb-2"
+                    style={{
+                      filter:
+                        "invert(16%) sepia(89%) saturate(6011%) hue-rotate(357deg) brightness(97%) contrast(110%)",
+                    }}
                   />
-                  <div className="text-[9px] font-bold text-red-700 uppercase leading-none mb-1">Invitation Homes</div>
+                  <div className="text-[9px] font-bold text-red-700 uppercase leading-none mb-1">
+                    Invitation Homes
+                  </div>
                   <div className="h-[1px] w-20 bg-red-700 mb-1" />
-                  <div className="text-xl font-black text-red-700 uppercase tracking-tighter leading-none py-1">OFFICIAL</div>
-                  <div className="text-xl font-black text-red-700 uppercase tracking-tighter leading-none mb-1">SEAL</div>
+                  <div className="text-xl font-black text-red-700 uppercase tracking-tighter leading-none py-1">
+                    OFFICIAL
+                  </div>
+                  <div className="text-xl font-black text-red-700 uppercase tracking-tighter leading-none mb-1">
+                    SEAL
+                  </div>
                   <div className="h-[1px] w-20 bg-red-700 mt-1" />
                 </div>
 
@@ -231,17 +239,28 @@ export default function RentalDocumentPage() {
             {/* Header */}
             <div className="flex justify-between items-start mb-12 border-b-2 border-slate-900 pb-8">
               <div className="space-y-1">
-                <img 
-                  src="https://dokumfe7mps0i.cloudfront.net/media/logos/2022/06/283238_1655844560.7826822_InvitationHomesBoldedcmykRevLogo.png" 
-                  alt="Invitation Homes Official Logo" 
+                <img
+                  src="https://dokumfe7mps0i.cloudfront.net/media/logos/2022/06/283238_1655844560.7826822_InvitationHomesBoldedcmykRevLogo.png"
+                  alt="Invitation Homes Official Logo"
                   className="h-14 object-contain mb-4"
                 />
-                <h1 className="text-xl font-bold text-slate-800 uppercase tracking-tight">Statement of Account & Occupancy Intent</h1>
+                <h1 className="text-xl font-bold text-slate-800 uppercase tracking-tight">
+                  Statement of Account & Occupancy Intent
+                </h1>
               </div>
               <div className="text-right text-sm">
-                <p className="font-bold">Transaction ID: IH-{(Math.random() * 1000000).toFixed(0)}</p>
-                <p>Date: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
-                <p>Status: <span className="text-red-700 font-bold uppercase">Pending Indexing</span></p>
+                <p className="font-bold">
+                  Transaction ID: IH-{Math.random().toString().substring(2, 8)}
+                </p>
+                <p>
+                  Date: {new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}
+                </p>
+                <p>
+                  Status:{" "}
+                  <span className="text-red-700 font-bold uppercase">
+                    Pending Indexing
+                  </span>
+                </p>
               </div>
             </div>
 
@@ -251,24 +270,30 @@ export default function RentalDocumentPage() {
               {/* Recipient Details */}
               <div className="grid grid-cols-2 gap-12">
                 <div className="space-y-4">
-                  <h3 className="font-bold border-b border-slate-300 pb-1 uppercase text-xs">Subject Property:</h3>
+                  <h3 className="font-bold border-b border-slate-300 pb-1 uppercase text-xs">
+                    Subject Property:
+                  </h3>
                   <p className="text-md font-bold leading-tight">
-                    3257 Trafalgar Ave,<br />
-                    East Stroudsburg, PA 18302
+                    2300 Hilltop Dr,
+                    <br />
+                    Albany, GA 31707
                   </p>
                 </div>
                 <div className="space-y-4">
-                  <h3 className="font-bold border-b border-slate-300 pb-1 uppercase text-xs">Primary Leaseholders:</h3>
+                  <h3 className="font-bold border-b border-slate-300 pb-1 uppercase text-xs">
+                    Primary Leaseholder:
+                  </h3>
                   <p className="text-md font-bold">
-                    Ms McKenzien Elizabeth Cowley<br />
-                    Ms Rebecca Cathrine Bardsley
+                    Mr Jaburi Denson
                   </p>
                 </div>
               </div>
 
               {/* Verified Payments Table */}
               <div className="space-y-4">
-                <h3 className="font-bold uppercase text-xs">Verified Funds Received (Processed via Chime):</h3>
+                <h3 className="font-bold uppercase text-xs">
+                  Verified Funds Received (Processed via Chime):
+                </h3>
                 <table className="w-full border-collapse">
                   <thead>
                     <tr className="bg-slate-50 border-y border-slate-800 font-bold text-xs uppercase">
@@ -281,27 +306,38 @@ export default function RentalDocumentPage() {
                   <tbody className="text-sm">
                     <tr className="border-b border-slate-200">
                       <td className="py-3 px-4 italic">2026-04-16</td>
-                      <td className="py-3 px-4">Application/Background Screening (Cowley)</td>
-                      <td className="py-3 px-4 font-mono text-xs uppercase">txn AN0200</td>
-                      <td className="py-3 px-4 text-right font-bold">$70.00</td>
-                    </tr>
-                    <tr className="border-b border-slate-200">
-                      <td className="py-3 px-4 italic">2026-04-16</td>
-                      <td className="py-3 px-4">Application/Background Screening (Bardsley)</td>
-                      <td className="py-3 px-4 font-mono text-xs uppercase">txn YE9LZ6</td>
+                      <td className="py-3 px-4">
+                        Application/Background Screening (Denson)
+                      </td>
+                      <td className="py-3 px-4 font-mono text-xs uppercase">
+                        txn AN0200
+                      </td>
                       <td className="py-3 px-4 text-right font-bold">$70.00</td>
                     </tr>
                     <tr className="border-b border-slate-200 bg-slate-50/50">
                       <td className="py-3 px-4 italic">2026-04-17</td>
-                      <td className="py-3 px-4 font-bold uppercase">Initial Security Deposit & Holding Fee</td>
-                      <td className="py-3 px-4 font-mono text-xs uppercase">txn 3YNS7N</td>
-                      <td className="py-3 px-4 text-right font-bold">$600.00</td>
+                      <td className="py-3 px-4 font-bold uppercase">
+                        Initial Security Deposit & Holding Fee
+                      </td>
+                      <td className="py-3 px-4 font-mono text-xs uppercase">
+                        txn 3YNS7N
+                      </td>
+                      <td className="py-3 px-4 text-right font-bold">
+                        $600.00
+                      </td>
                     </tr>
                   </tbody>
                   <tfoot>
                     <tr className="border-t-2 border-slate-800 text-md font-bold">
-                      <td colSpan={3} className="py-4 px-4 text-right uppercase">Total Consolidated Credits:</td>
-                      <td className="py-4 px-4 text-right text-lg">$740.00</td>
+                      <td
+                        colSpan={3}
+                        className="py-4 px-4 text-right uppercase"
+                      >
+                        Total Consolidated Credits:
+                      </td>
+                      <td className="py-4 px-4 text-right text-lg">
+                        $670.00
+                      </td>
                     </tr>
                   </tfoot>
                 </table>
@@ -309,11 +345,13 @@ export default function RentalDocumentPage() {
 
               {/* Legal & Processing Requirements */}
               <div className="space-y-6 pt-4">
-                <h3 className="font-bold border-b border-slate-300 pb-1 uppercase text-xs">Managerial & Legal Indexing Requirements:</h3>
+                <h3 className="font-bold border-b border-slate-300 pb-1 uppercase text-xs">
+                  Managerial & Legal Indexing Requirements:
+                </h3>
                 
                 <div className="space-y-4 text-sm leading-relaxed text-justify">
                   <p>
-                    <strong>1. TENANT RECOGNITION & INDEXING:</strong> Invitation Homes requires a one-time rent fee of <strong>$1,000.00</strong> to complete the formal digital indexing process. This indexing is mandatory to register the above-named individuals as the recurring tenants of record for 3257 Trafalgar Ave within our portfolio systems.
+                    <strong>1. TENANT RECOGNITION & INDEXING:</strong> Invitation Homes requires a one-time rent fee of <strong>$1,000.00</strong> to complete the formal digital indexing process. This indexing is mandatory to register Mr Jaburi Denson as the recurring tenant of record for 2300 Hilltop Dr within our portfolio systems.
                   </p>
                   
                   <p>
@@ -321,7 +359,7 @@ export default function RentalDocumentPage() {
                   </p>
                   
                   <p className="bg-slate-100 p-4 border-l-4 border-slate-800 italic">
-                    <strong>3. MANDATORY REFUND DISCLOSURE:</strong> Under the requirements of <strong>State Law</strong>, Invitation Homes is legally required to refund all payments made to date (currently totaling $740.00) in the event that the formal lease agreement is not signed by all parties or if physical possession (handing over of keys) has not been completed. All fees remain fully refundable until the moment of lease execution.
+                    <strong>3. MANDATORY REFUND DISCLOSURE:</strong> Under the requirements of <strong>State Law</strong>, Invitation Homes is legally required to refund all payments made to date (currently totaling $670.00) in the event that the formal lease agreement is not signed by all parties or if physical possession (handing over of keys) has not been completed. All fees remain fully refundable until the moment of lease execution.
                   </p>
                 </div>
               </div>
@@ -333,7 +371,7 @@ export default function RentalDocumentPage() {
                   <div className="space-y-1">
                     <p className="text-2xl font-serif italic border-b border-slate-400 pb-1 text-slate-900 leading-none">Brooke Kelley</p>
                     <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Ms. Brooke Kelley | Senior Leasing Specialist</p>
-                    <p className="text-[10px] text-slate-400">Invitation Homes - PA District</p>
+                    <p className="text-[10px] text-slate-400">Invitation Homes - Georgia Division</p>
                   </div>
                 </div>
                 
@@ -347,8 +385,8 @@ export default function RentalDocumentPage() {
             {/* Official Footer */}
             <div className="absolute bottom-12 left-16 right-16 border-t border-slate-200 pt-6 flex justify-between text-[10px] text-slate-400 font-bold uppercase tracking-widest italic">
               <span>www.invitationhomes.com</span>
-              <span>Pennsylvania Division</span>
-              <span>Prop ID: 3257-TRAF</span>
+              <span>Georgia Division</span>
+              <span>Prop ID: 2300-HILL</span>
             </div>
           </div>
         </div>
