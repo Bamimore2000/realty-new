@@ -535,11 +535,11 @@ export default function WendyMitchemStatementPage() {
             Wendy Mitchem (hereinafter "Lessee") to confirm the successful
             remittance of all previous payments, including application fee,
             security deposit, and four ($850.00) rent payments. The home has
-            been registered in Lessee's name. The Lessor (TBD) and Attorney of
-            Record Daniel Hall, Esq. acknowledge receipt of these payments. Per
-            South Carolina landlord-tenant law, Lessee is now required to
-            fulfill the payment of two months' rent prior to the physical
-            handover of keys.
+            been registered in Lessee's name. The Lessor (Todd Nicholls) and
+            Attorney of Record Daniel Hall, Esq. acknowledge receipt of these
+            payments. Per South Carolina landlord-tenant law, Lessee is now
+            required to fulfill the payment of two months' rent prior to the
+            physical handover of keys.
           </div>
 
           <div style={{ marginBottom: 28 }}>
@@ -937,8 +937,8 @@ export default function WendyMitchemStatementPage() {
                   margin: 0,
                 }}
               >
-                <strong style={{ color: "#5a5048" }}>Lessor:</strong> TBD
-                &nbsp;|&nbsp;
+                <strong style={{ color: "#5a5048" }}>Lessor:</strong> Todd
+                Nicholls &nbsp;|&nbsp;
                 <strong style={{ color: "#5a5048" }}>Attorney:</strong> Daniel
                 Hall, Esq. &nbsp;|&nbsp;
                 <strong style={{ color: "#5a5048" }}>Ref:</strong>{" "}
@@ -1043,7 +1043,7 @@ export default function WendyMitchemStatementPage() {
                 style={{ height: 1, background: "#1a1a1a", marginBottom: 6 }}
               />
               <div style={{ fontSize: 10, color: "#5a5048", fontWeight: 600 }}>
-                TBD
+                Todd Nicholls
               </div>
               <div
                 style={{
