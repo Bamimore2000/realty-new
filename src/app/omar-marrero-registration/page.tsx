@@ -23,17 +23,17 @@ const val: React.CSSProperties = {
   lineHeight: 1.5,
 };
 
-export default function TanyaMarieMendyRegistrationPage() {
+export default function OmarMarreroRegistrationPage() {
   const certificateRef = useRef<HTMLDivElement>(null);
   const [isSending, setIsSending] = useState(false);
   const [email, setEmail] = useState("");
 
-  const [tenantName, setTenantName] = useState("Mrs. Tanya Marie Mendy");
+  const [tenantName, setTenantName] = useState("Omar Marrero");
   const [propertyAddress, setPropertyAddress] = useState(
-    "6550 Kelso Lake Rd, Athol, ID 83801",
+    "179 Eisley Rd, Milton, PA 17847",
   );
-  const [dateIssued, setDateIssued] = useState("June 23, 2026");
-  const [registrationId, setRegistrationId] = useState("REG-2026-0903");
+  const [dateIssued, setDateIssued] = useState("June 12, 2026");
+  const [registrationId, setRegistrationId] = useState("REG-2026-0848");
 
   const generatePdfBase64 = async (): Promise<{
     base64: string;
@@ -41,14 +41,17 @@ export default function TanyaMarieMendyRegistrationPage() {
   } | null> => {
     const element = certificateRef.current;
     if (!element) return null;
+
     const width = element.scrollWidth;
     const height = element.scrollHeight;
+
     const dataUrl = await toJpeg(element, {
       pixelRatio: 2,
       quality: 0.95,
       skipAutoScale: true,
       style: { margin: "0", maxWidth: "none" },
     });
+
     const pdf = new jsPDF({
       orientation: "portrait",
       unit: "px",
@@ -238,12 +241,7 @@ export default function TanyaMarieMendyRegistrationPage() {
           >
             {isSending ? (
               <>
-                <RefreshCw
-                  size={15}
-                  className="spin-icon"
-                  style={{ animation: "spin 1s linear infinite" }}
-                />{" "}
-                Sending…
+                <RefreshCw size={15} className="spin-icon" /> Sending…
               </>
             ) : (
               <>
@@ -303,7 +301,7 @@ export default function TanyaMarieMendyRegistrationPage() {
           position: "relative",
         }}
       >
-        {/* Decorative borders */}
+        {/* Outer decorative border */}
         <div
           style={{
             position: "absolute",
@@ -330,7 +328,7 @@ export default function TanyaMarieMendyRegistrationPage() {
             padding: "36px 48px 0 48px",
           }}
         >
-          {/* Government Banner */}
+          {/* Government / Council Banner */}
           <div
             style={{
               textAlign: "center",
@@ -348,11 +346,11 @@ export default function TanyaMarieMendyRegistrationPage() {
                 margin: "0 0 4px 0",
               }}
             >
-              State of Idaho · Kootenai County
+              State of Pennsylvania · Northumberland County
             </p>
             <h2
               style={{
-                fontFamily: '"Playfair Display", serif',
+                fontFamily: "'Playfair Display', serif",
                 fontSize: 22,
                 fontWeight: 700,
                 color: "#0f1f3d",
@@ -360,7 +358,7 @@ export default function TanyaMarieMendyRegistrationPage() {
                 letterSpacing: "0.04em",
               }}
             >
-              Kootenai County Council — Housing &amp; Property Division
+              Northumberland County Council — Housing & Property Division
             </h2>
             <p
               style={{
@@ -371,7 +369,7 @@ export default function TanyaMarieMendyRegistrationPage() {
                 margin: 0,
               }}
             >
-              Office of Residential Registration · Athol District
+              Office of Residential Registration · Milton District
             </p>
           </div>
 
@@ -406,13 +404,13 @@ export default function TanyaMarieMendyRegistrationPage() {
               <div>
                 <div
                   style={{
-                    fontFamily: '"Playfair Display", serif',
+                    fontFamily: "'Playfair Display', serif",
                     fontSize: 15,
                     fontWeight: 700,
                     color: "#0f1f3d",
                   }}
                 >
-                  Invitation Homes
+                  Core Key Realty
                 </div>
                 <div
                   style={{
@@ -423,10 +421,10 @@ export default function TanyaMarieMendyRegistrationPage() {
                     marginTop: 2,
                   }}
                 >
-                  Licensed Property Management
+                  Administración de Propiedades Licenciada
                 </div>
                 <div style={{ fontSize: 10, color: "#8a8070", marginTop: 2 }}>
-                  Lic. No. ID-PMO-2026-902 · Kootenai County
+                  Lic. No. PA-PMO-2024-3822 · Northumberland County
                 </div>
               </div>
             </div>
@@ -444,7 +442,7 @@ export default function TanyaMarieMendyRegistrationPage() {
               </div>
               <div
                 style={{
-                  fontFamily: '"Playfair Display", serif',
+                  fontFamily: "'Playfair Display', serif",
                   fontSize: 18,
                   fontWeight: 700,
                   color: "#b8943a",
@@ -474,14 +472,14 @@ export default function TanyaMarieMendyRegistrationPage() {
             </p>
             <h1
               style={{
-                fontFamily: '"Playfair Display", serif',
+                fontFamily: "'Playfair Display', serif",
                 fontSize: 38,
                 color: "#0f1f3d",
                 margin: "0 0 12px 0",
                 lineHeight: 1.1,
               }}
             >
-              Certificate of Home Registration
+              Certificate of Tenant Registration
             </h1>
             <div
               style={{
@@ -493,7 +491,7 @@ export default function TanyaMarieMendyRegistrationPage() {
             />
           </div>
 
-          {/* Tenant & Property Info */}
+          {/* Tenant & Property Info Box */}
           <div
             style={{
               background: "#f7f4ef",
@@ -509,7 +507,7 @@ export default function TanyaMarieMendyRegistrationPage() {
               <p style={lbl}>Registered Tenant</p>
               <p
                 style={{
-                  fontFamily: '"Playfair Display", serif',
+                  fontFamily: "'Playfair Display', serif",
                   fontSize: 22,
                   fontWeight: 700,
                   color: "#0f1f3d",
@@ -527,81 +525,14 @@ export default function TanyaMarieMendyRegistrationPage() {
             </div>
             <div>
               <p style={lbl}>County</p>
-              <p style={{ ...val, margin: 0 }}>Kootenai County, Idaho</p>
+              <p style={{ ...val, margin: 0 }}>
+                Northumberland County, Pennsylvania
+              </p>
             </div>
             <div>
               <p style={lbl}>Tenancy Type</p>
               <p style={{ ...val, margin: 0 }}>Residential — Long Term Lease</p>
             </div>
-          </div>
-
-          {/* Fees Summary Box */}
-          <div
-            style={{
-              background: "#eaf4ec",
-              border: "1px solid #a5d6a7",
-              borderRadius: 6,
-              padding: "16px 20px",
-              marginBottom: 28,
-            }}
-          >
-            <p
-              style={{
-                fontSize: 11,
-                fontWeight: 700,
-                color: "#1b5e20",
-                letterSpacing: "0.08em",
-                textTransform: "uppercase",
-                margin: "0 0 10px 0",
-              }}
-            >
-              ✓ Initial Fees Satisfied — $740.00
-            </p>
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: 10,
-                fontSize: 12,
-                color: "#374151",
-              }}
-            >
-              <div>
-                Application Fee: <strong>$140.00</strong>
-              </div>
-              <div>
-                Security Deposit: <strong>$600.00</strong>
-              </div>
-            </div>
-          </div>
-
-          {/* Pending Notice */}
-          <div
-            style={{
-              background: "#fff3cd",
-              border: "1px solid #d4ad52",
-              borderLeft: "4px solid #b8943a",
-              borderRadius: 4,
-              padding: "14px 18px",
-              marginBottom: 28,
-              fontSize: 12,
-              color: "#5a3e00",
-              lineHeight: 1.75,
-            }}
-          >
-            <strong
-              style={{
-                fontSize: 11,
-                letterSpacing: "0.06em",
-                textTransform: "uppercase",
-              }}
-            >
-              ⏳ Pending — Key Handover Condition:
-            </strong>{" "}
-            The home will be officially registered in the name of{" "}
-            <strong>{tenantName}</strong> and keys will be handed over upon full
-            settlement of the outstanding balance of <strong>$900.00</strong> —
-            Key Handover Fee.
           </div>
 
           {/* Body Text */}
@@ -617,9 +548,9 @@ export default function TanyaMarieMendyRegistrationPage() {
             <p style={{ margin: "0 0 16px 0" }}>
               This is to certify, in accordance with the statutes and
               regulations of the{" "}
-              <strong>State of Idaho Housing Authority</strong> and the{" "}
+              <strong>State of Pennsylvania Housing Authority</strong> and the{" "}
               <strong>
-                Kootenai County Council — Housing &amp; Property Division
+                Northumberland County Council — Housing & Property Division
               </strong>
               , that the residential property located at{" "}
               <strong>{propertyAddress}</strong> has been duly registered,
@@ -628,23 +559,22 @@ export default function TanyaMarieMendyRegistrationPage() {
             </p>
             <p style={{ margin: "0 0 16px 0" }}>
               This registration was processed and approved under the authority
-              of <strong>Alan Scott</strong> (Landlord) and{" "}
-              <strong>Invitation Homes</strong>, a fully licensed property
-              management firm operating within the jurisdiction of Kootenai
-              County. All requisite documentation, background screening, lease
-              compliance reviews, and statutory filings have been completed in
-              accordance with the Idaho Residential Tenancy Act and the
-              applicable local housing ordinances.
+              of Core Key Realty (Lic. No. PA-PMO-2024-3822), a fully licensed
+              property management firm operating within the jurisdiction of
+              Northumberland County. All requisite documentation, background
+              screening, lease compliance reviews, and statutory filings have
+              been completed in accordance with the{" "}
+              <em>Pennsylvania Residential Tenancy Act</em> and the applicable
+              local housing ordinances.
             </p>
             <p style={{ margin: 0 }}>
               This certificate grants <strong>{tenantName}</strong> the
               exclusive and legally recognized right of occupancy of the
               above-mentioned premises, subject to the terms and conditions of
-              the duly executed lease agreement on file with this office and
-              upon settlement of all outstanding fees. Any transfer, subletting,
-              or modification of tenancy must be formally registered with the
-              Kootenai County Council — Housing &amp; Property Division and
-              Invitation Homes.
+              the duly executed lease agreement on file with this office. Any
+              transfer, subletting, or modification of tenancy must be formally
+              registered with the Northumberland County Council — Housing &
+              Property Division and Core Key Realty.
             </p>
           </div>
 
@@ -675,11 +605,12 @@ export default function TanyaMarieMendyRegistrationPage() {
             </span>
             <span>
               <strong style={{ color: "#fff" }}>Legal Notice:</strong> This
-              document has been issued under the authority of the Kootenai
-              County Council and the Idaho Department of Community Affairs.
-              Falsification or misuse of this certificate is a violation of
-              state law and may result in civil or criminal penalties. This
-              certificate is valid only for the named tenant and address above.
+              document has been issued under the authority of the Northumberland
+              County Council and the Pennsylvania Department of Community
+              Affairs (DCA). Falsification or misuse of this certificate is a
+              violation of Pennsylvania law and may result in civil or criminal
+              penalties. This certificate is valid only for the named tenant and
+              address above.
             </span>
           </div>
 
@@ -693,14 +624,14 @@ export default function TanyaMarieMendyRegistrationPage() {
               paddingBottom: 48,
             }}
           >
-            {/* Signature 1 — Landlord */}
+            {/* Signature 1 */}
             <div style={{ textAlign: "center", minWidth: 180 }}>
               <div
                 style={{ position: "relative", height: 70, marginBottom: 8 }}
               >
                 <img
-                  src="/signature-1.jpg"
-                  alt="Alan Scott Signature"
+                  src="/daniel-hall-sig.png"
+                  alt="Aswad Rhinehart Signature"
                   style={{
                     position: "absolute",
                     bottom: 0,
@@ -720,7 +651,7 @@ export default function TanyaMarieMendyRegistrationPage() {
                     margin: "0 0 2px 0",
                   }}
                 >
-                  Alan Scott
+                  Aswad Rhinehart
                 </p>
                 <p
                   style={{
@@ -731,7 +662,7 @@ export default function TanyaMarieMendyRegistrationPage() {
                     margin: 0,
                   }}
                 >
-                  Landlord
+                  Landlord & Authorized Agent
                 </p>
                 <p
                   style={{
@@ -740,12 +671,12 @@ export default function TanyaMarieMendyRegistrationPage() {
                     margin: "2px 0 0 0",
                   }}
                 >
-                  Invitation Homes
+                  Core Key Realty
                 </p>
               </div>
             </div>
 
-            {/* Official Stamp */}
+            {/* Stamp */}
             <div
               style={{
                 display: "flex",
@@ -789,7 +720,7 @@ export default function TanyaMarieMendyRegistrationPage() {
                     margin: "0 0 3px 0",
                   }}
                 >
-                  Kootenai County
+                  Northumberland County
                 </p>
                 <div
                   style={{
@@ -801,7 +732,7 @@ export default function TanyaMarieMendyRegistrationPage() {
                 />
                 <p
                   style={{
-                    fontFamily: '"Playfair Display", serif',
+                    fontFamily: "'Playfair Display', serif",
                     fontSize: 14,
                     color: "#0f1f3d",
                     fontWeight: 700,
@@ -809,11 +740,11 @@ export default function TanyaMarieMendyRegistrationPage() {
                     lineHeight: 1,
                   }}
                 >
-                  Approved
+                  APPROVED
                 </p>
                 <p
                   style={{
-                    fontFamily: '"Playfair Display", serif',
+                    fontFamily: "'Playfair Display', serif",
                     fontSize: 12,
                     color: "#0f1f3d",
                     fontWeight: 700,
@@ -821,7 +752,7 @@ export default function TanyaMarieMendyRegistrationPage() {
                     lineHeight: 1,
                   }}
                 >
-                  &amp; Registered
+                  & REGISTERED
                 </p>
                 <div
                   style={{
@@ -839,19 +770,19 @@ export default function TanyaMarieMendyRegistrationPage() {
                     letterSpacing: "0.1em",
                   }}
                 >
-                  Housing Division
+                  HOUSING DIVISION
                 </p>
               </div>
             </div>
 
-            {/* Signature 2 — Attorney */}
+            {/* Signature 2 */}
             <div style={{ textAlign: "center", minWidth: 180 }}>
               <div
                 style={{ position: "relative", height: 70, marginBottom: 8 }}
               >
                 <img
-                  src="/images-sig-2.jpg"
-                  alt="Daniel Hall Signature"
+                  src="/robinson-allan-sig.png"
+                  alt="Daniel Signature"
                   style={{
                     position: "absolute",
                     bottom: 0,
@@ -871,7 +802,7 @@ export default function TanyaMarieMendyRegistrationPage() {
                     margin: "0 0 2px 0",
                   }}
                 >
-                  Daniel Hall, Esq.
+                  Daniel, Esq.
                 </p>
                 <p
                   style={{
@@ -883,6 +814,15 @@ export default function TanyaMarieMendyRegistrationPage() {
                   }}
                 >
                   Attorney of Record
+                </p>
+                <p
+                  style={{
+                    fontSize: 10,
+                    color: "#8a8070",
+                    margin: "2px 0 0 0",
+                  }}
+                >
+                  Bar No. PA-2014-00193
                 </p>
               </div>
             </div>
@@ -902,20 +842,20 @@ export default function TanyaMarieMendyRegistrationPage() {
           <p
             style={{
               color: "#b8c4d4",
-              fontSize: 12,
+              fontSize: 10,
               margin: 0,
               letterSpacing: "0.1em",
             }}
           >
-            Invitation Homes · Licensed Property Management
+            Core Key Realty · In partnership with Invitation Homes
           </p>
-          <p style={{ color: "#6b7a94", fontSize: 12, margin: 0 }}>
-            Kootenai County Council · Housing &amp; Property Division · Athol,
-            ID 83801
+          <p style={{ color: "#6b7a94", fontSize: 10, margin: 0 }}>
+            Northumberland County Council · Housing &amp; Property Division ·
+            Milton, PA 17847
           </p>
         </div>
 
-        {/* Gold bar */}
+        {/* Gold accent bar */}
         <div
           style={{
             background:

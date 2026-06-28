@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice - 2734 E Johnson St</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 40px;
+            color: #333;
+            background-color: #f9f9f9;
+        }
+        .invoice-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            margin: 0;
+            color: #2c3e50;
+            font-size: 28px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .section {
+            margin-bottom: 30px;
+        }
+        .section h2 {
+            font-size: 18px;
+            color: #7f8c8d;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+        }
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .detail-item {
+            margin-bottom: 10px;
+        }
+        .detail-label {
+            font-weight: bold;
+            color: #555;
+            display: block;
+            margin-bottom: 3px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f8f9fa;
+            color: #333;
+            font-weight: 600;
+        }
+        .amount {
+            text-align: right;
+            font-family: monospace;
+            font-size: 15px;
+        }
+        .total-row td {
+            font-weight: bold;
+            font-size: 18px;
+            border-top: 2px solid #2c3e50;
+        }
+        .note {
+            font-size: 12px;
+            color: #777;
+            font-style: italic;
+        }
+        @media print {
+            body {
+                background-color: #fff;
+                padding: 0;
+            }
+            .invoice-container {
+                box-shadow: none;
+                padding: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="invoice-container">
+        <div class="header">
+            <h1>Statement of Account</h1>
+            <p>Invoice for Move-In Fees</p>
+        </div>
+
+        <div class="section details-grid">
+            <div>
+                <div class="detail-item">
+                    <span class="detail-label">Property Address:</span>
+                    2734 E Johnson St<br>
+                    Madison, WI 53704
+                </div>
+            </div>
+            <div>
+                <div class="detail-item">
+                    <span class="detail-label">Tenant Name:</span>
+                    Tammy L Grigas
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Attorney Name:</span>
+                    Jeff Dianne
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Previous Payments Received</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Description</th>
+                        <th>Notes</th>
+                        <th class="amount">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Rent Payment (4 Months)</td>
+                        <td class="note">Paid via Cash App / Bitcoin</td>
+                        <td class="amount">$5,200.00</td>
+                    </tr>
+                    <tr>
+                        <td>Security Deposit</td>
+                        <td class="note">Paid via Apple Pay</td>
+                        <td class="amount">$800.00</td>
+                    </tr>
+                    <tr>
+                        <td>Application Fee</td>
+                        <td class="note">Paid via Zelle</td>
+                        <td class="amount">$55.00</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="note">* Promotional Discount Applied: 3 Months</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>New Balance Due - Move-In Fees</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Description</th>
+                        <th class="amount">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Council Fee</td>
+                        <td class="amount">$200.00</td>
+                    </tr>
+                    <tr>
+                        <td>Community Development Fee</td>
+                        <td class="amount">$500.00</td>
+                    </tr>
+                    <tr>
+                        <td>Rental Insurance (Annual)</td>
+                        <td class="amount">$1,000.00</td>
+                    </tr>
+                    <tr>
+                        <td>Caution Fee</td>
+                        <td class="amount">$300.00</td>
+                    </tr>
+                    <tr class="total-row">
+                        <td style="text-align: right;">TOTAL AMOUNT DUE:</td>
+                        <td class="amount">$2,000.00</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

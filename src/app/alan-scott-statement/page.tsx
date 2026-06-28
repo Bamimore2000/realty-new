@@ -7,6 +7,7 @@ import { Download, Printer, RefreshCw, Send } from "lucide-react";
 import { toast } from "sonner";
 import { sendStatementEmail } from "./actions";
 
+// ─── Shared styles ────────────────────────────────────────────────────────────
 const labelStyle: React.CSSProperties = {
   fontSize: 9,
   letterSpacing: "0.18em",
@@ -29,6 +30,7 @@ const tableStyle: React.CSSProperties = {
   fontSize: 13,
 };
 
+// ─── Sub-components ───────────────────────────────────────────────────────────
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
     <div
@@ -112,7 +114,8 @@ function Td({
   );
 }
 
-export default function WendyMitchemStatementPage() {
+// ─── Main Page ────────────────────────────────────────────────────────────────
+export default function AlanScottStatementPage() {
   const invoiceRef = useRef<HTMLDivElement>(null);
   const [isSending, setIsSending] = useState(false);
   const [email, setEmail] = useState("");
@@ -147,7 +150,7 @@ export default function WendyMitchemStatementPage() {
     try {
       const result = await generatePdfBase64();
       if (!result) return;
-      result.pdf.save("wendy-mitchem-statement.pdf");
+      result.pdf.save("timothy-johnson-statement.pdf");
       toast.success("PDF downloaded successfully!");
     } catch (err) {
       console.error(err);
@@ -167,7 +170,7 @@ export default function WendyMitchemStatementPage() {
       const res = await sendStatementEmail(
         email,
         result.base64,
-        "wendy-mitchem-statement.pdf",
+        "timothy-johnson-statement.pdf",
       );
       if (res.success) {
         toast.success("Statement emailed successfully!");
@@ -192,6 +195,7 @@ export default function WendyMitchemStatementPage() {
         minHeight: "100vh",
       }}
     >
+      {/* ── Action Bar ── */}
       <div
         className="no-print"
         style={{
@@ -289,6 +293,7 @@ export default function WendyMitchemStatementPage() {
         </button>
       </div>
 
+      {/* ── Document Container ── */}
       <div
         ref={invoiceRef}
         className="statement-document"
@@ -299,6 +304,7 @@ export default function WendyMitchemStatementPage() {
           boxShadow: "0 4px 40px rgba(0,0,0,0.12)",
         }}
       >
+        {/* Header */}
         <div
           style={{
             background: "#0f1f3d",
@@ -354,7 +360,7 @@ export default function WendyMitchemStatementPage() {
                   marginTop: 3,
                 }}
               >
-                Licensed Property Management · State of South Carolina
+                Licensed Property Management · State of Florida
               </div>
             </div>
           </div>
@@ -385,6 +391,7 @@ export default function WendyMitchemStatementPage() {
           </div>
         </div>
 
+        {/* Gold strip */}
         <div
           style={{
             background:
@@ -394,6 +401,7 @@ export default function WendyMitchemStatementPage() {
         />
 
         <div style={{ padding: "36px 48px" }}>
+          {/* Metadata Grid */}
           <div
             style={{
               display: "grid",
@@ -407,24 +415,22 @@ export default function WendyMitchemStatementPage() {
             <div>
               <p style={labelStyle}>Premises Address</p>
               <p style={{ ...valueStyle, marginTop: 4 }}>
-                4927 Highway 76 W
+                7216 E Emma St
                 <br />
-                Laurens, SC 29390
+                Tampa, FL 33610
               </p>
             </div>
             <div>
               <p style={labelStyle}>Lessee / Tenant</p>
-              <p style={{ ...valueStyle, marginTop: 4 }}>Wendy Mitchem</p>
+              <p style={{ ...valueStyle, marginTop: 4 }}>Timothy Elijah Johnson</p>
               <p style={{ ...labelStyle, marginTop: 10 }}>Lessor / Owner</p>
-              <p style={{ ...valueStyle, marginTop: 4 }}>Todd Nicholls</p>
+              <p style={{ ...valueStyle, marginTop: 4 }}>Alan Scott</p>
             </div>
             <div>
               <p style={labelStyle}>Attorney of Record</p>
-              <p style={{ ...valueStyle, marginTop: 4 }}>Daniel Hall, Esq.</p>
-              <p style={{ ...labelStyle, marginTop: 10 }}>
-                Governing Jurisdiction
-              </p>
-              <p style={{ ...valueStyle, marginTop: 4 }}>Laurens County, SC</p>
+              <p style={{ ...valueStyle, marginTop: 4 }}>Eric Hill, Esq.</p>
+              <p style={{ ...labelStyle, marginTop: 10 }}>Governing Jurisdiction</p>
+              <p style={{ ...valueStyle, marginTop: 4 }}>Hillsborough County, FL</p>
             </div>
             <div style={{ textAlign: "right" }}>
               <p style={labelStyle}>Invoice Reference</p>
@@ -437,13 +443,14 @@ export default function WendyMitchemStatementPage() {
                   marginTop: 4,
                 }}
               >
-                #INV-2026-0902
+                #INV-2026-0845
               </p>
               <p style={{ ...labelStyle, marginTop: 10 }}>Date Issued</p>
-              <p style={{ ...valueStyle, marginTop: 4 }}>June 21, 2026</p>
+              <p style={{ ...valueStyle, marginTop: 4 }}>June 4, 2026</p>
             </div>
           </div>
 
+          {/* Cleared Fees Banner */}
           <div
             style={{
               display: "flex",
@@ -455,18 +462,10 @@ export default function WendyMitchemStatementPage() {
               padding: "14px 18px",
               marginBottom: 28,
               flexWrap: "wrap",
-              gap: 8,
+              gap: 12,
             }}
           >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 12,
-                flex: 1,
-                minWidth: 280,
-              }}
-            >
+            <div style={{ display: "flex", alignItems: "center", gap: 12, flex: 1, minWidth: 280 }}>
               <div
                 style={{
                   width: 32,
@@ -498,16 +497,17 @@ export default function WendyMitchemStatementPage() {
                     margin: 0,
                   }}
                 >
-                  Previous Payments Fully Satisfied
+                  Initial Move-In Financial Obligations Fully Satisfied
                 </p>
                 <span style={{ fontSize: 11, color: "#388e3c" }}>
-                  Application fee ($65.00), security deposit, and four ($850.00)
-                  rent payments have been received and fully cleared.
+                  Pursuant to Florida Statutes § 83.49, the security deposit, initial rent, and all administrative and attorney fees 
+                  totalling $1,860.00 have been received and fully cleared by the escrow agent.
                 </span>
               </div>
             </div>
           </div>
 
+          {/* Legal Preamble */}
           <div
             style={{
               background: "#f7f4ef",
@@ -521,27 +521,17 @@ export default function WendyMitchemStatementPage() {
               lineHeight: 1.75,
             }}
           >
-            <strong
-              style={{
-                color: "#0f1f3d",
-                fontSize: 11,
-                letterSpacing: "0.06em",
-                textTransform: "uppercase",
-              }}
-            >
-              Possession & Key Handover Notice —
+            <strong style={{ color: "#0f1f3d", fontSize: 11, letterSpacing: "0.06em", textTransform: "uppercase" }}>
+              Possession &amp; Clearance Notice —
             </strong>{" "}
-            This official Statement of Account is issued by Invitation Homes to
-            Wendy Mitchem (hereinafter "Lessee") to confirm the successful
-            remittance of all previous payments, including application fee,
-            security deposit, and four ($850.00) rent payments. The home has
-            been registered in Lessee's name. The Lessor (Todd Nicholls) and
-            Attorney of Record Daniel Hall, Esq. acknowledge receipt of these
-            payments. Per South Carolina landlord-tenant law, Lessee is now
-            required to fulfill the payment of two months' rent prior to the
-            physical handover of keys.
+            This official Statement of Account is issued by Invitation Homes to Timothy Elijah Johnson (hereinafter "Lessee")
+            to confirm the successful remittance of the initial escrow deposits. The Lessor, <strong>Alan Scott</strong>,
+            and the Attorney of Record, <strong>Eric Hill, Esq.</strong>, acknowledge receipt of the $1,860.00 initial move-in
+            costs. Per Florida Statutes Chapter 83, Part II, the Lessee is now required to fulfill the final outstanding
+            condition of advance rent (Second Month's Rent) prior to the physical delivery of possession.
           </div>
 
+          {/* Previous Payments Received */}
           <div style={{ marginBottom: 28 }}>
             <SectionTitle>Schedule of Satisfied Payments</SectionTitle>
             <table style={tableStyle}>
@@ -556,213 +546,79 @@ export default function WendyMitchemStatementPage() {
               <tbody>
                 <Tr>
                   <Td>
-                    Application Fee
-                    <div
-                      style={{ fontSize: 10, color: "#8a8070", marginTop: 2 }}
-                    >
+                    Initial Rent Payment
+                    <div style={{ fontSize: 10, color: "#8a8070", marginTop: 2 }}>
+                      First month's rent
+                    </div>
+                  </Td>
+                  <Td note>FL Stat. § 83.46</Td>
+                  <Td>
+                    <span style={{ display: "inline-block", fontSize: 9, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", padding: "3px 8px", borderRadius: 10, background: "#eaf4ec", color: "#1b5e20" }}>
+                      ✓ Cleared
+                    </span>
+                  </Td>
+                  <Td mono>$800.00</Td>
+                </Tr>
+                <Tr>
+                  <Td>
+                    Security Deposit
+                    <div style={{ fontSize: 10, color: "#8a8070", marginTop: 2 }}>
+                      Held in non-interest bearing escrow
+                    </div>
+                  </Td>
+                  <Td note>FL Stat. § 83.49</Td>
+                  <Td>
+                    <span style={{ display: "inline-block", fontSize: 9, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", padding: "3px 8px", borderRadius: 10, background: "#eaf4ec", color: "#1b5e20" }}>
+                      ✓ Cleared
+                    </span>
+                  </Td>
+                  <Td mono>$500.00</Td>
+                </Tr>
+                <Tr>
+                  <Td>
+                    Attorney Fee
+                    <div style={{ fontSize: 10, color: "#8a8070", marginTop: 2 }}>
+                      Lease drafting and review by Eric Hill, Esq.
+                    </div>
+                  </Td>
+                  <Td note>Contractual</Td>
+                  <Td>
+                    <span style={{ display: "inline-block", fontSize: 9, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", padding: "3px 8px", borderRadius: 10, background: "#eaf4ec", color: "#1b5e20" }}>
+                      ✓ Cleared
+                    </span>
+                  </Td>
+                  <Td mono>$350.00</Td>
+                </Tr>
+                <Tr>
+                  <Td>
+                    Application / Admin Fee
+                    <div style={{ fontSize: 10, color: "#8a8070", marginTop: 2 }}>
                       Processing and background screening
                     </div>
                   </Td>
                   <Td note>Administrative</Td>
                   <Td>
-                    <span
-                      style={{
-                        display: "inline-block",
-                        fontSize: 9,
-                        fontWeight: 700,
-                        letterSpacing: "0.1em",
-                        textTransform: "uppercase",
-                        padding: "3px 8px",
-                        borderRadius: 10,
-                        background: "#eaf4ec",
-                        color: "#1b5e20",
-                      }}
-                    >
+                    <span style={{ display: "inline-block", fontSize: 9, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", padding: "3px 8px", borderRadius: 10, background: "#eaf4ec", color: "#1b5e20" }}>
                       ✓ Cleared
                     </span>
                   </Td>
-                  <Td mono>$65.00</Td>
-                </Tr>
-                <Tr>
-                  <Td>
-                    Security Deposit
-                    <div
-                      style={{ fontSize: 10, color: "#8a8070", marginTop: 2 }}
-                    >
-                      Held in non-interest bearing escrow
-                    </div>
-                  </Td>
-                  <Td note>South Carolina Code § 27-40-130</Td>
-                  <Td>
-                    <span
-                      style={{
-                        display: "inline-block",
-                        fontSize: 9,
-                        fontWeight: 700,
-                        letterSpacing: "0.1em",
-                        textTransform: "uppercase",
-                        padding: "3px 8px",
-                        borderRadius: 10,
-                        background: "#eaf4ec",
-                        color: "#1b5e20",
-                      }}
-                    >
-                      ✓ Cleared
-                    </span>
-                  </Td>
-                  <Td mono>TBD</Td>
-                </Tr>
-                <Tr>
-                  <Td>
-                    Rent Payment (1 of 4)
-                    <div
-                      style={{ fontSize: 10, color: "#8a8070", marginTop: 2 }}
-                    >
-                      Preceding monthly rent
-                    </div>
-                  </Td>
-                  <Td note>South Carolina Code § 27-40-710</Td>
-                  <Td>
-                    <span
-                      style={{
-                        display: "inline-block",
-                        fontSize: 9,
-                        fontWeight: 700,
-                        letterSpacing: "0.1em",
-                        textTransform: "uppercase",
-                        padding: "3px 8px",
-                        borderRadius: 10,
-                        background: "#eaf4ec",
-                        color: "#1b5e20",
-                      }}
-                    >
-                      ✓ Cleared
-                    </span>
-                  </Td>
-                  <Td mono>$850.00</Td>
-                </Tr>
-                <Tr>
-                  <Td>
-                    Rent Payment (2 of 4)
-                    <div
-                      style={{ fontSize: 10, color: "#8a8070", marginTop: 2 }}
-                    >
-                      Preceding monthly rent
-                    </div>
-                  </Td>
-                  <Td note>South Carolina Code § 27-40-710</Td>
-                  <Td>
-                    <span
-                      style={{
-                        display: "inline-block",
-                        fontSize: 9,
-                        fontWeight: 700,
-                        letterSpacing: "0.1em",
-                        textTransform: "uppercase",
-                        padding: "3px 8px",
-                        borderRadius: 10,
-                        background: "#eaf4ec",
-                        color: "#1b5e20",
-                      }}
-                    >
-                      ✓ Cleared
-                    </span>
-                  </Td>
-                  <Td mono>$850.00</Td>
-                </Tr>
-                <Tr>
-                  <Td>
-                    Rent Payment (3 of 4)
-                    <div
-                      style={{ fontSize: 10, color: "#8a8070", marginTop: 2 }}
-                    >
-                      Preceding monthly rent
-                    </div>
-                  </Td>
-                  <Td note>South Carolina Code § 27-40-710</Td>
-                  <Td>
-                    <span
-                      style={{
-                        display: "inline-block",
-                        fontSize: 9,
-                        fontWeight: 700,
-                        letterSpacing: "0.1em",
-                        textTransform: "uppercase",
-                        padding: "3px 8px",
-                        borderRadius: 10,
-                        background: "#eaf4ec",
-                        color: "#1b5e20",
-                      }}
-                    >
-                      ✓ Cleared
-                    </span>
-                  </Td>
-                  <Td mono>$850.00</Td>
-                </Tr>
-                <Tr>
-                  <Td>
-                    Rent Payment (4 of 4)
-                    <div
-                      style={{ fontSize: 10, color: "#8a8070", marginTop: 2 }}
-                    >
-                      Preceding monthly rent
-                    </div>
-                  </Td>
-                  <Td note>South Carolina Code § 27-40-710</Td>
-                  <Td>
-                    <span
-                      style={{
-                        display: "inline-block",
-                        fontSize: 9,
-                        fontWeight: 700,
-                        letterSpacing: "0.1em",
-                        textTransform: "uppercase",
-                        padding: "3px 8px",
-                        borderRadius: 10,
-                        background: "#eaf4ec",
-                        color: "#1b5e20",
-                      }}
-                    >
-                      ✓ Cleared
-                    </span>
-                  </Td>
-                  <Td mono>$850.00</Td>
+                  <Td mono>$210.00</Td>
                 </Tr>
                 <tr>
-                  <td
-                    colSpan={3}
-                    style={{
-                      background: "#f7f4ef",
-                      padding: "10px 14px",
-                      textAlign: "right",
-                      fontSize: 12,
-                      color: "#5a5048",
-                      fontStyle: "italic",
-                    }}
-                  >
+                  <td colSpan={3} style={{ background: "#f7f4ef", padding: "10px 14px", textAlign: "right", fontSize: 12, color: "#5a5048", fontStyle: "italic" }}>
                     Total Remittances Cleared to Date:
                   </td>
-                  <td
-                    style={{
-                      background: "#f7f4ef",
-                      padding: "10px 14px",
-                      textAlign: "right",
-                      fontSize: 14,
-                      fontWeight: 700,
-                      color: "#1b5e20",
-                    }}
-                  >
-                    $3,465.00 + Security Deposit
+                  <td style={{ background: "#f7f4ef", padding: "10px 14px", textAlign: "right", fontSize: 14, fontWeight: 700, color: "#1b5e20" }}>
+                    $1,860.00
                   </td>
                 </tr>
               </tbody>
             </table>
           </div>
 
+          {/* New Balance Due — Second Month's Rent */}
           <div style={{ marginBottom: 28 }}>
-            <SectionTitle>
-              Required Remittance — Final Two Months' Rent
-            </SectionTitle>
+            <SectionTitle>Required Remittance — Final Move-In Clearance</SectionTitle>
             <table style={tableStyle}>
               <thead>
                 <tr style={{ background: "#0f1f3d" }}>
@@ -782,44 +638,18 @@ export default function WendyMitchemStatementPage() {
                       color: "#5a3e00",
                     }}
                   >
-                    Final Two Months' Rent
-                    <div
-                      style={{
-                        fontSize: 11,
-                        fontWeight: 400,
-                        marginTop: 4,
-                        color: "#8a6000",
-                      }}
-                    >
-                      Final payment required to execute full lease and release
-                      the property keys; home already registered in Lessee's
-                      name.
+                    Second Month's Rent
+                    <div style={{ fontSize: 11, fontWeight: 400, marginTop: 4, color: "#8a6000" }}>
+                      Final advance rent required to execute the lease and release the property keys.
                     </div>
                   </td>
-                  <td
-                    style={{
-                      background: "#fff3cd",
-                      padding: "13px 14px",
-                      fontSize: 11,
-                      color: "#8a6000",
-                    }}
-                  >
+                  <td style={{ background: "#fff3cd", padding: "13px 14px", fontSize: 11, color: "#8a6000" }}>
                     <em>
-                      Pursuant to South Carolina Code § 27-40-710. Final rent
-                      required for full lease execution and key handover.
+                      Pursuant to FL Stat. § 83.46. Advance rent condition for lease execution.
                     </em>
                   </td>
-                  <td
-                    style={{
-                      background: "#fff3cd",
-                      padding: "13px 14px",
-                      fontWeight: 700,
-                      textAlign: "right",
-                      color: "#8a6000",
-                      fontSize: 16,
-                    }}
-                  >
-                    $1,700.00
+                  <td style={{ background: "#fff3cd", padding: "13px 14px", fontWeight: 700, textAlign: "right", color: "#8a6000", fontSize: 16 }}>
+                    $800.00
                   </td>
                 </tr>
                 <tr style={{ background: "#0f1f3d" }}>
@@ -845,13 +675,14 @@ export default function WendyMitchemStatementPage() {
                       fontWeight: 700,
                     }}
                   >
-                    $1,700.00
+                    $800.00
                   </td>
                 </tr>
               </tbody>
             </table>
           </div>
 
+          {/* Transition Notice Panel - THE ONLY OBSTACLE */}
           <div
             style={{
               background: "#fff8e8",
@@ -864,45 +695,23 @@ export default function WendyMitchemStatementPage() {
               alignItems: "flex-start",
             }}
           >
-            <div style={{ fontSize: 18, lineHeight: 1.1, marginTop: 2 }}>
-              ⚖️
-            </div>
+            <div style={{ fontSize: 18, lineHeight: 1.1, marginTop: 2 }}>⚖️</div>
             <div>
-              <div
-                style={{
-                  fontSize: 11,
-                  fontWeight: 700,
-                  color: "#7a5500",
-                  letterSpacing: "0.08em",
-                  textTransform: "uppercase",
-                  marginBottom: 5,
-                }}
-              >
+              <div style={{ fontSize: 11, fontWeight: 700, color: "#7a5500", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 5 }}>
                 Formal Notice — Final Obstacle to Possession
               </div>
-              <div
-                style={{ fontSize: 11.5, color: "#8a6000", lineHeight: 1.75 }}
-              >
-                Please be advised that the payment of the{" "}
-                <strong>Final Two Months' Rent ($1,700.00)</strong> is the{" "}
-                <strong>absolute final and only remaining obstacle</strong>{" "}
-                standing between you and taking possession of the home.
-                <br />
-                <br />
-                All other fees, deposits, and prior rent payments are completely
-                cleared and settled. The home is already registered in your
-                name!{" "}
-                <strong>
-                  Once this final $1,700.00 is remitted, everything will be 100%
-                  done.
-                </strong>{" "}
-                The keys will be handed over to you immediately, and full
-                possessory rights under the lease agreement will commence
-                without any further delays or hidden fees.
+              <div style={{ fontSize: 11.5, color: "#8a6000", lineHeight: 1.75 }}>
+                Please be advised that the payment of the <strong>Second Month's Rent ($800.00)</strong> is the 
+                <strong> absolute final and only remaining obstacle</strong> standing between you and taking possession of the home. 
+                <br /><br />
+                All other fees, deposits, and initial rent obligations are completely cleared and settled. 
+                <strong>Once this final $800.00 is remitted, everything will be 100% done.</strong> The keys will be handed over to you immediately, 
+                and full possessory rights under the lease agreement will commence without any further delays or hidden fees.
               </div>
             </div>
           </div>
 
+          {/* Footer note + seal */}
           <div
             style={{
               display: "flex",
@@ -924,28 +733,18 @@ export default function WendyMitchemStatementPage() {
                 }}
               >
                 <strong style={{ color: "#5a5048" }}>Disclaimer:</strong> This
-                document constitutes an official Statement of Account issued
-                under the authority of Invitation Homes, operating under South
-                Carolina landlord-tenant law. This document serves to outline
-                the financial conditions required to deliver keys and occupancy.
+                document constitutes an official Statement of Account issued under the
+                authority of Invitation Homes, operating under the Florida Residential Landlord and Tenant Act.
+                This document serves to outline the financial conditions required to deliver keys and occupancy.
               </p>
-              <p
-                style={{
-                  fontSize: 10,
-                  color: "#9a9080",
-                  lineHeight: 1.8,
-                  margin: 0,
-                }}
-              >
-                <strong style={{ color: "#5a5048" }}>Lessor:</strong> Todd
-                Nicholls &nbsp;|&nbsp;
-                <strong style={{ color: "#5a5048" }}>Attorney:</strong> Daniel
-                Hall, Esq. &nbsp;|&nbsp;
-                <strong style={{ color: "#5a5048" }}>Ref:</strong>{" "}
-                #INV-2026-0902
+              <p style={{ fontSize: 10, color: "#9a9080", lineHeight: 1.8, margin: 0 }}>
+                <strong style={{ color: "#5a5048" }}>Lessor:</strong> Alan Scott &nbsp;|&nbsp;
+                <strong style={{ color: "#5a5048" }}>Attorney:</strong> Eric Hill, Esq. &nbsp;|&nbsp;
+                <strong style={{ color: "#5a5048" }}>Ref:</strong> #INV-2026-0845
               </p>
             </div>
 
+            {/* Official seal */}
             <div
               style={{
                 width: 116,
@@ -1007,12 +806,13 @@ export default function WendyMitchemStatementPage() {
                 >
                   Licensed
                   <br />
-                  South Carolina
+                  Florida
                 </div>
               </div>
             </div>
           </div>
 
+          {/* Signature block */}
           <div
             style={{
               display: "grid",
@@ -1023,13 +823,12 @@ export default function WendyMitchemStatementPage() {
               borderTop: "1px solid #e8e4dc",
             }}
           >
+            {/* Alan Scott */}
             <div>
-              <div
-                style={{ height: 56, marginBottom: 0, position: "relative" }}
-              >
+              <div style={{ height: 56, marginBottom: 0, position: "relative" }}>
                 <img
-                  src="/signature-1.jpg"
-                  alt="Landlord Signature"
+                  src="/robinson-allan-sig.png"
+                  alt="Alan Scott Signature"
                   style={{
                     height: 52,
                     maxWidth: "100%",
@@ -1043,7 +842,7 @@ export default function WendyMitchemStatementPage() {
                 style={{ height: 1, background: "#1a1a1a", marginBottom: 6 }}
               />
               <div style={{ fontSize: 10, color: "#5a5048", fontWeight: 600 }}>
-                Todd Nicholls
+                Alan Scott
               </div>
               <div
                 style={{
@@ -1058,11 +857,12 @@ export default function WendyMitchemStatementPage() {
               </div>
             </div>
 
+            {/* Eric Hill */}
             <div>
               <div style={{ height: 56, marginBottom: 0 }}>
                 <img
-                  src="/images-sig-2.jpg"
-                  alt="Daniel Hall Signature"
+                  src="/daniel-hall-sig.png"
+                  alt="Eric Hill Signature"
                   style={{
                     height: 52,
                     maxWidth: "100%",
@@ -1076,7 +876,7 @@ export default function WendyMitchemStatementPage() {
                 style={{ height: 1, background: "#1a1a1a", marginBottom: 6 }}
               />
               <div style={{ fontSize: 10, color: "#5a5048", fontWeight: 600 }}>
-                Daniel Hall, Esq.
+                Eric Hill, Esq.
               </div>
               <div
                 style={{
@@ -1091,13 +891,14 @@ export default function WendyMitchemStatementPage() {
               </div>
             </div>
 
+            {/* Lessee — blank */}
             <div>
               <div style={{ height: 56, marginBottom: 0 }} />
               <div
                 style={{ height: 1, background: "#1a1a1a", marginBottom: 6 }}
               />
               <div style={{ fontSize: 10, color: "#5a5048", fontWeight: 600 }}>
-                Wendy Mitchem
+                Timothy Elijah Johnson
               </div>
               <div
                 style={{
@@ -1113,6 +914,7 @@ export default function WendyMitchemStatementPage() {
             </div>
           </div>
 
+          {/* Footer bar */}
           <div
             style={{
               background: "#0f1f3d",
@@ -1125,22 +927,24 @@ export default function WendyMitchemStatementPage() {
               gap: 8,
             }}
           >
-            <div
-              style={{ color: "#b8c4d4", fontSize: 10, letterSpacing: "0.1em" }}
-            >
-              Invitation Homes &nbsp;·&nbsp; Licensed South Carolina Property
-              Management
+            <div style={{ color: "#b8c4d4", fontSize: 10, letterSpacing: "0.1em" }}>
+              Invitation Homes &nbsp;·&nbsp; Licensed Florida Property Management
             </div>
-            <div
-              style={{ color: "#6a7a90", fontSize: 9, letterSpacing: "0.08em" }}
-            >
-              South Carolina Code § 27-40-710 &nbsp;·&nbsp; Ref: #INV-2026-0902
-              &nbsp;·&nbsp; Issued: June 21, 2026
+            <div style={{ color: "#6a7a90", fontSize: 9, letterSpacing: "0.08em" }}>
+              FL Stat. Ch. 83 &nbsp;·&nbsp; Ref: #INV-2026-0845 &nbsp;·&nbsp; Issued: June 4, 2026
             </div>
           </div>
         </div>
       </div>
 
+      <style>{`
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @media print {
+          .no-print { display: none !important; }
+          body { background: #fff !important; padding: 0 !important; }
+          .statement-document { box-shadow: none !important; margin: 0 !important; max-width: 100% !important; }
+        }
+      `}</style>
     </div>
   );
 }

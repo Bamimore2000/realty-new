@@ -139,7 +139,7 @@ const PENDING = (
   </span>
 );
 
-export default function TanyaMarieMendyStatementPage() {
+export default function DarinLarisonStatementPage() {
   const ref = useRef<HTMLDivElement>(null);
   const [sending, setSending] = useState(false);
   const [email, setEmail] = useState("");
@@ -168,7 +168,7 @@ export default function TanyaMarieMendyStatementPage() {
     try {
       const r = await genPdf();
       if (!r) return;
-      r.pdf.save("tanya-marie-mendy-statement.pdf");
+      r.pdf.save("darin-larison-statement.pdf");
       toast.success("Downloaded!");
     } catch {
       toast.error("Failed to generate PDF.");
@@ -187,7 +187,7 @@ export default function TanyaMarieMendyStatementPage() {
       const res = await sendStatementEmail(
         email,
         r.base64,
-        "tanya-marie-mendy-statement.pdf",
+        "darin-larison-statement.pdf",
       );
       res.success
         ? toast.success("Statement emailed!")
@@ -368,7 +368,7 @@ export default function TanyaMarieMendyStatementPage() {
                   marginTop: 3,
                 }}
               >
-                Licensed Property Management · State of Idaho
+                Licensed Property Management · State of Washington
               </div>
             </div>
           </div>
@@ -420,22 +420,24 @@ export default function TanyaMarieMendyStatementPage() {
             <div>
               <p style={lbl}>Premises Address</p>
               <p style={{ ...val, marginTop: 4 }}>
-                6550 Kelso Lake Rd
+                2303 Pacific Ave
                 <br />
-                Athol, ID 83801
+                Hoquiam, WA 98550
               </p>
             </div>
             <div>
               <p style={lbl}>Lessee / Tenant</p>
-              <p style={{ ...val, marginTop: 4 }}>Mrs. Tanya Marie Mendy</p>
+              <p style={{ ...val, marginTop: 4 }}>Darin Larison</p>
               <p style={{ ...lbl, marginTop: 10 }}>Lessor / Owner</p>
-              <p style={{ ...val, marginTop: 4 }}>Alan Scott</p>
+              <p style={{ ...val, marginTop: 4 }}>Todd Nicholls</p>
             </div>
             <div>
               <p style={lbl}>Attorney of Record</p>
-              <p style={{ ...val, marginTop: 4 }}>Daniel Hall, Esq.</p>
+              <p style={{ ...val, marginTop: 4 }}>Robertson Allan</p>
               <p style={{ ...lbl, marginTop: 10 }}>Governing Jurisdiction</p>
-              <p style={{ ...val, marginTop: 4 }}>Kootenai County, Idaho</p>
+              <p style={{ ...val, marginTop: 4 }}>
+                Grays Harbor County, Washington
+              </p>
             </div>
             <div style={{ textAlign: "right" }}>
               <p style={lbl}>Invoice Reference</p>
@@ -448,10 +450,10 @@ export default function TanyaMarieMendyStatementPage() {
                   marginTop: 4,
                 }}
               >
-                #INV-2026-0903
+                #INV-2026-0905
               </p>
               <p style={{ ...lbl, marginTop: 10 }}>Date Issued</p>
-              <p style={{ ...val, marginTop: 4 }}>June 23, 2026</p>
+              <p style={{ ...val, marginTop: 4 }}>June 28, 2026</p>
             </div>
           </div>
 
@@ -499,11 +501,11 @@ export default function TanyaMarieMendyStatementPage() {
                   margin: 0,
                 }}
               >
-                Initial Fees Fully Satisfied — $740.00
+                Initial Fees Satisfied — $550.00
               </p>
               <span style={{ fontSize: 11, color: "#388e3c" }}>
-                Application fee ($140.00) and security deposit ($600.00) have
-                been received and fully cleared.
+                Application Fee ($50.00) and partial Security Deposit ($500.00)
+                have been received and fully cleared.
               </span>
             </div>
           </div>
@@ -530,15 +532,15 @@ export default function TanyaMarieMendyStatementPage() {
                 textTransform: "uppercase",
               }}
             >
-              Possession &amp; Key Handover Notice —{" "}
+              Registration In Progress —{" "}
             </strong>
-            This Statement of Account is issued by Invitation Homes to{" "}
-            <strong>Mrs. Tanya Marie Mendy</strong> (hereinafter "Lessee")
-            confirming receipt of initial payments. The Lessor,{" "}
-            <strong>Alan Scott</strong>, and Attorney of Record,{" "}
-            <strong>Daniel Hall, Esq.</strong>, acknowledge these payments. Keys
-            will be handed over upon full payment of the{" "}
-            <strong>$900.00</strong> outstanding balance.
+            This Statement of Account is issued by Invitation Homes to
+            <strong>Darin Larison</strong> (hereinafter "Lessee")
+            confirming receipt of initial fees and partial security deposit.
+            The Lessor, <strong>Todd Nicholls</strong>, and Attorney of Record,
+            <strong>Robertson Allan</strong>, acknowledge these payments.
+            Keys will be handed over upon full payment of remaining $300.00
+            security deposit and $1000.00 advance rent for batch receipt generation.
           </div>
 
           {/* Paid table */}
@@ -558,27 +560,36 @@ export default function TanyaMarieMendyStatementPage() {
                   <Td>
                     Application Fee
                     <div
-                      style={{ fontSize: 10, color: "#8a8070", marginTop: 2 }}
+                      style={{
+                        fontSize: 10,
+                        color: "#8a8070",
+                        marginTop: 2,
+                      }}
                     >
-                      Processing and background screening
+                      Processing and background screening (applied to security
+                      deposit)
                     </div>
                   </Td>
                   <Td note>Administrative</Td>
                   <Td>{CLEARED}</Td>
-                  <Td mono>$140.00</Td>
+                  <Td mono>$50.00</Td>
                 </tr>
                 <tr style={{ borderBottom: "1px solid #f0ede8" }}>
                   <Td>
-                    Security Deposit
+                    Security Deposit (Partial)
                     <div
-                      style={{ fontSize: 10, color: "#8a8070", marginTop: 2 }}
+                      style={{
+                        fontSize: 10,
+                        color: "#8a8070",
+                        marginTop: 2,
+                      }}
                     >
-                      Refundable damage deposit
+                      Partial payment of refundable damage deposit
                     </div>
                   </Td>
-                  <Td note>Idaho Code Title 55</Td>
+                  <Td note>Washington State Landlord-Tenant Act</Td>
                   <Td>{CLEARED}</Td>
-                  <Td mono>$600.00</Td>
+                  <Td mono>$500.00</Td>
                 </tr>
                 <tr>
                   <td
@@ -604,7 +615,7 @@ export default function TanyaMarieMendyStatementPage() {
                       color: "#1b5e20",
                     }}
                   >
-                    $740.00
+                    $550.00
                   </td>
                 </tr>
               </tbody>
@@ -614,7 +625,7 @@ export default function TanyaMarieMendyStatementPage() {
           {/* Pending table */}
           <div style={{ marginBottom: 28 }}>
             <SecTitle>
-              Outstanding Balance — Required Prior to Key Handover
+              Outstanding Payments — Required for Key Handover & Batch Receipts
             </SecTitle>
             <table style={tbl}>
               <thead>
@@ -626,7 +637,7 @@ export default function TanyaMarieMendyStatementPage() {
                 </tr>
               </thead>
               <tbody>
-                <tr>
+                <tr style={{ borderBottom: "1px solid #f0ede8" }}>
                   <td
                     style={{
                       background: "#fff3cd",
@@ -636,7 +647,7 @@ export default function TanyaMarieMendyStatementPage() {
                       color: "#5a3e00",
                     }}
                   >
-                    Remaining Balance — Key Handover Fee
+                    Remaining Security Deposit
                     <div
                       style={{
                         fontSize: 11,
@@ -645,8 +656,7 @@ export default function TanyaMarieMendyStatementPage() {
                         color: "#8a6000",
                       }}
                     >
-                      Required payment prior to handover of keys and
-                      commencement of tenancy.
+                      Final portion to complete security deposit
                     </div>
                   </td>
                   <td
@@ -658,8 +668,7 @@ export default function TanyaMarieMendyStatementPage() {
                     }}
                   >
                     <em>
-                      Pursuant to Idaho landlord-tenant law and executed lease
-                      agreement.
+                      Washington State Landlord-Tenant Act
                     </em>
                   </td>
                   <td style={{ background: "#fff3cd", padding: "13px 14px" }}>
@@ -672,10 +681,62 @@ export default function TanyaMarieMendyStatementPage() {
                       fontWeight: 700,
                       textAlign: "right",
                       color: "#8a6000",
-                      fontSize: 16,
+                      fontSize: "16",
                     }}
                   >
-                    $900.00
+                    $300.00
+                  </td>
+                </tr>
+                <tr>
+                  <td
+                    style={{
+                      background: "#fff3cd",
+                      borderLeft: "4px solid #d4ad52",
+                      padding: "13px 14px",
+                      fontWeight: 600,
+                      color: "#5a3e00",
+                    }}
+                  >
+                    Next Month's Advance Rent
+                    <div
+                      style={{
+                        fontSize: 11,
+                        fontWeight: 400,
+                        marginTop: 4,
+                        color: "#8a6000",
+                      }}
+                    >
+                      Prepaid rent for upcoming month to facilitate batch receipt
+                      generation
+                    </div>
+                  </td>
+                  <td
+                    style={{
+                      background: "#fff3cd",
+                      padding: "13px 14px",
+                      fontSize: 11,
+                      color: "#8a6000",
+                    }}
+                  >
+                    <em>
+                      Requested per Invitation Homes' request for batch receipt
+                      processing
+                    </em>
+                  </td>
+                  <td style={{ background: "#fff3cd", padding: "13px 14px" }}>
+                    {PENDING}
+                  </td>
+                  <td
+                    style={{
+                      background: "#fff3cd",
+                      padding: "13px 14px",
+                      fontWeight: 700,
+                      textAlign: "right",
+                      color: "#8a6000",
+                      fontSize: "16",
+                    }}
+                  >
+                    $1,000.00
                   </td>
                 </tr>
                 <tr style={{ background: "#0f1f3d" }}>
@@ -689,20 +750,20 @@ export default function TanyaMarieMendyStatementPage() {
                       textTransform: "uppercase",
                     }}
                   >
-                    Total Balance Now Due — Keys Handed Over Upon Full Payment
+                    Total Balance Due:
                   </td>
                   <td style={{ padding: "16px 14px" }} />
                   <td
                     style={{
                       padding: "16px 14px",
                       fontFamily: '"Playfair Display", serif',
-                      fontSize: 28,
+                      fontSize: "28",
                       color: "#d4ad52",
                       textAlign: "right",
-                      fontWeight: 700,
+                      fontWeight: "700",
                     }}
                   >
-                    $900.00
+                    $1,300.00
                   </td>
                 </tr>
               </tbody>
@@ -712,8 +773,8 @@ export default function TanyaMarieMendyStatementPage() {
           {/* Legal */}
           <div
             style={{
-              background: "#fff8e8",
-              border: "1px solid #e8c94a",
+              background: "#fff3cd",
+              border: "1px solid #d4ad52",
               borderRadius: 6,
               padding: "14px 18px",
               marginBottom: 28,
@@ -730,22 +791,21 @@ export default function TanyaMarieMendyStatementPage() {
                 style={{
                   fontSize: 11,
                   fontWeight: 700,
-                  color: "#7a5500",
+                  color: "#8a6000",
                   letterSpacing: "0.08em",
                   textTransform: "uppercase",
                   marginBottom: 5,
                 }}
               >
-                Formal Notice — Key Handover Condition
+                Formal Notice — Pending Payments Required
               </div>
               <div
-                style={{ fontSize: 11.5, color: "#8a6000", lineHeight: 1.75 }}
+                style={{ fontSize: 11.5, color: "#5a3e00", lineHeight: 1.75 }}
               >
-                The outstanding balance of <strong>$900.00</strong> must be paid
-                in full before the keys to the property are handed over to{" "}
-                <strong>Mrs. Tanya Marie Mendy</strong>. Settlement of this
-                amount is a mandatory condition under the executed lease
-                agreement.
+                Remaining security deposit ($300.00) and advance rent ($1000.00)
+                must be paid in full before keys to the property are handed over
+                to <strong>Darin Larison</strong>. Both payments are required to
+                complete batch receipt generation.
               </div>
             </div>
           </div>
@@ -765,7 +825,7 @@ export default function TanyaMarieMendyStatementPage() {
               <div style={{ height: 56, marginBottom: 0 }}>
                 <img
                   src="/signature-1.jpg"
-                  alt="Alan Scott"
+                  alt="Todd Nicholls"
                   style={{
                     height: 52,
                     maxWidth: "100%",
@@ -776,10 +836,14 @@ export default function TanyaMarieMendyStatementPage() {
                 />
               </div>
               <div
-                style={{ height: 1, background: "#1a1a1a", marginBottom: 6 }}
+                style={{
+                  height: 1,
+                  background: "#1a1a1a",
+                  marginBottom: 6,
+                }}
               />
               <div style={{ fontSize: 10, color: "#5a5048", fontWeight: 600 }}>
-                Alan Scott
+                Todd Nicholls
               </div>
               <div
                 style={{
@@ -796,8 +860,8 @@ export default function TanyaMarieMendyStatementPage() {
             <div>
               <div style={{ height: 56, marginBottom: 0 }}>
                 <img
-                  src="/images-sig-2.jpg"
-                  alt="Daniel Hall"
+                  src="/robinson-allan-sig.png"
+                  alt="Robertson Allan"
                   style={{
                     height: 52,
                     maxWidth: "100%",
@@ -808,10 +872,14 @@ export default function TanyaMarieMendyStatementPage() {
                 />
               </div>
               <div
-                style={{ height: 1, background: "#1a1a1a", marginBottom: 6 }}
+                style={{
+                  height: 1,
+                  background: "#1a1a1a",
+                  marginBottom: 6,
+                }}
               />
               <div style={{ fontSize: 10, color: "#5a5048", fontWeight: 600 }}>
-                Daniel Hall, Esq.
+                Robertson Allan
               </div>
               <div
                 style={{
@@ -828,10 +896,14 @@ export default function TanyaMarieMendyStatementPage() {
             <div>
               <div style={{ height: 56, marginBottom: 0 }} />
               <div
-                style={{ height: 1, background: "#1a1a1a", marginBottom: 6 }}
+                style={{
+                  height: 1,
+                  background: "#1a1a1a",
+                  marginBottom: 6,
+                }}
               />
               <div style={{ fontSize: 10, color: "#5a5048", fontWeight: 600 }}>
-                Mrs. Tanya Marie Mendy
+                Darin Larison
               </div>
               <div
                 style={{
@@ -863,11 +935,12 @@ export default function TanyaMarieMendyStatementPage() {
             <div
               style={{ color: "#b8c4d4", fontSize: 10, letterSpacing: "0.1em" }}
             >
-              Invitation Homes &nbsp;·&nbsp; Licensed Idaho Property Management
+              Invitation Homes &nbsp;·&nbsp; Licensed Washington Property
+              Management
             </div>
             <div style={{ color: "#6a7a90", fontSize: 9 }}>
-              Idaho Landlord-Tenant Law &nbsp;·&nbsp; Ref: #INV-2026-0903
-              &nbsp;·&nbsp; Issued: June 23, 2026
+              Washington State Landlord-Tenant Law &nbsp;·&nbsp; Ref:
+              #INV-2026-0905 &nbsp;·&nbsp; Issued: June 28, 2026
             </div>
           </div>
         </div>

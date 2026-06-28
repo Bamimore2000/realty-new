@@ -112,7 +112,7 @@ function Td({
   );
 }
 
-export default function WendyMitchemStatementPage() {
+export default function PabloLopezStatementPage() {
   const invoiceRef = useRef<HTMLDivElement>(null);
   const [isSending, setIsSending] = useState(false);
   const [email, setEmail] = useState("");
@@ -147,7 +147,7 @@ export default function WendyMitchemStatementPage() {
     try {
       const result = await generatePdfBase64();
       if (!result) return;
-      result.pdf.save("wendy-mitchem-statement.pdf");
+      result.pdf.save("pablo-lopez-statement.pdf");
       toast.success("PDF downloaded successfully!");
     } catch (err) {
       console.error(err);
@@ -167,7 +167,7 @@ export default function WendyMitchemStatementPage() {
       const res = await sendStatementEmail(
         email,
         result.base64,
-        "wendy-mitchem-statement.pdf",
+        "pablo-lopez-statement.pdf",
       );
       if (res.success) {
         toast.success("Statement emailed successfully!");
@@ -354,7 +354,7 @@ export default function WendyMitchemStatementPage() {
                   marginTop: 3,
                 }}
               >
-                Licensed Property Management · State of South Carolina
+                Licensed Property Management · State of Tennessee
               </div>
             </div>
           </div>
@@ -407,16 +407,16 @@ export default function WendyMitchemStatementPage() {
             <div>
               <p style={labelStyle}>Premises Address</p>
               <p style={{ ...valueStyle, marginTop: 4 }}>
-                4927 Highway 76 W
+                1004 Dartmouth St
                 <br />
-                Laurens, SC 29390
+                Chattanooga, TN 37405
               </p>
             </div>
             <div>
               <p style={labelStyle}>Lessee / Tenant</p>
-              <p style={{ ...valueStyle, marginTop: 4 }}>Wendy Mitchem</p>
+              <p style={{ ...valueStyle, marginTop: 4 }}>Pablo Lopez</p>
               <p style={{ ...labelStyle, marginTop: 10 }}>Lessor / Owner</p>
-              <p style={{ ...valueStyle, marginTop: 4 }}>Todd Nicholls</p>
+              <p style={{ ...valueStyle, marginTop: 4 }}>Robert Sansone</p>
             </div>
             <div>
               <p style={labelStyle}>Attorney of Record</p>
@@ -424,7 +424,9 @@ export default function WendyMitchemStatementPage() {
               <p style={{ ...labelStyle, marginTop: 10 }}>
                 Governing Jurisdiction
               </p>
-              <p style={{ ...valueStyle, marginTop: 4 }}>Laurens County, SC</p>
+              <p style={{ ...valueStyle, marginTop: 4 }}>
+                Hamilton County, Tennessee
+              </p>
             </div>
             <div style={{ textAlign: "right" }}>
               <p style={labelStyle}>Invoice Reference</p>
@@ -437,10 +439,10 @@ export default function WendyMitchemStatementPage() {
                   marginTop: 4,
                 }}
               >
-                #INV-2026-0902
+                #INV-2026-0925
               </p>
               <p style={{ ...labelStyle, marginTop: 10 }}>Date Issued</p>
-              <p style={{ ...valueStyle, marginTop: 4 }}>June 21, 2026</p>
+              <p style={{ ...valueStyle, marginTop: 4 }}>June 19, 2026</p>
             </div>
           </div>
 
@@ -498,11 +500,11 @@ export default function WendyMitchemStatementPage() {
                     margin: 0,
                   }}
                 >
-                  Previous Payments Fully Satisfied
+                  Application Fees Fully Satisfied
                 </p>
                 <span style={{ fontSize: 11, color: "#388e3c" }}>
-                  Application fee ($65.00), security deposit, and four ($850.00)
-                  rent payments have been received and fully cleared.
+                  Two adult application fees totaling $140.00 have been
+                  received and fully cleared via Chime.
                 </span>
               </div>
             </div>
@@ -529,17 +531,16 @@ export default function WendyMitchemStatementPage() {
                 textTransform: "uppercase",
               }}
             >
-              Possession & Key Handover Notice —
+              Possession &amp; Key Handover Notice —
             </strong>{" "}
             This official Statement of Account is issued by Invitation Homes to
-            Wendy Mitchem (hereinafter "Lessee") to confirm the successful
-            remittance of all previous payments, including application fee,
-            security deposit, and four ($850.00) rent payments. The home has
-            been registered in Lessee's name. The Lessor (Todd Nicholls) and
-            Attorney of Record Daniel Hall, Esq. acknowledge receipt of these
-            payments. Per South Carolina landlord-tenant law, Lessee is now
-            required to fulfill the payment of two months' rent prior to the
-            physical handover of keys.
+            Pablo Lopez (hereinafter "Lessee") to confirm the successful
+            remittance of the application fees. The Lessor,{" "}
+            <strong>Robert Sansone</strong>, and the Attorney of Record,{" "}
+            <strong>Daniel Hall, Esq.</strong>, acknowledge receipt of these
+            payments. Per Tennessee landlord-tenant law, the Lessee is now
+            required to fulfill the payment of the minimum pre-meeting deposit
+            prior to proceeding further.
           </div>
 
           <div style={{ marginBottom: 28 }}>
@@ -556,7 +557,7 @@ export default function WendyMitchemStatementPage() {
               <tbody>
                 <Tr>
                   <Td>
-                    Application Fee
+                    Application Fee - Adult 1
                     <div
                       style={{ fontSize: 10, color: "#8a8070", marginTop: 2 }}
                     >
@@ -581,18 +582,18 @@ export default function WendyMitchemStatementPage() {
                       ✓ Cleared
                     </span>
                   </Td>
-                  <Td mono>$65.00</Td>
+                  <Td mono>$70.00</Td>
                 </Tr>
                 <Tr>
                   <Td>
-                    Security Deposit
+                    Application Fee - Adult 2
                     <div
                       style={{ fontSize: 10, color: "#8a8070", marginTop: 2 }}
                     >
-                      Held in non-interest bearing escrow
+                      Processing and background screening
                     </div>
                   </Td>
-                  <Td note>South Carolina Code § 27-40-130</Td>
+                  <Td note>Administrative</Td>
                   <Td>
                     <span
                       style={{
@@ -610,123 +611,7 @@ export default function WendyMitchemStatementPage() {
                       ✓ Cleared
                     </span>
                   </Td>
-                  <Td mono>TBD</Td>
-                </Tr>
-                <Tr>
-                  <Td>
-                    Rent Payment (1 of 4)
-                    <div
-                      style={{ fontSize: 10, color: "#8a8070", marginTop: 2 }}
-                    >
-                      Preceding monthly rent
-                    </div>
-                  </Td>
-                  <Td note>South Carolina Code § 27-40-710</Td>
-                  <Td>
-                    <span
-                      style={{
-                        display: "inline-block",
-                        fontSize: 9,
-                        fontWeight: 700,
-                        letterSpacing: "0.1em",
-                        textTransform: "uppercase",
-                        padding: "3px 8px",
-                        borderRadius: 10,
-                        background: "#eaf4ec",
-                        color: "#1b5e20",
-                      }}
-                    >
-                      ✓ Cleared
-                    </span>
-                  </Td>
-                  <Td mono>$850.00</Td>
-                </Tr>
-                <Tr>
-                  <Td>
-                    Rent Payment (2 of 4)
-                    <div
-                      style={{ fontSize: 10, color: "#8a8070", marginTop: 2 }}
-                    >
-                      Preceding monthly rent
-                    </div>
-                  </Td>
-                  <Td note>South Carolina Code § 27-40-710</Td>
-                  <Td>
-                    <span
-                      style={{
-                        display: "inline-block",
-                        fontSize: 9,
-                        fontWeight: 700,
-                        letterSpacing: "0.1em",
-                        textTransform: "uppercase",
-                        padding: "3px 8px",
-                        borderRadius: 10,
-                        background: "#eaf4ec",
-                        color: "#1b5e20",
-                      }}
-                    >
-                      ✓ Cleared
-                    </span>
-                  </Td>
-                  <Td mono>$850.00</Td>
-                </Tr>
-                <Tr>
-                  <Td>
-                    Rent Payment (3 of 4)
-                    <div
-                      style={{ fontSize: 10, color: "#8a8070", marginTop: 2 }}
-                    >
-                      Preceding monthly rent
-                    </div>
-                  </Td>
-                  <Td note>South Carolina Code § 27-40-710</Td>
-                  <Td>
-                    <span
-                      style={{
-                        display: "inline-block",
-                        fontSize: 9,
-                        fontWeight: 700,
-                        letterSpacing: "0.1em",
-                        textTransform: "uppercase",
-                        padding: "3px 8px",
-                        borderRadius: 10,
-                        background: "#eaf4ec",
-                        color: "#1b5e20",
-                      }}
-                    >
-                      ✓ Cleared
-                    </span>
-                  </Td>
-                  <Td mono>$850.00</Td>
-                </Tr>
-                <Tr>
-                  <Td>
-                    Rent Payment (4 of 4)
-                    <div
-                      style={{ fontSize: 10, color: "#8a8070", marginTop: 2 }}
-                    >
-                      Preceding monthly rent
-                    </div>
-                  </Td>
-                  <Td note>South Carolina Code § 27-40-710</Td>
-                  <Td>
-                    <span
-                      style={{
-                        display: "inline-block",
-                        fontSize: 9,
-                        fontWeight: 700,
-                        letterSpacing: "0.1em",
-                        textTransform: "uppercase",
-                        padding: "3px 8px",
-                        borderRadius: 10,
-                        background: "#eaf4ec",
-                        color: "#1b5e20",
-                      }}
-                    >
-                      ✓ Cleared
-                    </span>
-                  </Td>
-                  <Td mono>$850.00</Td>
+                  <Td mono>$70.00</Td>
                 </Tr>
                 <tr>
                   <td
@@ -752,7 +637,7 @@ export default function WendyMitchemStatementPage() {
                       color: "#1b5e20",
                     }}
                   >
-                    $3,465.00 + Security Deposit
+                    $140.00
                   </td>
                 </tr>
               </tbody>
@@ -761,7 +646,7 @@ export default function WendyMitchemStatementPage() {
 
           <div style={{ marginBottom: 28 }}>
             <SectionTitle>
-              Required Remittance — Final Two Months' Rent
+              Required Remittance — Minimum Pre-Meeting Deposit
             </SectionTitle>
             <table style={tableStyle}>
               <thead>
@@ -782,7 +667,7 @@ export default function WendyMitchemStatementPage() {
                       color: "#5a3e00",
                     }}
                   >
-                    Final Two Months' Rent
+                    Minimum Pre-Meeting Deposit
                     <div
                       style={{
                         fontSize: 11,
@@ -791,9 +676,8 @@ export default function WendyMitchemStatementPage() {
                         color: "#8a6000",
                       }}
                     >
-                      Final payment required to execute full lease and release
-                      the property keys; home already registered in Lessee's
-                      name.
+                      Required payment to proceed with the meeting and finalize
+                      tenancy arrangements.
                     </div>
                   </td>
                   <td
@@ -805,8 +689,8 @@ export default function WendyMitchemStatementPage() {
                     }}
                   >
                     <em>
-                      Pursuant to South Carolina Code § 27-40-710. Final rent
-                      required for full lease execution and key handover.
+                      Pursuant to Tennessee landlord-tenant law. Deposit
+                      required to proceed with tenancy process.
                     </em>
                   </td>
                   <td
@@ -819,7 +703,7 @@ export default function WendyMitchemStatementPage() {
                       fontSize: 16,
                     }}
                   >
-                    $1,700.00
+                    $300.00
                   </td>
                 </tr>
                 <tr style={{ background: "#0f1f3d" }}>
@@ -845,7 +729,7 @@ export default function WendyMitchemStatementPage() {
                       fontWeight: 700,
                     }}
                   >
-                    $1,700.00
+                    $300.00
                   </td>
                 </tr>
               </tbody>
@@ -878,27 +762,23 @@ export default function WendyMitchemStatementPage() {
                   marginBottom: 5,
                 }}
               >
-                Formal Notice — Final Obstacle to Possession
+                Formal Notice — Pre-Meeting Requirement
               </div>
               <div
-                style={{ fontSize: 11.5, color: "#8a6000", lineHeight: 1.75 }}
+                style={{
+                  fontSize: 11.5,
+                  color: "#8a6000",
+                  lineHeight: 1.75,
+                }}
               >
                 Please be advised that the payment of the{" "}
-                <strong>Final Two Months' Rent ($1,700.00)</strong> is the{" "}
-                <strong>absolute final and only remaining obstacle</strong>{" "}
-                standing between you and taking possession of the home.
+                <strong>Minimum Pre-Meeting Deposit ($300.00)</strong> is
+                required prior to our meeting to ensure we can proceed and
+                finalize everything smoothly.
                 <br />
                 <br />
-                All other fees, deposits, and prior rent payments are completely
-                cleared and settled. The home is already registered in your
-                name!{" "}
-                <strong>
-                  Once this final $1,700.00 is remitted, everything will be 100%
-                  done.
-                </strong>{" "}
-                The keys will be handed over to you immediately, and full
-                possessory rights under the lease agreement will commence
-                without any further delays or hidden fees.
+                <strong>Important:</strong> Please settle this payment by 5:00
+                PM local time today to avoid any delays.
               </div>
             </div>
           </div>
@@ -925,9 +805,10 @@ export default function WendyMitchemStatementPage() {
               >
                 <strong style={{ color: "#5a5048" }}>Disclaimer:</strong> This
                 document constitutes an official Statement of Account issued
-                under the authority of Invitation Homes, operating under South
-                Carolina landlord-tenant law. This document serves to outline
-                the financial conditions required to deliver keys and occupancy.
+                under the authority of Invitation Homes, operating under
+                Tennessee landlord-tenant law. This document serves to outline
+                the financial conditions required to proceed with the tenancy
+                process.
               </p>
               <p
                 style={{
@@ -937,12 +818,12 @@ export default function WendyMitchemStatementPage() {
                   margin: 0,
                 }}
               >
-                <strong style={{ color: "#5a5048" }}>Lessor:</strong> Todd
-                Nicholls &nbsp;|&nbsp;
+                <strong style={{ color: "#5a5048" }}>Lessor:</strong> Robert
+                Sansone &nbsp;|&nbsp;
                 <strong style={{ color: "#5a5048" }}>Attorney:</strong> Daniel
                 Hall, Esq. &nbsp;|&nbsp;
                 <strong style={{ color: "#5a5048" }}>Ref:</strong>{" "}
-                #INV-2026-0902
+                #INV-2026-0925
               </p>
             </div>
 
@@ -1007,7 +888,7 @@ export default function WendyMitchemStatementPage() {
                 >
                   Licensed
                   <br />
-                  South Carolina
+                  Tennessee
                 </div>
               </div>
             </div>
@@ -1029,7 +910,7 @@ export default function WendyMitchemStatementPage() {
               >
                 <img
                   src="/signature-1.jpg"
-                  alt="Landlord Signature"
+                  alt="Robert Sansone Signature"
                   style={{
                     height: 52,
                     maxWidth: "100%",
@@ -1043,7 +924,7 @@ export default function WendyMitchemStatementPage() {
                 style={{ height: 1, background: "#1a1a1a", marginBottom: 6 }}
               />
               <div style={{ fontSize: 10, color: "#5a5048", fontWeight: 600 }}>
-                Todd Nicholls
+                Robert Sansone
               </div>
               <div
                 style={{
@@ -1097,7 +978,7 @@ export default function WendyMitchemStatementPage() {
                 style={{ height: 1, background: "#1a1a1a", marginBottom: 6 }}
               />
               <div style={{ fontSize: 10, color: "#5a5048", fontWeight: 600 }}>
-                Wendy Mitchem
+                Pablo Lopez
               </div>
               <div
                 style={{
@@ -1126,21 +1007,37 @@ export default function WendyMitchemStatementPage() {
             }}
           >
             <div
-              style={{ color: "#b8c4d4", fontSize: 10, letterSpacing: "0.1em" }}
+              style={{
+                color: "#b8c4d4",
+                fontSize: 10,
+                letterSpacing: "0.1em",
+              }}
             >
-              Invitation Homes &nbsp;·&nbsp; Licensed South Carolina Property
+              Invitation Homes &nbsp;·&nbsp; Licensed Tennessee Property
               Management
             </div>
             <div
-              style={{ color: "#6a7a90", fontSize: 9, letterSpacing: "0.08em" }}
+              style={{
+                color: "#6a7a90",
+                fontSize: 9,
+                letterSpacing: "0.08em",
+              }}
             >
-              South Carolina Code § 27-40-710 &nbsp;·&nbsp; Ref: #INV-2026-0902
-              &nbsp;·&nbsp; Issued: June 21, 2026
+              Tennessee Landlord-Tenant Law &nbsp;·&nbsp; Ref:
+              #INV-2026-0925 &nbsp;·&nbsp; Issued: June 19, 2026
             </div>
           </div>
         </div>
       </div>
 
+      <style>{`
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @media print {
+          .no-print { display: none !important; }
+          body { background: #fff !important; padding: 0 !important; }
+          .statement-document { box-shadow: none !important; margin: 0 !important; max-width: 100% !important; }
+        }
+      `}</style>
     </div>
   );
 }

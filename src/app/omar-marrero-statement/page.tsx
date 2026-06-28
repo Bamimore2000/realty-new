@@ -7,7 +7,7 @@ import { Download, Printer, RefreshCw, Send } from "lucide-react";
 import { toast } from "sonner";
 import { sendStatementEmail } from "./actions";
 
-const labelStyle: React.CSSProperties = {
+const lbl: React.CSSProperties = {
   fontSize: 9,
   letterSpacing: "0.18em",
   textTransform: "uppercase",
@@ -16,17 +16,13 @@ const labelStyle: React.CSSProperties = {
   marginBottom: 4,
   margin: 0,
 };
-const valueStyle: React.CSSProperties = {
+
+const val: React.CSSProperties = {
   fontSize: 13,
-  color: "#1a1a1a",
   fontWeight: 500,
+  color: "#1a1a1a",
   lineHeight: 1.5,
   margin: 0,
-};
-const tableStyle: React.CSSProperties = {
-  width: "100%",
-  borderCollapse: "collapse",
-  fontSize: 13,
 };
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
@@ -81,39 +77,8 @@ function Th({
   );
 }
 
-function Tr({ children }: { children: React.ReactNode }) {
-  return <tr style={{ borderBottom: "1px solid #f0ede8" }}>{children}</tr>;
-}
-
-function Td({
-  children,
-  mono,
-  note,
-  green,
-}: {
-  children?: React.ReactNode;
-  mono?: boolean;
-  note?: boolean;
-  green?: boolean;
-}) {
-  return (
-    <td
-      style={{
-        padding: "12px 14px",
-        color: green ? "#2e7d32" : "#2a2520",
-        textAlign: mono ? "right" : "left",
-        fontStyle: note ? "italic" : "normal",
-        fontSize: note ? 11 : 13,
-        fontWeight: mono ? 500 : 400,
-      }}
-    >
-      {children}
-    </td>
-  );
-}
-
-export default function WendyMitchemStatementPage() {
-  const invoiceRef = useRef<HTMLDivElement>(null);
+export default function OmarMarreroStatementPage() {
+  const statementRef = useRef<HTMLDivElement>(null);
   const [isSending, setIsSending] = useState(false);
   const [email, setEmail] = useState("");
 
@@ -121,19 +86,16 @@ export default function WendyMitchemStatementPage() {
     base64: string;
     pdf: jsPDF;
   } | null> => {
-    const element = invoiceRef.current;
+    const element = statementRef.current;
     if (!element) return null;
-
     const width = element.scrollWidth;
     const height = element.scrollHeight;
-
     const dataUrl = await toJpeg(element, {
       pixelRatio: 2,
       quality: 0.95,
       skipAutoScale: true,
       style: { margin: "0", maxWidth: "none" },
     });
-
     const pdf = new jsPDF({
       orientation: "portrait",
       unit: "px",
@@ -147,7 +109,7 @@ export default function WendyMitchemStatementPage() {
     try {
       const result = await generatePdfBase64();
       if (!result) return;
-      result.pdf.save("wendy-mitchem-statement.pdf");
+      result.pdf.save("omar-marrero-statement.pdf");
       toast.success("PDF downloaded successfully!");
     } catch (err) {
       console.error(err);
@@ -167,13 +129,10 @@ export default function WendyMitchemStatementPage() {
       const res = await sendStatementEmail(
         email,
         result.base64,
-        "wendy-mitchem-statement.pdf",
+        "omar-marrero-statement.pdf",
       );
-      if (res.success) {
-        toast.success("Statement emailed successfully!");
-      } else {
-        toast.error(res.error || "Failed to send email.");
-      }
+      if (res.success) toast.success("Statement emailed successfully!");
+      else toast.error(res.error || "Failed to send email.");
     } catch (err) {
       console.error(err);
       toast.error("An error occurred while sending.");
@@ -192,6 +151,7 @@ export default function WendyMitchemStatementPage() {
         minHeight: "100vh",
       }}
     >
+      {/* ── Toolbar ── */}
       <div
         className="no-print"
         style={{
@@ -205,7 +165,7 @@ export default function WendyMitchemStatementPage() {
       >
         <input
           type="email"
-          placeholder="Tenant email address..."
+          placeholder="Lessee email address..."
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           style={{
@@ -220,6 +180,7 @@ export default function WendyMitchemStatementPage() {
           }}
         />
         <button
+          type="button"
           onClick={handleSendEmail}
           disabled={isSending}
           style={{
@@ -239,19 +200,16 @@ export default function WendyMitchemStatementPage() {
         >
           {isSending ? (
             <>
-              <RefreshCw
-                size={15}
-                style={{ animation: "spin 1s linear infinite" }}
-              />{" "}
-              Sending…
+              <RefreshCw size={15} className="spin-icon" /> Sending…
             </>
           ) : (
             <>
-              <Send size={15} /> Send to Tenant
+              <Send size={15} /> Send to Lessee
             </>
           )}
         </button>
         <button
+          type="button"
           onClick={handleDownload}
           style={{
             display: "flex",
@@ -270,6 +228,7 @@ export default function WendyMitchemStatementPage() {
           <Download size={15} /> Download PDF
         </button>
         <button
+          type="button"
           onClick={() => window.print()}
           style={{
             display: "flex",
@@ -289,8 +248,9 @@ export default function WendyMitchemStatementPage() {
         </button>
       </div>
 
+      {/* ── Document ── */}
       <div
-        ref={invoiceRef}
+        ref={statementRef}
         className="statement-document"
         style={{
           maxWidth: 780,
@@ -299,6 +259,7 @@ export default function WendyMitchemStatementPage() {
           boxShadow: "0 4px 40px rgba(0,0,0,0.12)",
         }}
       >
+        {/* Header */}
         <div
           style={{
             background: "#0f1f3d",
@@ -339,22 +300,21 @@ export default function WendyMitchemStatementPage() {
                   fontSize: 17,
                   fontWeight: 700,
                   letterSpacing: "0.03em",
-                  lineHeight: 1.2,
                 }}
               >
-                Invitation Homes
+                Core Key Realty
               </div>
               <div
                 style={{
                   color: "#b8c4d4",
                   fontSize: 10,
-                  fontWeight: 400,
                   letterSpacing: "0.15em",
                   textTransform: "uppercase",
                   marginTop: 3,
                 }}
               >
-                Licensed Property Management · State of South Carolina
+                Administración de Propiedades Licenciada · Estado de
+                Pennsylvania
               </div>
             </div>
           </div>
@@ -365,11 +325,10 @@ export default function WendyMitchemStatementPage() {
                 letterSpacing: "0.18em",
                 textTransform: "uppercase",
                 color: "#b8c4d4",
-                marginBottom: 6,
                 margin: "0 0 6px",
               }}
             >
-              Official Legal Document
+              Documento Oficial Legal
             </p>
             <h2
               style={{
@@ -380,11 +339,23 @@ export default function WendyMitchemStatementPage() {
                 margin: 0,
               }}
             >
-              Statement of Account
+              Estado de Cuenta
             </h2>
+            <p
+              style={{
+                color: "#6a7a90",
+                fontSize: 9,
+                letterSpacing: "0.1em",
+                margin: "6px 0 0",
+                textTransform: "uppercase",
+              }}
+            >
+              Pursuant to Pennsylvania Landlord-Tenant Act
+            </p>
           </div>
         </div>
 
+        {/* Gold accent bar */}
         <div
           style={{
             background:
@@ -394,6 +365,148 @@ export default function WendyMitchemStatementPage() {
         />
 
         <div style={{ padding: "36px 48px" }}>
+          {/* Lessee card */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 20,
+              background: "#f7f4ef",
+              border: "1px solid #e8e4dc",
+              borderRadius: 8,
+              padding: "18px 22px",
+              marginBottom: 24,
+            }}
+          >
+            <div style={{ flex: 1 }}>
+              <div
+                style={{
+                  fontFamily: "'Playfair Display', serif",
+                  fontSize: 20,
+                  fontWeight: 700,
+                  color: "#0f1f3d",
+                }}
+              >
+                Omar Marrero
+              </div>
+              <div
+                style={{
+                  fontSize: 10,
+                  color: "#8a8070",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.14em",
+                  marginTop: 3,
+                }}
+              >
+                Lessee — Residential Tenancy Agreement
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  gap: 24,
+                  marginTop: 10,
+                  flexWrap: "wrap",
+                }}
+              >
+                <div>
+                  <p style={lbl}>Premises</p>
+                  <p style={{ ...val, marginTop: 4 }}>
+                    179 Eisley Rd, Milton, PA 17847
+                  </p>
+                </div>
+                <div>
+                  <p style={lbl}>Monthly Rent Obligation</p>
+                  <p style={{ ...val, marginTop: 4 }}>$700.00 / month</p>
+                </div>
+                <div>
+                  <p style={lbl}>Jurisdiction</p>
+                  <p style={{ ...val, marginTop: 4 }}>
+                    Northumberland County, Pennsylvania
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div
+              style={{
+                background: "#fff3cd",
+                border: "1px solid #d4ad52",
+                color: "#8a6000",
+                fontSize: 10,
+                fontWeight: 700,
+                letterSpacing: "0.12em",
+                textTransform: "uppercase",
+                padding: "5px 12px",
+                borderRadius: 20,
+                whiteSpace: "nowrap",
+                alignSelf: "flex-start",
+              }}
+            >
+              ⚠ Pending Remittance
+            </div>
+          </div>
+
+          {/* Summary tiles */}
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr 1fr",
+              gap: 1,
+              background: "#e8e4dc",
+              border: "1px solid #e8e4dc",
+              borderRadius: 8,
+              overflow: "hidden",
+              marginBottom: 24,
+            }}
+          >
+            {[
+              {
+                label: "Total Remitted",
+                value: "$630",
+                sub: "Application fee & security deposit satisfied in full",
+              },
+              {
+                label: "Balance Outstanding",
+                value: "$700",
+                sub: "First-month rent obligation",
+                warn: true,
+              },
+              {
+                label: "Total Lease Obligation",
+                value: "$1,330",
+                sub: "App · Deposit · Rent (Month 1)",
+              },
+            ].map((t, i) => (
+              <div key={i} style={{ background: "#fff", padding: "14px 18px" }}>
+                <div
+                  style={{
+                    fontSize: 9,
+                    letterSpacing: "0.16em",
+                    textTransform: "uppercase",
+                    color: "#9a9080",
+                    fontWeight: 600,
+                    marginBottom: 6,
+                  }}
+                >
+                  {t.label}
+                </div>
+                <div
+                  style={{
+                    fontFamily: "'Playfair Display', serif",
+                    fontSize: 20,
+                    fontWeight: 700,
+                    color: t.warn ? "#b8943a" : i === 0 ? "#1b5e20" : "#0f1f3d",
+                  }}
+                >
+                  {t.value}
+                </div>
+                <div style={{ fontSize: 10, color: "#9a9080", marginTop: 3 }}>
+                  {t.sub}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Details grid */}
           <div
             style={{
               display: "grid",
@@ -405,109 +518,46 @@ export default function WendyMitchemStatementPage() {
             }}
           >
             <div>
-              <p style={labelStyle}>Premises Address</p>
-              <p style={{ ...valueStyle, marginTop: 4 }}>
-                4927 Highway 76 W
+              <p style={lbl}>Leased Premises</p>
+              <p style={{ ...val, marginTop: 4 }}>
+                179 Eisley Rd
                 <br />
-                Laurens, SC 29390
+                Milton, PA 17847
               </p>
             </div>
             <div>
-              <p style={labelStyle}>Lessee / Tenant</p>
-              <p style={{ ...valueStyle, marginTop: 4 }}>Wendy Mitchem</p>
-              <p style={{ ...labelStyle, marginTop: 10 }}>Lessor / Owner</p>
-              <p style={{ ...valueStyle, marginTop: 4 }}>Todd Nicholls</p>
+              <p style={lbl}>Lessee</p>
+              <p style={{ ...val, marginTop: 4 }}>Omar Marrero</p>
+              <p style={{ ...lbl, marginTop: 10 }}>Lessor / Realtor</p>
+              <p style={{ ...val, marginTop: 4 }}>Aswad Rhinehart</p>
             </div>
             <div>
-              <p style={labelStyle}>Attorney of Record</p>
-              <p style={{ ...valueStyle, marginTop: 4 }}>Daniel Hall, Esq.</p>
-              <p style={{ ...labelStyle, marginTop: 10 }}>
-                Governing Jurisdiction
+              <p style={lbl}>Attorney of Record</p>
+              <p style={{ ...val, marginTop: 4 }}>Daniel, Esq.</p>
+              <p style={{ ...lbl, marginTop: 10 }}>Governing Law</p>
+              <p style={{ ...val, marginTop: 4 }}>
+                Pennsylvania Landlord-Tenant Act
               </p>
-              <p style={{ ...valueStyle, marginTop: 4 }}>Laurens County, SC</p>
             </div>
             <div style={{ textAlign: "right" }}>
-              <p style={labelStyle}>Invoice Reference</p>
+              <p style={lbl}>Account Reference</p>
               <p
                 style={{
-                  ...valueStyle,
+                  ...val,
                   fontFamily: "'Playfair Display', serif",
                   fontSize: 15,
                   color: "#0f1f3d",
                   marginTop: 4,
                 }}
               >
-                #INV-2026-0902
+                #INV-2026-0848
               </p>
-              <p style={{ ...labelStyle, marginTop: 10 }}>Date Issued</p>
-              <p style={{ ...valueStyle, marginTop: 4 }}>June 21, 2026</p>
+              <p style={{ ...lbl, marginTop: 10 }}>Date of Issuance</p>
+              <p style={{ ...val, marginTop: 4 }}>June 12, 2026</p>
             </div>
           </div>
 
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              background: "#eaf4ec",
-              border: "1px solid #a5d6a7",
-              borderRadius: 6,
-              padding: "14px 18px",
-              marginBottom: 28,
-              flexWrap: "wrap",
-              gap: 8,
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 12,
-                flex: 1,
-                minWidth: 280,
-              }}
-            >
-              <div
-                style={{
-                  width: 32,
-                  height: 32,
-                  borderRadius: "50%",
-                  background: "#2e7d32",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  flexShrink: 0,
-                }}
-              >
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <path
-                    d="M3 8L6.5 11.5L13 5"
-                    stroke="white"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </div>
-              <div>
-                <p
-                  style={{
-                    fontSize: 13,
-                    fontWeight: 600,
-                    color: "#1b5e20",
-                    margin: 0,
-                  }}
-                >
-                  Previous Payments Fully Satisfied
-                </p>
-                <span style={{ fontSize: 11, color: "#388e3c" }}>
-                  Application fee ($65.00), security deposit, and four ($850.00)
-                  rent payments have been received and fully cleared.
-                </span>
-              </div>
-            </div>
-          </div>
-
+          {/* Legal preamble */}
           <div
             style={{
               background: "#f7f4ef",
@@ -516,7 +566,7 @@ export default function WendyMitchemStatementPage() {
               borderRadius: 4,
               padding: "14px 18px",
               marginBottom: 28,
-              fontSize: 11.5,
+              fontSize: 11,
               color: "#5a5048",
               lineHeight: 1.75,
             }}
@@ -529,42 +579,64 @@ export default function WendyMitchemStatementPage() {
                 textTransform: "uppercase",
               }}
             >
-              Possession & Key Handover Notice —
+              Preámbulo y Autoridad Gubernamental —
             </strong>{" "}
-            This official Statement of Account is issued by Invitation Homes to
-            Wendy Mitchem (hereinafter "Lessee") to confirm the successful
-            remittance of all previous payments, including application fee,
-            security deposit, and four ($850.00) rent payments. The home has
-            been registered in Lessee's name. The Lessor (Todd Nicholls) and
-            Attorney of Record Daniel Hall, Esq. acknowledge receipt of these
-            payments. Per South Carolina landlord-tenant law, Lessee is now
-            required to fulfill the payment of two months' rent prior to the
-            physical handover of keys.
+            Este Estado de Cuenta es emitido por Core Key Realty (en adelante
+            "Arrendador" o "Agente Administrativo"), actuando en nombre del
+            propietario de la propiedad, a Omar Marrero (en adelante
+            "Arrendatario"), en relación con el contrato de arrendamiento
+            residencial propuesto de las instalaciones ubicadas en
+            <strong> 179 Eisley Rd, Milton, PA 17847</strong> (en adelante "las
+            Instalaciones"). Este documento es emitido de conformidad con la Ley
+            de Arrendador-Arrendatario de Pennsylvania. Todas las obligaciones
+            monetarias establecidas en este documento constituyen condiciones
+            financieras vinculantes previas a la ejecución y ratificación del
+            contrato de arrendamiento residencial y la transmisión del derecho
+            de ocupación al Arrendatario.
           </div>
 
+          {/* Remittances received */}
           <div style={{ marginBottom: 28 }}>
-            <SectionTitle>Schedule of Satisfied Payments</SectionTitle>
-            <table style={tableStyle}>
+            <SectionTitle>
+              Lista de Pagos Recibidos — Cuota de Solicitud y Depósito de
+              Garantía Satisfechos
+            </SectionTitle>
+            <table
+              style={{
+                width: "100%",
+                borderCollapse: "collapse",
+                fontSize: 13,
+              }}
+            >
               <thead>
                 <tr style={{ background: "#0f1f3d" }}>
                   <Th>Item / Description</Th>
-                  <Th>Statutory Basis</Th>
+                  <Th>Statutory Reference</Th>
                   <Th>Status</Th>
-                  <Th right>Amount Remitted</Th>
+                  <Th right>Amount</Th>
                 </tr>
               </thead>
               <tbody>
-                <Tr>
-                  <Td>
-                    Application Fee
+                <tr style={{ borderBottom: "1px solid #f0ede8" }}>
+                  <td style={{ padding: "12px 14px", color: "#2a2520" }}>
+                    Non-Refundable Application Fee
                     <div
-                      style={{ fontSize: 10, color: "#8a8070", marginTop: 2 }}
+                      style={{ fontSize: 11, color: "#9a9080", marginTop: 2 }}
                     >
-                      Processing and background screening
+                      Deemed refundable per agreement; paid in full
                     </div>
-                  </Td>
-                  <Td note>Administrative</Td>
-                  <Td>
+                  </td>
+                  <td
+                    style={{
+                      padding: "12px 14px",
+                      fontSize: 11,
+                      color: "#9a9080",
+                      fontStyle: "italic",
+                    }}
+                  >
+                    PA Landlord-Tenant Act
+                  </td>
+                  <td style={{ padding: "12px 14px" }}>
                     <span
                       style={{
                         display: "inline-block",
@@ -578,22 +650,42 @@ export default function WendyMitchemStatementPage() {
                         color: "#1b5e20",
                       }}
                     >
-                      ✓ Cleared
+                      ✓ Received
                     </span>
-                  </Td>
-                  <Td mono>$65.00</Td>
-                </Tr>
-                <Tr>
-                  <Td>
-                    Security Deposit
+                  </td>
+                  <td
+                    style={{
+                      padding: "12px 14px",
+                      textAlign: "right",
+                      fontWeight: 500,
+                      color: "#2a2520",
+                    }}
+                  >
+                    $130.00
+                  </td>
+                </tr>
+                <tr style={{ borderBottom: "1px solid #f0ede8" }}>
+                  <td style={{ padding: "12px 14px", color: "#2a2520" }}>
+                    Security Deposit — Direct Remittance
                     <div
-                      style={{ fontSize: 10, color: "#8a8070", marginTop: 2 }}
+                      style={{ fontSize: 11, color: "#9a9080", marginTop: 2 }}
                     >
-                      Held in non-interest bearing escrow
+                      Cash remittance received; applied toward required security
+                      deposit of $500.00. Security deposit obligation is
+                      discharged in full.
                     </div>
-                  </Td>
-                  <Td note>South Carolina Code § 27-40-130</Td>
-                  <Td>
+                  </td>
+                  <td
+                    style={{
+                      padding: "12px 14px",
+                      fontSize: 11,
+                      color: "#9a9080",
+                      fontStyle: "italic",
+                    }}
+                  >
+                    PA Landlord-Tenant Act
+                  </td>
+                  <td style={{ padding: "12px 14px" }}>
                     <span
                       style={{
                         display: "inline-block",
@@ -607,127 +699,20 @@ export default function WendyMitchemStatementPage() {
                         color: "#1b5e20",
                       }}
                     >
-                      ✓ Cleared
+                      ✓ Received
                     </span>
-                  </Td>
-                  <Td mono>TBD</Td>
-                </Tr>
-                <Tr>
-                  <Td>
-                    Rent Payment (1 of 4)
-                    <div
-                      style={{ fontSize: 10, color: "#8a8070", marginTop: 2 }}
-                    >
-                      Preceding monthly rent
-                    </div>
-                  </Td>
-                  <Td note>South Carolina Code § 27-40-710</Td>
-                  <Td>
-                    <span
-                      style={{
-                        display: "inline-block",
-                        fontSize: 9,
-                        fontWeight: 700,
-                        letterSpacing: "0.1em",
-                        textTransform: "uppercase",
-                        padding: "3px 8px",
-                        borderRadius: 10,
-                        background: "#eaf4ec",
-                        color: "#1b5e20",
-                      }}
-                    >
-                      ✓ Cleared
-                    </span>
-                  </Td>
-                  <Td mono>$850.00</Td>
-                </Tr>
-                <Tr>
-                  <Td>
-                    Rent Payment (2 of 4)
-                    <div
-                      style={{ fontSize: 10, color: "#8a8070", marginTop: 2 }}
-                    >
-                      Preceding monthly rent
-                    </div>
-                  </Td>
-                  <Td note>South Carolina Code § 27-40-710</Td>
-                  <Td>
-                    <span
-                      style={{
-                        display: "inline-block",
-                        fontSize: 9,
-                        fontWeight: 700,
-                        letterSpacing: "0.1em",
-                        textTransform: "uppercase",
-                        padding: "3px 8px",
-                        borderRadius: 10,
-                        background: "#eaf4ec",
-                        color: "#1b5e20",
-                      }}
-                    >
-                      ✓ Cleared
-                    </span>
-                  </Td>
-                  <Td mono>$850.00</Td>
-                </Tr>
-                <Tr>
-                  <Td>
-                    Rent Payment (3 of 4)
-                    <div
-                      style={{ fontSize: 10, color: "#8a8070", marginTop: 2 }}
-                    >
-                      Preceding monthly rent
-                    </div>
-                  </Td>
-                  <Td note>South Carolina Code § 27-40-710</Td>
-                  <Td>
-                    <span
-                      style={{
-                        display: "inline-block",
-                        fontSize: 9,
-                        fontWeight: 700,
-                        letterSpacing: "0.1em",
-                        textTransform: "uppercase",
-                        padding: "3px 8px",
-                        borderRadius: 10,
-                        background: "#eaf4ec",
-                        color: "#1b5e20",
-                      }}
-                    >
-                      ✓ Cleared
-                    </span>
-                  </Td>
-                  <Td mono>$850.00</Td>
-                </Tr>
-                <Tr>
-                  <Td>
-                    Rent Payment (4 of 4)
-                    <div
-                      style={{ fontSize: 10, color: "#8a8070", marginTop: 2 }}
-                    >
-                      Preceding monthly rent
-                    </div>
-                  </Td>
-                  <Td note>South Carolina Code § 27-40-710</Td>
-                  <Td>
-                    <span
-                      style={{
-                        display: "inline-block",
-                        fontSize: 9,
-                        fontWeight: 700,
-                        letterSpacing: "0.1em",
-                        textTransform: "uppercase",
-                        padding: "3px 8px",
-                        borderRadius: 10,
-                        background: "#eaf4ec",
-                        color: "#1b5e20",
-                      }}
-                    >
-                      ✓ Cleared
-                    </span>
-                  </Td>
-                  <Td mono>$850.00</Td>
-                </Tr>
+                  </td>
+                  <td
+                    style={{
+                      padding: "12px 14px",
+                      textAlign: "right",
+                      fontWeight: 500,
+                      color: "#2a2520",
+                    }}
+                  >
+                    $500.00
+                  </td>
+                </tr>
                 <tr>
                   <td
                     colSpan={3}
@@ -740,7 +725,7 @@ export default function WendyMitchemStatementPage() {
                       fontStyle: "italic",
                     }}
                   >
-                    Total Remittances Cleared to Date:
+                    Total Remitted to Date (Deposit Cleared):
                   </td>
                   <td
                     style={{
@@ -752,22 +737,30 @@ export default function WendyMitchemStatementPage() {
                       color: "#1b5e20",
                     }}
                   >
-                    $3,465.00 + Security Deposit
+                    $630.00
                   </td>
                 </tr>
               </tbody>
             </table>
           </div>
 
+          {/* Outstanding balance */}
           <div style={{ marginBottom: 28 }}>
             <SectionTitle>
-              Required Remittance — Final Two Months' Rent
+              Obligación Pendiente — Condición Previa a la Ratificación del
+              Contrato de Arrendamiento
             </SectionTitle>
-            <table style={tableStyle}>
+            <table
+              style={{
+                width: "100%",
+                borderCollapse: "collapse",
+                fontSize: 13,
+              }}
+            >
               <thead>
                 <tr style={{ background: "#0f1f3d" }}>
-                  <Th>Obligation / Escrow Item</Th>
-                  <Th>Statutory Basis / Terms</Th>
+                  <Th>Obligation</Th>
+                  <Th>Legal Basis / Notes</Th>
                   <Th right>Amount Due</Th>
                 </tr>
               </thead>
@@ -782,7 +775,7 @@ export default function WendyMitchemStatementPage() {
                       color: "#5a3e00",
                     }}
                   >
-                    Final Two Months' Rent
+                    First Month's Rent — Advance Rent Obligation
                     <div
                       style={{
                         fontSize: 11,
@@ -791,9 +784,8 @@ export default function WendyMitchemStatementPage() {
                         color: "#8a6000",
                       }}
                     >
-                      Final payment required to execute full lease and release
-                      the property keys; home already registered in Lessee's
-                      name.
+                      The final financial condition required to complete
+                      registration and release keys
                     </div>
                   </td>
                   <td
@@ -805,8 +797,12 @@ export default function WendyMitchemStatementPage() {
                     }}
                   >
                     <em>
-                      Pursuant to South Carolina Code § 27-40-710. Final rent
-                      required for full lease execution and key handover.
+                      Pursuant to Pennsylvania landlord-tenant law, remittance
+                      of advance rent is required prior to final execution of
+                      lease instruments. Upon full satisfaction of this
+                      obligation, the paperwork registration shall be completed
+                      and we will immediately head down to the home to convey
+                      right of occupancy and seal the rental.
                     </em>
                   </td>
                   <td
@@ -819,12 +815,13 @@ export default function WendyMitchemStatementPage() {
                       fontSize: 16,
                     }}
                   >
-                    $1,700.00
+                    $700.00
                   </td>
                 </tr>
-                <tr style={{ background: "#0f1f3d" }}>
+                <tr>
                   <td
                     style={{
+                      background: "#0f1f3d",
                       padding: "16px 14px",
                       color: "#b8c4d4",
                       fontSize: 11,
@@ -832,11 +829,12 @@ export default function WendyMitchemStatementPage() {
                       textTransform: "uppercase",
                     }}
                   >
-                    Total Balance Now Due
+                    Total Balance Due &amp; Owing
                   </td>
-                  <td style={{ padding: "16px 14px" }} />
+                  <td style={{ background: "#0f1f3d", padding: "16px 14px" }} />
                   <td
                     style={{
+                      background: "#0f1f3d",
                       padding: "16px 14px",
                       fontFamily: "'Playfair Display', serif",
                       fontSize: 28,
@@ -845,13 +843,61 @@ export default function WendyMitchemStatementPage() {
                       fontWeight: 700,
                     }}
                   >
-                    $1,700.00
+                    $700.00
                   </td>
                 </tr>
               </tbody>
             </table>
           </div>
 
+          {/* Deposit confirmed notice */}
+          <div
+            style={{
+              background: "#eaf4ec",
+              border: "1px solid #a3d4ab",
+              borderRadius: 6,
+              padding: "14px 18px",
+              marginBottom: 20,
+              display: "flex",
+              gap: 12,
+              alignItems: "flex-start",
+            }}
+          >
+            <div style={{ fontSize: 18, lineHeight: 1.1, marginTop: 2 }}>
+              ✅
+            </div>
+            <div>
+              <div
+                style={{
+                  fontSize: 11,
+                  fontWeight: 700,
+                  color: "#1b5e20",
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                  marginBottom: 5,
+                }}
+              >
+                Cuota de Solicitud y Depósito de Garantía — Obligaciones
+                Completamente Satisfechas
+              </div>
+              <div
+                style={{ fontSize: 11.5, color: "#2e7d32", lineHeight: 1.7 }}
+              >
+                La cuota de solicitud del Arrendatario de{" "}
+                <strong>$130.00</strong> y la obligación de depósito de garantía
+                de <strong>$500.00</strong> han sido completamente satisfechas.
+                El Arrendador reconoce la recepción y confirma que el depósito
+                se mantiene en fideicomiso de acuerdo con la ley de
+                Pennsylvania.{" "}
+                <strong>
+                  No hay más obligaciones pendientes de cuota de solicitud o
+                  depósito.
+                </strong>
+              </div>
+            </div>
+          </div>
+
+          {/* Formal legal notice */}
           <div
             style={{
               background: "#fff8e8",
@@ -878,31 +924,32 @@ export default function WendyMitchemStatementPage() {
                   marginBottom: 5,
                 }}
               >
-                Formal Notice — Final Obstacle to Possession
+                Aviso Formal — Condición Previa Pendiente
               </div>
               <div
                 style={{ fontSize: 11.5, color: "#8a6000", lineHeight: 1.75 }}
               >
-                Please be advised that the payment of the{" "}
-                <strong>Final Two Months' Rent ($1,700.00)</strong> is the{" "}
-                <strong>absolute final and only remaining obstacle</strong>{" "}
-                standing between you and taking possession of the home.
-                <br />
-                <br />
-                All other fees, deposits, and prior rent payments are completely
-                cleared and settled. The home is already registered in your
-                name!{" "}
-                <strong>
-                  Once this final $1,700.00 is remitted, everything will be 100%
-                  done.
-                </strong>{" "}
-                The keys will be handed over to you immediately, and full
-                possessory rights under the lease agreement will commence
-                without any further delays or hidden fees.
+                Quede constar formalmente que el único y exclusivo gravamen
+                restante que impide la finalización del registro del papeleo y
+                la entrega de las llaves de la propiedad para las Instalaciones
+                en <strong>179 Eisley Rd, Milton, PA 17847</strong>
+                es la obligación pendiente del alquiler del primer mes de
+                <strong>$700.00</strong>. Todas las demás condiciones
+                financieras previas, incluyendo la cuota de solicitud y el
+                depósito de garantía, han sido debidamente satisfechas y
+                aclaradas en su totalidad. Una vez recibido y aclarado este pago
+                final, Core Key Realty y los agentes autorizados finalizarán el
+                papeleo de registro y
+                <strong>se dirigirán a la casa inmediatamente</strong> para
+                otorgar formalmente el derecho de ocupación al Arrendatario,
+                <strong>Omar Marrero</strong>, y sellar el alquiler. Este aviso
+                se emite con la revisión y autorización del Abogado de Registro{" "}
+                <strong>Daniel, Esq.</strong>
               </div>
             </div>
           </div>
 
+          {/* Footer note + seal */}
           <div
             style={{
               display: "flex",
@@ -925,9 +972,13 @@ export default function WendyMitchemStatementPage() {
               >
                 <strong style={{ color: "#5a5048" }}>Disclaimer:</strong> This
                 document constitutes an official Statement of Account issued
-                under the authority of Invitation Homes, operating under South
-                Carolina landlord-tenant law. This document serves to outline
-                the financial conditions required to deliver keys and occupancy.
+                under the authority of Core Key Realty, a licensed property
+                management entity operating in the State of Pennsylvania. All
+                rights and obligations contained herein are governed by the
+                Pennsylvania Landlord-Tenant Act. This statement does not
+                constitute a legally executed lease agreement. Ratification of
+                the tenancy is contingent upon full satisfaction of all
+                outstanding obligations identified herein.
               </p>
               <p
                 style={{
@@ -937,15 +988,16 @@ export default function WendyMitchemStatementPage() {
                   margin: 0,
                 }}
               >
-                <strong style={{ color: "#5a5048" }}>Lessor:</strong> Todd
-                Nicholls &nbsp;|&nbsp;
-                <strong style={{ color: "#5a5048" }}>Attorney:</strong> Daniel
-                Hall, Esq. &nbsp;|&nbsp;
+                <strong style={{ color: "#5a5048" }}>Lessor / Realtor:</strong>{" "}
+                Aswad Rhinehart &nbsp;|&nbsp;
+                <strong style={{ color: "#5a5048" }}>Attorney:</strong> Daniel,
+                Esq. &nbsp;|&nbsp;
                 <strong style={{ color: "#5a5048" }}>Ref:</strong>{" "}
-                #INV-2026-0902
+                #INV-2026-0848
               </p>
             </div>
 
+            {/* Official seal */}
             <div
               style={{
                 width: 116,
@@ -979,14 +1031,14 @@ export default function WendyMitchemStatementPage() {
                     fontSize: 7,
                     fontWeight: 700,
                     color: "#0f1f3d",
-                    letterSpacing: "0.08em",
+                    letterSpacing: "0.1em",
                     textTransform: "uppercase",
-                    lineHeight: 1.3,
+                    lineHeight: 1.5,
                   }}
                 >
-                  Invitation
+                  Core Key
                   <br />
-                  Homes
+                  Realty
                 </div>
                 <div
                   style={{
@@ -1002,17 +1054,18 @@ export default function WendyMitchemStatementPage() {
                     color: "#9a9080",
                     letterSpacing: "0.08em",
                     textTransform: "uppercase",
-                    lineHeight: 1.4,
+                    lineHeight: 1.5,
                   }}
                 >
                   Licensed
                   <br />
-                  South Carolina
+                  Pennsylvania
                 </div>
               </div>
             </div>
           </div>
 
+          {/* Signature block */}
           <div
             style={{
               display: "grid",
@@ -1023,13 +1076,14 @@ export default function WendyMitchemStatementPage() {
               borderTop: "1px solid #e8e4dc",
             }}
           >
+            {/* Aswad Rhinehart */}
             <div>
               <div
                 style={{ height: 56, marginBottom: 0, position: "relative" }}
               >
                 <img
-                  src="/signature-1.jpg"
-                  alt="Landlord Signature"
+                  src="/daniel-hall-sig.png"
+                  alt="Aswad Rhinehart Signature"
                   style={{
                     height: 52,
                     maxWidth: "100%",
@@ -1043,7 +1097,7 @@ export default function WendyMitchemStatementPage() {
                 style={{ height: 1, background: "#1a1a1a", marginBottom: 6 }}
               />
               <div style={{ fontSize: 10, color: "#5a5048", fontWeight: 600 }}>
-                Todd Nicholls
+                Aswad Rhinehart
               </div>
               <div
                 style={{
@@ -1054,15 +1108,16 @@ export default function WendyMitchemStatementPage() {
                   marginTop: 2,
                 }}
               >
-                Lessor / Owner
+                Authorized Signatory — Lessor / Realtor
               </div>
             </div>
 
+            {/* Daniel */}
             <div>
               <div style={{ height: 56, marginBottom: 0 }}>
                 <img
-                  src="/images-sig-2.jpg"
-                  alt="Daniel Hall Signature"
+                  src="/robinson-allan-sig.png"
+                  alt="Daniel Signature"
                   style={{
                     height: 52,
                     maxWidth: "100%",
@@ -1076,7 +1131,7 @@ export default function WendyMitchemStatementPage() {
                 style={{ height: 1, background: "#1a1a1a", marginBottom: 6 }}
               />
               <div style={{ fontSize: 10, color: "#5a5048", fontWeight: 600 }}>
-                Daniel Hall, Esq.
+                Daniel, Esq.
               </div>
               <div
                 style={{
@@ -1091,13 +1146,14 @@ export default function WendyMitchemStatementPage() {
               </div>
             </div>
 
+            {/* Lessee — blank */}
             <div>
               <div style={{ height: 56, marginBottom: 0 }} />
               <div
                 style={{ height: 1, background: "#1a1a1a", marginBottom: 6 }}
               />
               <div style={{ fontSize: 10, color: "#5a5048", fontWeight: 600 }}>
-                Wendy Mitchem
+                Omar Marrero
               </div>
               <div
                 style={{
@@ -1108,11 +1164,12 @@ export default function WendyMitchemStatementPage() {
                   marginTop: 2,
                 }}
               >
-                Lessee / Tenant
+                Acknowledged — Lessee
               </div>
             </div>
           </div>
 
+          {/* Footer bar */}
           <div
             style={{
               background: "#0f1f3d",
@@ -1128,19 +1185,18 @@ export default function WendyMitchemStatementPage() {
             <div
               style={{ color: "#b8c4d4", fontSize: 10, letterSpacing: "0.1em" }}
             >
-              Invitation Homes &nbsp;·&nbsp; Licensed South Carolina Property
-              Management
+              Core Key Realty &nbsp;·&nbsp; In partnership with Invitation Homes
+              &nbsp;·&nbsp; State of Pennsylvania
             </div>
             <div
               style={{ color: "#6a7a90", fontSize: 9, letterSpacing: "0.08em" }}
             >
-              South Carolina Code § 27-40-710 &nbsp;·&nbsp; Ref: #INV-2026-0902
-              &nbsp;·&nbsp; Issued: June 21, 2026
+              PA Landlord-Tenant Act &nbsp;·&nbsp; Ref: #INV-2026-0848
+              &nbsp;·&nbsp; Issued: June 12, 2026
             </div>
           </div>
         </div>
       </div>
-
     </div>
   );
 }

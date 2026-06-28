@@ -773,14 +773,6 @@ export default function WendyMitchemRegistrationPage() {
         </div>
       </div>
 
-      <style>{`
-        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        @media print {
-          .no-print { display: none !important; }
-          body { background: #fff !important; padding: 0 !important; margin: 0 !important; }
-          div[ref] { box-shadow: none !important; margin: 0 !important; max-width: 100% !important; page-break-inside: avoid; }
-        }
-      `}</style>
     </div>
   );
 }

@@ -23,17 +23,17 @@ const val: React.CSSProperties = {
   lineHeight: 1.5,
 };
 
-export default function TanyaMarieMendyRegistrationPage() {
+export default function DarinLarisonRegistrationPage() {
   const certificateRef = useRef<HTMLDivElement>(null);
   const [isSending, setIsSending] = useState(false);
   const [email, setEmail] = useState("");
 
-  const [tenantName, setTenantName] = useState("Mrs. Tanya Marie Mendy");
+  const [tenantName, setTenantName] = useState("Darin Larison");
   const [propertyAddress, setPropertyAddress] = useState(
-    "6550 Kelso Lake Rd, Athol, ID 83801",
+    "2303 Pacific Ave, Hoquiam, WA 98550",
   );
-  const [dateIssued, setDateIssued] = useState("June 23, 2026");
-  const [registrationId, setRegistrationId] = useState("REG-2026-0903");
+  const [dateIssued, setDateIssued] = useState("June 28, 2026");
+  const [registrationId, setRegistrationId] = useState("REG-2026-0905");
 
   const generatePdfBase64 = async (): Promise<{
     base64: string;
@@ -348,7 +348,7 @@ export default function TanyaMarieMendyRegistrationPage() {
                 margin: "0 0 4px 0",
               }}
             >
-              State of Idaho · Kootenai County
+              State of Washington · Grays Harbor County
             </p>
             <h2
               style={{
@@ -360,7 +360,7 @@ export default function TanyaMarieMendyRegistrationPage() {
                 letterSpacing: "0.04em",
               }}
             >
-              Kootenai County Council — Housing &amp; Property Division
+              Grays Harbor County Council — Housing &amp; Property Division
             </h2>
             <p
               style={{
@@ -371,7 +371,7 @@ export default function TanyaMarieMendyRegistrationPage() {
                 margin: 0,
               }}
             >
-              Office of Residential Registration · Athol District
+              Office of Residential Registration · Hoquiam District
             </p>
           </div>
 
@@ -426,7 +426,7 @@ export default function TanyaMarieMendyRegistrationPage() {
                   Licensed Property Management
                 </div>
                 <div style={{ fontSize: 10, color: "#8a8070", marginTop: 2 }}>
-                  Lic. No. ID-PMO-2026-902 · Kootenai County
+                  Lic. No. WA-PMO-2026-904 · Grays Harbor County
                 </div>
               </div>
             </div>
@@ -527,7 +527,9 @@ export default function TanyaMarieMendyRegistrationPage() {
             </div>
             <div>
               <p style={lbl}>County</p>
-              <p style={{ ...val, margin: 0 }}>Kootenai County, Idaho</p>
+              <p style={{ ...val, margin: 0 }}>
+                Grays Harbor County, Washington
+              </p>
             </div>
             <div>
               <p style={lbl}>Tenancy Type</p>
@@ -555,7 +557,7 @@ export default function TanyaMarieMendyRegistrationPage() {
                 margin: "0 0 10px 0",
               }}
             >
-              ✓ Initial Fees Satisfied — $740.00
+              ✓ Initial Fees Satisfied — $550.00
             </p>
             <div
               style={{
@@ -567,10 +569,10 @@ export default function TanyaMarieMendyRegistrationPage() {
               }}
             >
               <div>
-                Application Fee: <strong>$140.00</strong>
+                Application Fee (applied to deposit): <strong>$50.00</strong>
               </div>
               <div>
-                Security Deposit: <strong>$600.00</strong>
+                Security Deposit (Partial): <strong>$500.00</strong>
               </div>
             </div>
           </div>
@@ -598,10 +600,11 @@ export default function TanyaMarieMendyRegistrationPage() {
             >
               ⏳ Pending — Key Handover Condition:
             </strong>{" "}
-            The home will be officially registered in the name of{" "}
+            The home has been officially registered in the name of{" "}
             <strong>{tenantName}</strong> and keys will be handed over upon full
-            settlement of the outstanding balance of <strong>$900.00</strong> —
-            Key Handover Fee.
+            settlement of the outstanding balance of <strong>$300.00</strong>{" "}
+            (remaining portion of the security deposit) as required by
+            Washington state law.
           </div>
 
           {/* Body Text */}
@@ -617,9 +620,9 @@ export default function TanyaMarieMendyRegistrationPage() {
             <p style={{ margin: "0 0 16px 0" }}>
               This is to certify, in accordance with the statutes and
               regulations of the{" "}
-              <strong>State of Idaho Housing Authority</strong> and the{" "}
+              <strong>State of Washington Housing Authority</strong> and the{" "}
               <strong>
-                Kootenai County Council — Housing &amp; Property Division
+                Grays Harbor County Council — Housing &amp; Property Division
               </strong>
               , that the residential property located at{" "}
               <strong>{propertyAddress}</strong> has been duly registered,
@@ -628,12 +631,11 @@ export default function TanyaMarieMendyRegistrationPage() {
             </p>
             <p style={{ margin: "0 0 16px 0" }}>
               This registration was processed and approved under the authority
-              of <strong>Alan Scott</strong> (Landlord) and{" "}
-              <strong>Invitation Homes</strong>, a fully licensed property
-              management firm operating within the jurisdiction of Kootenai
-              County. All requisite documentation, background screening, lease
-              compliance reviews, and statutory filings have been completed in
-              accordance with the Idaho Residential Tenancy Act and the
+              of Invitation Homes, a fully licensed property management firm
+              operating within the jurisdiction of Grays Harbor County. All
+              requisite documentation, background screening, lease compliance
+              reviews, and statutory filings have been completed in accordance
+              with the Washington Residential Landlord-Tenant Act and the
               applicable local housing ordinances.
             </p>
             <p style={{ margin: 0 }}>
@@ -643,7 +645,7 @@ export default function TanyaMarieMendyRegistrationPage() {
               the duly executed lease agreement on file with this office and
               upon settlement of all outstanding fees. Any transfer, subletting,
               or modification of tenancy must be formally registered with the
-              Kootenai County Council — Housing &amp; Property Division and
+              Grays Harbor County Council — Housing &amp; Property Division and
               Invitation Homes.
             </p>
           </div>
@@ -675,8 +677,8 @@ export default function TanyaMarieMendyRegistrationPage() {
             </span>
             <span>
               <strong style={{ color: "#fff" }}>Legal Notice:</strong> This
-              document has been issued under the authority of the Kootenai
-              County Council and the Idaho Department of Community Affairs.
+              document has been issued under the authority of the Grays Harbor
+              County Council and the Washington Department of Community Affairs.
               Falsification or misuse of this certificate is a violation of
               state law and may result in civil or criminal penalties. This
               certificate is valid only for the named tenant and address above.
@@ -700,7 +702,7 @@ export default function TanyaMarieMendyRegistrationPage() {
               >
                 <img
                   src="/signature-1.jpg"
-                  alt="Alan Scott Signature"
+                  alt="Todd Nicholls Signature"
                   style={{
                     position: "absolute",
                     bottom: 0,
@@ -720,7 +722,7 @@ export default function TanyaMarieMendyRegistrationPage() {
                     margin: "0 0 2px 0",
                   }}
                 >
-                  Alan Scott
+                  Todd Nicholls
                 </p>
                 <p
                   style={{
@@ -789,7 +791,7 @@ export default function TanyaMarieMendyRegistrationPage() {
                     margin: "0 0 3px 0",
                   }}
                 >
-                  Kootenai County
+                  Grays Harbor
                 </p>
                 <div
                   style={{
@@ -850,8 +852,8 @@ export default function TanyaMarieMendyRegistrationPage() {
                 style={{ position: "relative", height: 70, marginBottom: 8 }}
               >
                 <img
-                  src="/images-sig-2.jpg"
-                  alt="Daniel Hall Signature"
+                  src="/robinson-allan-sig.png"
+                  alt="Robertson Allan Signature"
                   style={{
                     position: "absolute",
                     bottom: 0,
@@ -871,7 +873,7 @@ export default function TanyaMarieMendyRegistrationPage() {
                     margin: "0 0 2px 0",
                   }}
                 >
-                  Daniel Hall, Esq.
+                  Robertson Allan
                 </p>
                 <p
                   style={{
@@ -910,8 +912,8 @@ export default function TanyaMarieMendyRegistrationPage() {
             Invitation Homes · Licensed Property Management
           </p>
           <p style={{ color: "#6b7a94", fontSize: 12, margin: 0 }}>
-            Kootenai County Council · Housing &amp; Property Division · Athol,
-            ID 83801
+            Grays Harbor County Council · Housing &amp; Property Division ·
+            Hoquiam, WA 98550
           </p>
         </div>
 
